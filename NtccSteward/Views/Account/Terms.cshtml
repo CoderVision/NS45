@@ -1,0 +1,18 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<span class="sectionTitle">Terms of Use</span>
+
+@using (Html.BeginForm("Index", "Account", FormMethod.Post))
+{
+    <p style="margin-left:4px;">
+        This website is for use by New Testament Christian Church pastors, associated ministers, and designated members.
+    </p>
+    <p>
+        <input class="btn" type="submit" value="OK" />
+    </p>
+}
+    

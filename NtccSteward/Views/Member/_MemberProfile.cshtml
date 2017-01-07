@@ -1,0 +1,170 @@
+﻿@model NtccSteward.Modules.Members.MemberProfile
+
+@* This is the Member Profile (info and addresses) *@
+
+@{
+    ViewBag.Title = @Model.DisplayText;
+}
+
+@*Add checkbox for Holy Spirit Baptism and Water Baptism*@
+
+    <div class="row">
+
+        <input type="hidden" name="identityId" id="identityId" value="@Model.Id" />
+        <form class="form-horizontal" >
+
+            <fieldset class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+
+                <div class="form-group">
+                    <label for="firstName" class="col-sm-2 control-label labelNormal">First</label>
+                    <div class="col-sm-10">
+                        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", @id = "FirstName", @placeholder = "Enter first name" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="middleName" class="col-sm-2 control-label labelNormal">Middle</label>
+                    <div class="col-sm-10">
+                        @Html.TextBoxFor(m => m.MiddleName, new { @class = "form-control", @id = "MiddleName", @placeholder = "Enter middle name" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="lastName" class="col-sm-2 control-label labelNormal">Last</label>
+                    <div class="col-sm-10">
+                        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", @id = "LastName", @placeholder = "Enter last name" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="preferredName" class="col-sm-2 control-label labelNormal">Preferred</label>
+                    <div class="col-sm-10">
+                        @Html.TextBoxFor(m => m.PreferredName, new { @class = "form-control", @id = "PreferredName", @placeholder = "Enter preferred name" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="gender" class="col-sm-2 control-label labelNormal">Gender</label>
+                    <div class="col-sm-10">
+                        <div class="radio-inline">
+                            <label class="labelNormal">@Html.RadioButtonFor(m => m.Gender, "M", new { @type = "radio", @name = "genderRadio", @id = "maleRadio" }) Male</label>
+                        </div>
+                        <div class="radio-inline">
+                            <label class="labelNormal">@Html.RadioButtonFor(m => m.Gender, "F", new { @type = "radio", @name = "genderRadio", @id = "femaleRadio" }) Female</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="birthDate" class="col-sm-2 control-label labelNormal">Birthdate</label>
+                    <div class="col-sm-10">
+                        @Html.TextBoxFor(m => m.BirthDate, new { @class = "form-control", @id = "BirthDate", @placeholder = "Enter date of birth" })
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+
+                <div class="form-group">
+                    <label for="church" class="col-sm-2 control-label labelNormal">Church</label>
+                    <div class="col-sm-10">
+                        @Html.TextBoxFor(m => m.ChurchName, new { @class = "form-control", @id = "ChurchName", @placeholder = "Church name" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="status" class="col-sm-2 control-label labelNormal">Status</label>
+                    <div class="col-sm-10">
+                        @Html.TextBoxFor(m => m.Status, new { @class = "form-control", @id = "Status" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="sponsor" class="col-sm-2 control-label labelNormal">Sponsor</label>
+                    <div class="col-sm-10">
+                        @Html.TextBoxFor(m => m.Sponsor, new { @class = "form-control", @id = "Sponsor", @placeholder = "Sponsor name" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="comments" class="col-sm-2 control-label labelNormal">Comments</label>
+                    <div class="col-sm-10">
+                        @Html.TextAreaFor(m => m.Comments, new { @class = "form-control", @id = "Comments", @placeholder = "Enter comments" })
+                    </div>
+                </div>
+
+            </fieldset>
+
+        </form>
+    </div>
+
+
+<div class="row" style="margin-top:10px;">
+    <div id="addressList">
+        <div class="sectionBand">
+            <span class="sectionTitle">Address</span>
+            <hr class="help-block" />
+        </div>
+        <div id="addressList_@Model.Id">
+            @for (var i = 0; i < Model.AddressList.Count; i++)
+            {
+                await Html.RenderPartialAsync("~/Views/Shared/AddressInfo/_Address.cshtml", Model.AddressList[i]);
+            }
+        </div>
+        <div class="sectionBand">
+            <label style="cursor:pointer;" onclick="AddAddress(@Model.Id, 'address', 'addressList_@Model.Id' )"><img id="addAddy" src="~/images/add.png" style="width:20px;height:20px;vertical-align:middle;margin-bottom:4px;" />  Add address</label>
+        </div>
+    </div>
+</div>
+
+<div class="row" style="margin-top:10px;">
+    <div id="phoneList">
+        <div class="sectionBand">
+            <span class="sectionTitle">Phone</span>
+            <hr class="help-block" />
+        </div>
+        <div id="phoneList_@Model.Id">
+            @for (var i = 0; i < Model.PhoneList.Count; i++)
+            {
+                await Html.RenderPartialAsync("~/Views/Shared/AddressInfo/_Phone.cshtml", Model.PhoneList[i]);
+            }
+        </div>
+        <div class="sectionBand">
+            <label style="cursor:pointer;" onclick="AddAddress(@Model.Id, 'phone', 'phoneList_@Model.Id')"><img id="addAddy" src="~/images/add.png" style="width:20px;height:20px;vertical-align:middle;margin-bottom:4px;" />  Add phone</label>
+        </div>
+    </div>
+</div>
+
+<div class="row" style="margin-top:10px;">
+    <div id="emailList">
+        <div class="sectionBand">
+            <span class="sectionTitle">Email</span>
+            <hr class="help-block" />
+        </div>
+        <div id="emailList_@Model.Id">
+            @for (var i = 0; i < Model.EmailList.Count; i++)
+            {
+                await Html.RenderPartialAsync("~/Views/Shared/AddressInfo/_Email.cshtml", Model.EmailList[i]);
+            }
+        </div>
+        <div class="sectionBand">
+            <label style="cursor:pointer;" onclick="AddAddress(@Model.Id, 'email', 'emailList_@Model.Id' )"><img id="addEmail" src="~/images/add.png" style="width:20px;height:20px;vertical-align:middle;margin-bottom:4px;" />  Add email</label>
+        </div>
+    </div>
+</div>
+
+@{ 
+    Html.RenderPartial("~/Views/Message/_Message.cshtml");
+}
+
+<script type="text/javascript">
+    $(function () {
+        $("#birthDate").datepicker({
+            showOtherMonths: true,
+            selectOtherMonths: true,
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+0"
+        });
+    });
+</script>

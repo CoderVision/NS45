@@ -1,0 +1,43 @@
+﻿
+@model NtccSteward.Modules.Members.MemberModule
+
+@{
+    ViewBag.Title = @Model.DisplayText;
+}
+
+<img src="~/images/save-32-gray.png" class="icon32 saveIcon float-right" id="memberSaveBtn" onclick="SaveMemberProfile()" />
+@*<br style="float:none;" />*@ 
+
+<span class="sectionTitle">@Model.DisplayText</span>
+
+<div id="member" class="nstable" style="width:100%;">
+    <div class="nstablerow">
+        <div class="nstablecell" style="width:115px;vertical-align:top;padding: 0px;">
+            <div id="moduleMenu">
+                @foreach (var m in @Model.Modules)
+                {
+                    <a href="#" class="moduleLink cell" onclick="memberModuleLinkClick('@m', '@Model.Id')">@m</a>
+                }
+            </div>
+        </div>
+        <div class="nstablecell" style="padding: 0px;vertical-align:top;">
+            <div id="moduleContent" class="moduleContent" style="padding:20px;">
+                @{
+                    await Html.RenderPartialAsync("~/Views/Member/_MemberProfile.cshtml", Model.InitialModule);
+                }
+            </div>
+
+            <img id="profileLoader" class="spinner" src="~/images/ajax-spinner.gif" style="visibility:hidden;" />
+        </div>
+    </div>
+</div>
+
+<script src="~/js/member.js"></script>
+
+@section scripts{
+    <script type="text/javascript">
+            selectModuleLink('Personal Info');
+
+            wireEventHandlers("member");
+    </script>
+}

@@ -1,0 +1,36 @@
+﻿@model NtccSteward.ViewModels.Common.Address.EmailVm
+
+<div id="email_@Model.Id">
+
+    <form class="form-horizontal">
+        <fieldset class="col-xs-12">
+
+            <div class="form-group">
+                <label for="emailAddress" class="col-sm-1 control-label labelNormal">Email</label>
+                <div class="col-sm-11">
+                    @Html.TextBoxFor(m => m.EmailAddress, new { @class = "form-control", @id = "emailAddress", @placeholder = "Enter email address" })
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12 center">
+                    <ul class="list-inline center-block text-center">
+                        <li class="col-sm-3">
+                            <label class="checkbox-inline">@Html.CheckBoxFor(m => m.Verified, new { @id = "verified", @class = "nscheckbox" })  Verified</label>
+                        </li>
+                        <li class="col-sm-3">
+                            <label class="checkbox-inline">@Html.CheckBoxFor(m => m.Preferred, new { @id = "preferred", @class = "nscheckbox" })  Preferred</label>
+                        </li>
+                        <li class="col-sm-3">
+                            <img class="img-responsive inline-block center icon" onclick="OpenEmail('@Model.Id')" src="~/images/Mail-32.png" alt="Open email" />
+                        </li>
+                        <li class="col-sm-3">
+                            <img class="icon" onclick="RemoveAddress(@Model.Id, 'email')" src="~/images/remove-32.png" alt="Remove Address" style="height:12px;vertical-align:middle;" />
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="center" style="width:80%;" />
+        </fieldset>
+    </form>
+</div>

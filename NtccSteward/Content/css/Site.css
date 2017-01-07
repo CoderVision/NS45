@@ -1,0 +1,560 @@
+﻿
+/*
+    Theme colors
+
+    banner background color: #518262;
+
+    -- this is a lighter shade of the banner background color.   
+    The 1st 2 numbers are Hue and Saturation, the last number is the Lightness (75%)
+
+    #B1CEBB = hsl(141,23%,75%); 
+
+    Go here to create differnt shades:
+    http://serennu.com/colour/hsltorgb.php
+*/
+
+
+body {
+   /*font-family: "Myriad Set Pro","Helvetica Neue","Helvetica","Arial",sans-serif;*/
+   -webkit-font-smoothing: antialiased;
+   background-color:  #efeeef;
+}
+
+/*body,header,div {
+    padding:0px;
+    margin:0px;
+}
+
+.mainContainer {
+    margin-left: 4px;
+    margin-right: 4px;
+}
+
+.content-wrapper {
+    float:none;
+    margin-left: 10px;
+    margin-right: 10px;
+    /*margin: 0 auto;
+    max-width: 960px;
+}*/
+
+ /*ul.standard {
+    list-style: none;
+    padding:0;
+    margin:0;
+}
+
+ul.standard > li { 
+    padding-left: 1em; 
+    text-indent: -.7em;
+    margin-bottom: 1em;
+}
+
+ul.standard > li:before {
+    content: "• ";
+    color: #518262; 
+}*/
+
+
+/*header{
+                       <ul class="float-right" style="margin-right:20px;">
+                        <li><a href=@Url.Action("Index", "Home")><img src="~/images/placeholder.gif" class="navIcon navHome" alt="Home" title="Home" /></a></li>
+                        <li><a href=@Url.Action("Index", "Members")><img src="~/images/placeholder.gif" class="navIcon navMembers" alt="Members" title="Members" /></a></li>
+                        <li><a href=@Url.Action("Index", "Church")><img src="~/images/placeholder.gif" class="navIcon navChurch" alt="Churches" title="Churches" /></a></li>
+                        <li><a href=@Url.Action("Index", "Admin")><img src="~/images/placeholder.gif" class="navIcon navAdmin" alt="Admin" title="Admin" /></a></li>
+                        <li><a href=@Url.Action("Index", "Help")><img src="~/images/placeholder.gif" class="navIcon navHelp" alt="Help" title="Help" /></a></li>
+                    </ul>
+}*/
+
+.banner {
+    background:#518262;
+    /*background: -webkit-linear-gradient(-90deg, #000099, #0026ff );  original */
+    background: -webkit-linear-gradient(-90deg, #518262, #285939 );
+    /*height:65px;
+    margin:0;
+    margin-bottom:20px;*/
+}
+
+.nscheckbox {
+    /*display:inline;
+    height:16px;
+    width:16px;
+    vertical-align:middle;
+    bottom: 1px;
+    position:relative;*/
+}
+
+a img.toolbarIcon {
+    height: 20px;
+    width: 20px;
+    margin:0px;
+    vertical-align:middle;
+}
+
+a img.add {
+    background:url('/images/add.png') 0 0;
+    background-size: 18px 18px;
+    background-repeat: no-repeat;
+}
+
+
+ /*ul.nav {
+    list-style-type:none;
+    margin-left:10px;
+    -webkit-margin-before: 0em;
+    -webkit-margin-after: 0em;
+    -webkit-margin-start: 10px;
+    -webkit-margin-end: 0px;
+    -webkit-padding-start: 0px;
+}
+
+
+ul.nav > li.nav {
+    display: inline;
+}*/
+.navbartoggleFocus:hover,
+.navbartoggleFocus:focus{
+    background-color: lime;
+}
+
+.icon32 {
+    height:32px;
+    width:32px;
+}
+
+img.saveIcon {
+    margin:-7px 4px 0px 0px;
+}
+
+img.saveIcon:hover {
+    cursor:pointer;
+}
+
+img.icon{
+    cursor:pointer;
+}
+
+img.icon-inline{
+    cursor:pointer;
+    border: 0 none;
+    display: inline-block;
+    height: auto;
+    max-width: 100%;
+    vertical-align: middle;
+}
+
+/*a img.iconSize*/
+   a img.navIcon {
+        height: 48px;
+        width: 48px;
+        /*margin-top:8px;*/
+    }
+
+   a img.navIcon:hover {
+        background-position: 1px -1px;
+    }
+
+      /*a img.icon:hover {
+        background-position: 1px -1px;
+    }*/
+
+
+       a img.navHome {
+        background:url('/images/Home-48.png') 0 0;
+                /*background-size: 64px 64px;
+        background-repeat: no-repeat;*/
+    }
+
+
+
+   a img.navMembers {
+    background: url('../images/members-dark-48.png') 0 0;
+}
+
+      a img.navMessages {
+    background: url('../images/Message-Green-48.png') 0 0;
+            background-size: 48px 48px;
+        background-repeat: no-repeat;
+}
+    a img.navChurch {
+        /*background:url('/images/Church-48.png') 0 0;*/
+        background:url('/images/Church-48.png') 0 0;
+        background-size: 48px 48px;
+        background-repeat: no-repeat;
+    }
+    
+    a img.navAdmin {
+        background:url('/images/Settings-48.png') 0 0;
+    }
+
+    a img.navHelp {
+        background:url('/images/Help-48.png') 0 0;
+    }
+
+    a img.navReport {
+        background:url('/images/report-48.png') 0 0;
+    }
+
+.float-left {
+    float: left;
+}
+
+.float-right {
+    float: right;
+}
+
+.float-clear {
+    float: none;
+}
+
+/*nav {
+    text-align:center;
+    vertical-align:middle;
+    line-height:65px;
+}
+nav ul {
+    list-style-type:none;
+    margin:0;
+    padding:0;
+}
+
+
+nav ul li {
+    display: inline;
+    margin: 10px;
+}*/
+
+    /*nav ul li a {
+        color:white;
+    }*/
+    /*nav ul li a:link, a:visited,
+    a:active, a:hover {
+        color: #333;
+    }*/
+
+ul.listbox {
+    overflow:hidden;
+    overflow-y:scroll;
+    /*list-style:none;
+    padding-left:4px;*/
+    /*cursor:pointer;*/
+}
+
+
+ul.listbox li {
+    cursor:pointer;
+}
+
+.msgPnl {
+    width:90%;
+}
+/*#conversationListPnl {
+    height: calc(100%-50px);
+}*/
+
+
+.nscenter {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+input.watermark {
+    color:gray;
+    border: 1px solid #D6E8FF;
+}
+
+.sectionTitle
+{
+    /*color: #000099;
+    padding: 0px 0px 0px 0px;
+    margin: 20px 0 4px 2px;*/
+    
+    display:block;
+    color: #285939;
+    padding: 0px 0px 0px 0px;
+    height: 25px;
+    /*margin-left: 2px;*/
+    margin-bottom:0px;
+    font-weight:bold;
+    font-size:large;
+}
+
+.sectionBand
+{
+    padding: 0 10px 0 10px;
+}
+
+
+.spinner{
+    height:100px;
+    width:100px;
+    position:relative;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+}
+
+/*  Slick Grid styles */
+.cellText { 
+    font-size:small; 
+    text-align:left;
+    /*line-height:20px !important;*/
+    height:20px !important;
+    vertical-align:text-bottom;
+    padding-bottom:2px;
+    /*padding-left:10px;*/
+}
+
+.cellTextRight { font-size:small; text-align: right; }
+
+.cellTextHeader { 
+    font-size:small; 
+    padding-left:8px;
+    padding-top:0px;
+    line-height:20px;
+    color:#285939;
+    background: #9FD6B2 !important;
+    background: -webkit-linear-gradient(-90deg, #FFFFFF, #B8DEC5) !important;
+}
+
+.slick-header *, *:before, *.after {
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+}
+
+.slick-cell{
+    padding-left:4px;
+}
+
+/*.slick-header-column {
+    background-color: #285939 !important;
+}
+
+.slick-headerrow-column {
+    background-color: #285939 !important;
+}*/
+
+/*ui-state-default slick-header-column cellTextHeader slick-header-sortable*/
+
+ .moduleMenu {
+     vertical-align:top;
+     /*position: absolute;*/
+ }
+
+ a.moduleLink {
+    color:black;
+    display:block;
+    border-color: gray;
+    border-width: 1px 1px 1px 1px;
+    border-style: solid;
+    /*background-color: lightgray;*/
+    /*background-color:#B8DEC5; content area color*/
+    background-color:#518262;
+    border-bottom-left-radius: 4px;
+    border-top-left-radius: 4px;
+    margin: 0px 2px 4px 0px;
+    padding: 4px 4px 4px 6px;
+    position: relative;
+    z-index:100;
+    /*width:125px;*/
+}
+
+ a.moduleLink:hover {
+    background-color: #B8DEC5;
+}
+
+.nstable {
+    display:table;
+    width:100%;
+}
+
+.nstablerow {
+    display:table-row;
+}
+
+.nstablecell {
+    display:table-cell;
+}
+
+.cellChkBox {
+    display:table-cell;
+    width:125px;
+}
+
+.cellRemoveImg {
+    display:table-cell;
+    padding-left:20px;
+    padding-right:4px;
+    text-align:left;
+}
+
+.cellDataField {
+    display:table-cell;
+    max-width:300px;
+    width:300px;
+}
+
+.celldataLabel {
+    display:table-cell;
+    width:125px;
+    text-align:right;
+}
+
+.labelNormal {
+    font-weight:normal;
+}
+
+.column {
+    display:table-column;
+}
+
+/*img.remove {
+    content: url('../images/remove-32.png');
+    height:12px;
+    cursor:pointer;
+}
+
+/*For browsers that do not support content*/
+/*img.remove {
+    background-image: url('../images/remove-32.png');
+    height:12px;
+    width:32px;
+    cursor:pointer;
+    background-repeat:no-repeat;
+    vertical-align:bottom;
+}*/
+
+
+
+div.moduleContent {
+    /*background-color:#AEE8C2;*/
+    /*background-color:#ABD9BB;*/
+    background-color:#B8DEC5;
+    margin-right:4px;
+    padding: 4px 0px 4px 6px;
+    border-color: gray;
+    border-width: 1px 1px 1px 1px;
+    border-style: solid;
+}
+
+div.ui-datepicker{
+ font-size:12px;
+}
+
+.input-block-level {
+  display: block;
+  width: 100%;
+  min-height: 28px;        // Make inputs at least the height of their button counterpart
+  .box-sizing(border-box); // Makes inputs behave like true block-level elements
+}
+
+.datalabel {
+    /*display:block;*/
+    /*min-width:100px;*/
+    width:100px;
+    /*min-width:80px;*/
+    /*height:16px;
+    text-align:right;
+    vertical-align:middle;
+    padding: 2px 4px 0px 4px;
+    margin: 0px 0px 0px 0px;
+    text-wrap:none;*/
+    font-weight:normal;
+}
+
+.datafield{
+    /*min-width:125px;*/
+    /*width:100%;*/
+    width:90%;
+    min-width:50px;
+    max-width:250px;
+    height:20px;
+    margin: 1px 4px 2px 4px;
+    vertical-align:middle;
+    text-align:left;
+    padding: 0px 4px 0px 4px;
+    border-color:gray;
+    border-width: 1px;
+    border-style:solid;
+    overflow:hidden;
+}
+
+p.terms {
+    margin-top:40px;
+}
+
+input.btn {
+    background:#518262;
+    background: -webkit-linear-gradient(-90deg, #518262, #285939 );
+    color: white;
+    border-radius: 4px;
+    padding: 6px 30px 6px 30px;
+    margin:0;
+    margin-left:2px;
+    cursor:pointer;
+}
+
+.nscomments {
+    height:200px;
+}
+
+.nopadding {
+   padding: 0 !important;
+   margin: 0 !important;
+}
+
+.addyGutter {
+    margin-top:4px;
+}
+/*input[type=checkbox] {
+    display:none;
+}
+
+    input[type=checkbox] + label {
+        background: url('../images/accept.png') no-repeat;
+        height:32px;
+        width: 32px;
+        display: inline-block;
+        padding: 0 0 0 0px;
+    }
+
+input[type=checkbox]:checked  + label
+{
+    background: url('../images/placeholder.gif') no-repeat;
+    height:32px;
+    width: 32px;
+    display:inline-block;
+    padding: 0 0 0 0px;
+}*/
+
+
+
+/*@media screen and (max-width: 768px) {
+    body { 
+        background: #FFFF99; 
+    }
+
+    nav {
+        text-align:left;
+        vertical-align:middle;
+        line-height:45px;
+        background-color: #ffffff;
+    }
+
+    nav ul {
+        list-style-type:none;
+        margin:0;
+        padding:0;
+    }
+
+    nav ul li {
+        display: block;
+        margin: 0px 0px 1px 0px;
+        background-color:#C9C9C9;
+        border: 1px solid #686868;
+        padding-left: 10px;
+    }
+}*/
+
+
+
