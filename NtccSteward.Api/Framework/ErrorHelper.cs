@@ -9,14 +9,10 @@ namespace NtccSteward.Api.Framework
 {
     public class ErrorHelper
     {
-        ILogger _logger = null;
+        public ErrorHelper()
+        { }
 
-        public ErrorHelper(ILogger logger)
-        {
-            _logger = logger;
-        }
-
-        public void ProcessError(Exception ex, string methodName)
+        public void ProcessError(ILogger _logger, Exception ex, string methodName)
         {
             var errorMsg = $"An error occurred in {methodName}";
 

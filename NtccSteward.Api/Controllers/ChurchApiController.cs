@@ -39,7 +39,7 @@ namespace NtccSteward.Api.Controllers
             }
             catch (Exception ex)
             {
-                new ErrorHelper(_logger).ProcessError(ex, nameof(Login));
+                new ErrorHelper().ProcessError(_logger, ex, nameof(GetList));
 
                 return InternalServerError();
             }

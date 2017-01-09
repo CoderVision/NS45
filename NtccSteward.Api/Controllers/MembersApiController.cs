@@ -14,9 +14,13 @@ using System.Web;
 using NtccSteward.Api.Framework;
 using System.Web.Http.Routing;
 using Newtonsoft.Json;
+using System.Web.Http.Cors;
 
 namespace NtccSteward.Api.Controllers
 {
+    // this can be added to the WebApiConfig, or to a class specifically.
+    //  you can enter specific domains separated by a comma, or a * for all
+    [EnableCors("*", "*", "*")]
     [RoutePrefix("api/member")]
     public class MembersApiController : ApiController
     {
@@ -90,7 +94,7 @@ namespace NtccSteward.Api.Controllers
             }
             catch (Exception ex)
             {
-                new ErrorHelper(_logger).ProcessError(ex, nameof(GetList));
+                new ErrorHelper().ProcessError(_logger, ex, nameof(GetList));
 
                 return InternalServerError();
             }
@@ -163,7 +167,7 @@ namespace NtccSteward.Api.Controllers
             }
             catch (Exception ex)
             {
-                new ErrorHelper(_logger).ProcessError(ex, nameof(GetProfile));
+                new ErrorHelper().ProcessError(_logger, ex, nameof(GetProfile));
 
                 return InternalServerError();
             }
@@ -185,7 +189,7 @@ namespace NtccSteward.Api.Controllers
             }
             catch (Exception ex)
             {
-                new ErrorHelper(_logger).ProcessError(ex, nameof(CreateMember));
+                new ErrorHelper().ProcessError(_logger, ex, nameof(CreateMember));
 
                 return InternalServerError();
             }
@@ -206,7 +210,7 @@ namespace NtccSteward.Api.Controllers
             }
             catch (Exception ex)
             {
-                new ErrorHelper(_logger).ProcessError(ex, nameof(SaveMemberProfile));
+                new ErrorHelper().ProcessError(_logger, ex, nameof(SaveMemberProfile));
 
                 return InternalServerError();
             }
@@ -231,7 +235,7 @@ namespace NtccSteward.Api.Controllers
             }
             catch (Exception ex)
             {
-                new ErrorHelper(_logger).ProcessError(ex, nameof(DeleteMember));
+                new ErrorHelper().ProcessError(_logger, ex, nameof(DeleteMember));
 
                 return InternalServerError();
             }

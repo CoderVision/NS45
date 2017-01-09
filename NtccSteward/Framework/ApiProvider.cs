@@ -5,14 +5,18 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
+using System.Net.Http.Headers;
 
 namespace NtccSteward.Framework
 {
     public interface IApiProvider
     {
         T DeserializeJson<T>(string item);
-        Task<string> PostItemAsync<T>(HttpRequest request, string url, T item);
+        Task<string> PostItemAsync<T>(HttpRequest request, string url, T item, string queryString = null, string version = null);
+        Task<string> PutItemAsync<T>(HttpRequest request, string relativeUrl, T item, string queryString = null, string version = null);
+        Task<string> GetItemAsync(HttpRequest request, string relativeUrl, string queryString = null, string version = null);
         string SerializeJson<T>(T item);
+        HttpClient CreateHttpClient(HttpRequest request, string version = null);
     }
 
     public class ApiProvider : IApiProvider
@@ -20,22 +24,43 @@ namespace NtccSteward.Framework
         //NOTE:  NEED TO ADD GetItemAsync, As well as PutItemAsync
         //http://stackoverflow.com/questions/22505022/httpclient-getasync-post-object
 
+        public HttpClient CreateHttpClient(HttpRequest request, string version = null)
+        {
+            var root = request.IsSecureConnection ? "https" : "http";
+            var baseUri = $"{root}://{request.Url.Authority}"; // changed to request.Url.Authority - this may not work.
+
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(baseUri);
+
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            if (version != null)
+            {
+                // this enables interaction with a versioned Web API
+                client.DefaultRequestHeaders.Accept.Add(
+                    new MediaTypeWithQualityHeaderValue($"application/vnd.ntccstewardapi.v{version}+json"));
+            }
+
+            return client;
+        }
+
 
         /// <summary>
-        /// Async posts to relative url.  
+        /// Async POST to relative url.  
         /// </summary>
         /// <param name="request">HttpRequest from controller</param>
         /// <param name="relativeUrl">/api/account/login</param>
         /// <param name="item">model to be posted</param>
-        /// <returns></returns>
-        public async Task<string> PostItemAsync<T>(HttpRequest request, string relativeUrl, T item)
+        /// <param name="queryString">?id=1</param>
+        /// <param name="version">Verion of WebAPI method to call, e.g., 1</param>
+        public async Task<string> PostItemAsync<T>(HttpRequest request, string relativeUrl, T item, string queryString = null, string version = null)
         {
-            var root = request.IsSecureConnection ? "https" : "http";
-            var requestUri = $"{root}://{request.Url.Authority}/{relativeUrl}"; // changed to request.Url.Authority - this may not work.
-
-            using (var client = new HttpClient())
+            using (var client = CreateHttpClient(request, version))
             {
-                var response = await client.PostAsync(requestUri, new StringContent(SerializeJson<T>(item)));
+                var response = await client.PostAsync(
+                                        CreateUrl(relativeUrl, queryString), 
+                                        CreateStringContent<T>(item));
 
                 var result = ReadResponse(response);
 
@@ -43,15 +68,21 @@ namespace NtccSteward.Framework
             }
         }
 
-
-
-        public async Task<string> PutItemAsync<T>(HttpRequest request, string relativeUrl, T item)
+        /// <summary>
+        /// Async PUT to relative url.  
+        /// </summary>
+        /// <param name="request">HttpRequest from controller</param>
+        /// <param name="relativeUrl">/api/account/login</param>
+        /// <param name="item">model to be posted</param>
+        /// <param name="queryString">?id=1</param>
+        /// <param name="version">Verion of WebAPI method to call, e.g., 1</param>
+        public async Task<string> PutItemAsync<T>(HttpRequest request, string relativeUrl, T item, string queryString = null, string version = null)
         {
-            var requestUri = CreateRequestUri(request, relativeUrl);
-
-            using (var client = new HttpClient())
+            using (var client = CreateHttpClient(request, version))
             {
-                var response = await client.PutAsync(requestUri, new StringContent(SerializeJson<T>(item)));
+                var response = await client.PutAsync(
+                                        CreateUrl(relativeUrl, queryString), 
+                                        CreateStringContent<T>(item));
 
                 var result = ReadResponse(response);
                 
@@ -59,13 +90,18 @@ namespace NtccSteward.Framework
             }
         }
 
-        public async Task<string> GetItemAsync(HttpRequest request, string relativeUrl, string queryString)
+        /// <summary>
+        /// Async PUT to relative url.  
+        /// </summary>
+        /// <param name="request">HttpRequest from controller</param>
+        /// <param name="relativeUrl">/api/account/login</param>
+        /// <param name="queryString">?id=1</param>
+        /// <param name="version">Verion of WebAPI method to call, e.g., 1</param>
+        public async Task<string> GetItemAsync(HttpRequest request, string relativeUrl, string queryString = null, string version = null)
         {
-            var requestUri = CreateRequestUri(request, relativeUrl) + $"?{queryString.TrimStart('?')}"; // changed to request.Url.Authority - this may not work.
-
-            using (var client = new HttpClient())
+            using (var client = CreateHttpClient(request, version))
             {
-                var response = await client.GetAsync(requestUri);
+                var response = await client.GetAsync(CreateUrl(relativeUrl, queryString));
 
                 var result = ReadResponse(response);
 
@@ -73,12 +109,14 @@ namespace NtccSteward.Framework
             }
         }
 
-        private string CreateRequestUri(HttpRequest request, string relativeUrl)
+        public string CreateUrl(string relativeUrl, string queryString = null)
         {
-            var root = request.IsSecureConnection ? "https" : "http";
-            var requestUri = $"{root}://{request.Url.Authority}/{relativeUrl}";
+            var requestUri = relativeUrl +
+                queryString != null ? $"?{queryString.TrimStart('?')}" : "";
+
             return requestUri;
         }
+
 
         private async Task<string> ReadResponse(HttpResponseMessage response)
         {
@@ -90,6 +128,16 @@ namespace NtccSteward.Framework
             {
                 return $"Error processing request.  Status code:  {response.StatusCode}";
             }
+        }
+
+        /// <summary>
+        /// Creates StringContent containing serialized Json
+        /// </summary>
+        public StringContent CreateStringContent<T>(T item)
+        {
+            var json = SerializeJson<T>(item);
+            var content = new StringContent(json, System.Text.Encoding.Unicode, "application/json");
+            return content;
         }
 
         public T DeserializeJson<T>(string item)
