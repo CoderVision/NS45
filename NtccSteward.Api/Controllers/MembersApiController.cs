@@ -15,6 +15,7 @@ using NtccSteward.Api.Framework;
 using System.Web.Http.Routing;
 using Newtonsoft.Json;
 using System.Web.Http.Cors;
+using NtccSteward.Repository.Framework;
 
 namespace NtccSteward.Api.Controllers
 {
@@ -27,7 +28,6 @@ namespace NtccSteward.Api.Controllers
         private readonly ILogger _logger;
         private readonly IMemberRepository _repository = null;
 
-        //public MembersApiController(IAppConfigProvider appConfigProvider)
         public MembersApiController(IMemberRepository memberRepository, ILogger logger)
         {
             _repository = memberRepository;
@@ -183,9 +183,18 @@ namespace NtccSteward.Api.Controllers
                 if (member == null)
                     return BadRequest();
 
-                _repository.Add(member);
+                var result = _repository.Add(member);
 
-                return Created(Request.RequestUri + "/" + member.id, member);
+                if (result.Status == RepositoryActionStatus.Created)
+                {
+                    return Created(Request.RequestUri + "/" + member.id, member);
+                }
+                else if (result.Status == RepositoryActionStatus.NotFound)
+                {
+                    return NotFound();
+                }
+
+                return BadRequest();
             }
             catch (Exception ex)
             {
@@ -204,9 +213,18 @@ namespace NtccSteward.Api.Controllers
                 if (memberProfile == null)
                     return BadRequest();
 
-                _repository.SaveProfile(memberProfile);
+                var result = _repository.SaveProfile(memberProfile);
 
-                return Ok(memberProfile);
+                if (result.Status == RepositoryActionStatus.Updated)
+                {
+                    return Ok(memberProfile);
+                }
+                else if (result.Status == RepositoryActionStatus.NotFound)
+                {
+                    return NotFound();
+                }
+
+                return BadRequest();
             }
             catch (Exception ex)
             {
@@ -222,16 +240,18 @@ namespace NtccSteward.Api.Controllers
         {
             try
             {
-                var success = this._repository.Delete(id);
+                var result = this._repository.Delete(id);
 
-                if (success)
+                if (result.Status == RepositoryActionStatus.Deleted)
                 {
                     return StatusCode(HttpStatusCode.NoContent);
                 }
-                else
+                else if (result.Status == RepositoryActionStatus.NotFound)
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
+
+                return BadRequest();
             }
             catch (Exception ex)
             {

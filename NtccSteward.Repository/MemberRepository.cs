@@ -12,19 +12,20 @@ using NtccSteward.Core.Models.Common.Address;
 using NtccSteward.Core.Interfaces.Common.Address;
 using NtccSteward.Core.Models.Common.CustomAttributes;
 using NtccSteward.Core.Models.Common.Enums;
+using NtccSteward.Repository.Framework;
 
 namespace NtccSteward.Api.Repository
 {
     public interface IMemberRepository
     {
-        int Add(NewMember member);
+        RepositoryActionResult<NewMember> Add(NewMember member);
         List<Member> GetByStatus(int churchId, int id);
         List<Member> GetProfileMetadata(int identityTypeEnumID);
 
         MemberProfile GetProfile(int id, bool includeMetadata);
-        void SaveProfile(MemberProfile memberProfile);
+        RepositoryActionResult<MemberProfile> SaveProfile(MemberProfile memberProfile);
 
-        bool Delete(int id); 
+        RepositoryActionResult<Member> Delete(int id);
     }
 
     public class MemberRepository : Repository, IMemberRepository
@@ -45,7 +46,7 @@ namespace NtccSteward.Api.Repository
         /// <param name="createdByUserId">The ID of the user that is creating this member</param>
         /// <param name="churchId">The churchId of the church that this new member belongs</param>
         /// <returns>New ID of the member, or -1 if no id was returned</returns>
-        public int Add(NewMember member)
+        public RepositoryActionResult<NewMember> Add(NewMember member)
         {
             var proc = "CreateMember";
 
@@ -73,7 +74,15 @@ namespace NtccSteward.Api.Repository
 
             var list = _executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, readFx);
 
-            return list?.FirstOrDefault() ?? -1;
+            var memberId = list.FirstOrDefault();
+
+            if (memberId != 0)
+            {
+                return new RepositoryActionResult<NewMember>(member, RepositoryActionStatus.Created);
+            }
+            else
+                return new RepositoryActionResult<NewMember>(member, RepositoryActionStatus.NotFound);
+
         }
 
 
@@ -257,7 +266,7 @@ namespace NtccSteward.Api.Repository
             return list;
         }
 
-        public void SaveProfile(MemberProfile memberProfile)
+        public RepositoryActionResult<MemberProfile> SaveProfile(MemberProfile memberProfile)
         {
             var paramz = new List<SqlParameter>();
             paramz.Add(new SqlParameter("memberId", memberProfile.MemberId));
@@ -281,7 +290,8 @@ namespace NtccSteward.Api.Repository
                 return (int)reader["MemberId"];
             };
 
-            _executor.ExecuteSql<int>("SaveMemberProfile", CommandType.StoredProcedure, paramz, readFx);
+            var memberId = _executor.ExecuteSql<int>("SaveMemberProfile", CommandType.StoredProcedure, paramz, readFx);
+            memberProfile.MemberId = memberId.FirstOrDefault();
 
             Func<SqlDataReader, int> ciReadFx = (reader) =>
             {
@@ -323,6 +333,11 @@ namespace NtccSteward.Api.Repository
 
                 addy.ContactInfoId = list.First();
             }
+
+            if (memberProfile.MemberId != 0)
+                return new RepositoryActionResult<MemberProfile>(memberProfile, RepositoryActionStatus.Updated);
+            else
+                return new RepositoryActionResult<MemberProfile>(memberProfile, RepositoryActionStatus.NotFound);
         }
 
 
@@ -342,10 +357,25 @@ namespace NtccSteward.Api.Repository
         }
 
 
-        public bool Delete(int id)
+        public RepositoryActionResult<Member> Delete(int id)
         {
-            // DO NOT DELETE, archive or tag as deleted
-            return false;
+            try
+            {
+                // DO NOT DELETE, archive or tag as deleted
+
+                //  add code to archive record in database.  return count.
+                int deleteCount = 0;
+                if (deleteCount == 1)
+                {
+                    return new RepositoryActionResult<Member>(null, RepositoryActionStatus.Deleted);
+                }
+
+                return new RepositoryActionResult<Member>(null, RepositoryActionStatus.NotFound);
+            }
+            catch (Exception ex)
+            {
+                return new RepositoryActionResult<Member>(null, RepositoryActionStatus.Error, ex);
+            }
         }
     }
 }
