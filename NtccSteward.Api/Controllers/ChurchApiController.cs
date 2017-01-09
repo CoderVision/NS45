@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Net;
 using System.Web;
+using NtccSteward.Api.Framework;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -38,13 +39,7 @@ namespace NtccSteward.Api.Controllers
             }
             catch (Exception ex)
             {
-                var errorId = Guid.NewGuid().ToString();
-                var errorMsg = $"An error occurred while creating the account request in the database.  [ErrorId: {errorId}] ";
-
-                var errorMessage = ex.Message;
-                _logger.LogInfo(LogLevel.Error, "Error Creating Account Request", errorMsg + ".\r\n\r\n" + ex.Message, 0);
-
-                HttpContext.Current.Response.Headers.Add("ErrorId", errorId);
+                new ErrorHelper(_logger).ProcessError(ex, nameof(Login));
 
                 return InternalServerError();
             }

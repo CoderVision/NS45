@@ -11,6 +11,9 @@ using NtccSteward.Core.Framework;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web;
+using NtccSteward.Api.Framework;
+using System.Web.Http.Routing;
+using Newtonsoft.Json;
 
 namespace NtccSteward.Api.Controllers
 {
@@ -28,9 +31,9 @@ namespace NtccSteward.Api.Controllers
         }
 
 
-        [Route("GetByStatus")]
+        [Route("GetList")]
         [HttpGet]
-        public IHttpActionResult GetByStatus(int churchId, int statusId)
+        public IHttpActionResult GetList(int churchId, int statusId = 1, int page = 1, int pageSize = 10000)
         //public IHttpActionResult GetByStatus([FromBody] MembersByStatus status)
         {
             try
@@ -45,27 +48,58 @@ namespace NtccSteward.Api.Controllers
                     return NotFound();
                 }
                 else
-                    return Ok(list);
+                {
+                    var totalCount = list.Count();
+                    var totalPages = (int)Math.Ceiling((decimal)totalCount / pageSize);
+
+                    // add pagination infor to the response header
+                    var urlHelper = new UrlHelper(Request);
+                    var prevLink = page > 1 ? urlHelper.Link("GetList"
+                        , new {
+                            churchId = churchId
+                            , statusId = statusId
+                            , page = page - 1
+                            , pageSize = pageSize
+                        }) : "";
+                    var nextLink = page < totalPages ? urlHelper.Link("GetList"
+                        , new
+                        {
+                            churchId = churchId
+                            , statusId = statusId
+                            , page = page + 1
+                            , pageSize = pageSize
+                        }) : "";
+                    var paginationHeader = new
+                    {
+                        currentPage = page,
+                        pageSize = pageSize,
+                        totalCount = totalCount,
+                        totalPages = totalPages,
+                        previousPageLink = prevLink,
+                        nextPageLink = nextLink
+                    };
+
+                    HttpContext.Current.Response.Headers.Add("X-Pagination"
+                        , JsonConvert.SerializeObject(paginationHeader));
+
+                    return Ok(list
+                        .Skip(pageSize * (page-1))
+                        .Take(pageSize));
+                }
             }
             catch (Exception ex)
             {
-                var errorId = Guid.NewGuid().ToString();
-                var errorMsg = $"An error occurred while MembersApiController.GetByStatus in the database.  [ErrorId: {errorId}] ";
-
-                var errorMessage = ex.Message;
-                _logger.LogInfo(LogLevel.Error, "Error MembersApiController.GetByStatus", errorMsg + ".\r\n\r\n" + ex.Message, 0);
-
-                HttpContext.Current.Response.Headers.Add("ErrorId", errorId);
+                new ErrorHelper(_logger).ProcessError(ex, nameof(GetList));
 
                 return InternalServerError();
             }
-
         }
 
+
         //http://localhost:62428/api/member/GetContacts
-        [Route("GetContacts")]
+        [Route("GetContactList")]
         [HttpGet]
-        public IHttpActionResult GetContacts()
+        public IHttpActionResult GetContactList()
         {
             //var list = repository.GetByStatus(status.ChurchID, status.StatusID);
             var list = new List<Member>();
@@ -91,27 +125,6 @@ namespace NtccSteward.Api.Controllers
 
             return m;
         }
-
-
-        // consider options:
-        //string url = Url.RouteUrl("GetByIdRoute", new { Id = member.Id }, Request.Scheme, Request.Host.ToUriComponent());
-        //HttpContext.Response.StatusCode = 201;  // created
-        //HttpContext.Response.Headers["Location"] = url;
-
-        ////[HttpPost("GetByStatus")]
-        //////public IEnumerable<Member>
-        ////public JsonResult GetByStatus([FromBody] MembersByStatus status) // this worked with above
-        ////{
-        ////    var member = new Member();
-        ////    member.FirstName = "Gary";
-        ////    member.LastName = "Lima";
-        ////    member.Id = 1;
-        ////    member.Status = "Active";
-        ////    var list = new List<Member>();
-        ////    list.Add(member);
-
-        ////    return Json(list);
-        ////}
 
 
         /*
@@ -149,13 +162,7 @@ namespace NtccSteward.Api.Controllers
             }
             catch (Exception ex)
             {
-                var errorId = Guid.NewGuid().ToString();
-                var errorMsg = $"An error occurred while MembersApiController.GetProfile in the database.  [ErrorId: {errorId}] ";
-
-                var errorMessage = ex.Message;
-                _logger.LogInfo(LogLevel.Error, "Error MembersApiController.GetProfile", errorMsg + ".\r\n\r\n" + ex.Message, 0);
-
-                HttpContext.Current.Response.Headers.Add("ErrorId", errorId);
+                new ErrorHelper(_logger).ProcessError(ex, nameof(GetProfile));
 
                 return InternalServerError();
             }
@@ -177,15 +184,7 @@ namespace NtccSteward.Api.Controllers
             }
             catch (Exception ex)
             {
-                // log exception, return internal server error
-
-                var errorId = Guid.NewGuid().ToString();
-                var errorMsg = $"An error occurred while MembersApiController.CreateMember in the database.  [ErrorId: {errorId}] ";
-
-                var errorMessage = ex.Message;
-                _logger.LogInfo(LogLevel.Error, "Error MembersApiController.CreateMember", errorMsg + ".\r\n\r\n" + ex.Message, 0);
-
-                HttpContext.Current.Response.Headers.Add("ErrorId", errorId);
+                new ErrorHelper(_logger).ProcessError(ex, nameof(CreateMember));
 
                 return InternalServerError();
             }
@@ -206,34 +205,35 @@ namespace NtccSteward.Api.Controllers
             }
             catch (Exception ex)
             {
-                // log exception, return internal server error
-
-                var errorId = Guid.NewGuid().ToString();
-                var errorMsg = $"An error occurred while MembersApiController.SaveMemberProfile in the database.  [ErrorId: {errorId}] ";
-
-                var errorMessage = ex.Message;
-                _logger.LogInfo(LogLevel.Error, "Error MembersApiController.SaveMemberProfile", errorMsg + ".\r\n\r\n" + ex.Message, 0);
-
-                HttpContext.Current.Response.Headers.Add("ErrorId", errorId);
+                new ErrorHelper(_logger).ProcessError(ex, nameof(SaveMemberProfile));
 
                 return InternalServerError();
             }
         }
 
         //// DELETE api/values/5
-        //[HttpPost("{id}")]
-        //public IActionResult DeleteMember(int id)
-        //{
-        //    var success = this.repository.TryDelete(id);
+        [HttpDelete()]
+        public IHttpActionResult DeleteMember(int id)
+        {
+            try
+            {
+                var success = this._repository.Delete(id);
 
-        //    if (success)
-        //    {
-        //        return Ok();
-        //    }
-        //    else
-        //    {
-        //        return new ContentResult() { Content = "Unable to delete member" };
-        //    }
-        //}
+                if (success)
+                {
+                    return StatusCode(HttpStatusCode.NoContent);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception ex)
+            {
+                new ErrorHelper(_logger).ProcessError(ex, nameof(DeleteMember));
+
+                return InternalServerError();
+            }
+        }
     }
 }

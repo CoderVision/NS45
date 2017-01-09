@@ -203,6 +203,7 @@
     <Compile Include="Controllers\ChurchApiController.cs" />
     <Compile Include="Controllers\MembersApiController.cs" />
     <Compile Include="Controllers\MessageApiController.cs" />
+    <Compile Include="Framework\ErrorHelper.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

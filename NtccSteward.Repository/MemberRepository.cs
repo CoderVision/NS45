@@ -23,6 +23,8 @@ namespace NtccSteward.Api.Repository
 
         MemberProfile GetProfile(int id, bool includeMetadata);
         void SaveProfile(MemberProfile memberProfile);
+
+        bool Delete(int id); 
     }
 
     public class MemberRepository : Repository, IMemberRepository
@@ -337,6 +339,13 @@ namespace NtccSteward.Api.Repository
             paramz.Add(new SqlParameter("note", info.Note.ToSqlString()));
 
             return paramz;
+        }
+
+
+        public bool Delete(int id)
+        {
+            // DO NOT DELETE, archive or tag as deleted
+            return false;
         }
     }
 }

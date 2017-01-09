@@ -10,7 +10,7 @@ namespace NtccSteward.Api.Repository
 {
     public interface ILogger
     {
-        void LogInfo(LogLevel logLevel, string errSummary, string errDetails, int userId);
+        int LogInfo(LogLevel logLevel, string errSummary, string errDetails, int userId);
     }
 
 
@@ -21,7 +21,15 @@ namespace NtccSteward.Api.Repository
             this.ConnectionString = connectionString;
         }
 
-        public void LogInfo(LogLevel logLevel, string errSummary, string errDetails, int userId)
+        /// <summary>
+        /// logs the error and returns the log id.
+        /// </summary>
+        /// <param name="logLevel"></param>
+        /// <param name="errSummary"></param>
+        /// <param name="errDetails"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public int LogInfo(LogLevel logLevel, string errSummary, string errDetails, int userId)
         {
             var proc = "LogError";
             using (var cn = new SqlConnection(ConnectionString))
@@ -33,6 +41,8 @@ namespace NtccSteward.Api.Repository
                 cmd.Parameters.AddWithValue("@Summary", errSummary);
                 cmd.Parameters.AddWithValue("@Details", errDetails);
                 cn.Open();
+                var logId = (int)cmd.ExecuteScalar();
+                return logId;
             }
         }
     }
