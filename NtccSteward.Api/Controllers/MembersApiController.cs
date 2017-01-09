@@ -31,7 +31,8 @@ namespace NtccSteward.Api.Controllers
         }
 
 
-        [Route("GetList")]
+        [VersionedRoute("GetList", 1)] // indicates Version 1 of the route.
+        //[Route("GetList")]
         [HttpGet]
         public IHttpActionResult GetList(int churchId, int statusId = 1, int page = 1, int pageSize = 10000)
         //public IHttpActionResult GetByStatus([FromBody] MembersByStatus status)

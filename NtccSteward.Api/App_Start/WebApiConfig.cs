@@ -34,6 +34,9 @@ namespace NtccSteward.Api
             // add some default formatting to Json
             config.Formatters.JsonFormatter.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
             config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+
+            // Add automatic caching.  to add SQL Server caching, add CacheCow's SQL server NuGet package.
+            config.MessageHandlers.Add(new CacheCow.Server.CachingHandler(config));
         }
     }
 }
