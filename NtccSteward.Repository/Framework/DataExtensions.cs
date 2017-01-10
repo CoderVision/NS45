@@ -2,7 +2,7 @@
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
 
-namespace NtccSteward.Api.Framework
+namespace NtccSteward.Repository.Framework
 {
     public static class DataExtensions
     {

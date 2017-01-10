@@ -1,5 +1,5 @@
 ﻿
-using NtccSteward.Api.Framework;
+using NtccSteward.Repository.Framework;
 using NtccSteward.Core.Models.Members;
 using NtccSteward.Api.Repository.Ordinals;
 using System;
@@ -205,21 +205,21 @@ namespace NtccSteward.Api.Repository
                         }
 
                         // attributes
-                        reader.NextResult();
-                        while (reader.Read())
-                        {
-                            var attr = new CustomAttribute();
-                            attr.IdentityID = reader.ValueOrDefault<int>("IdentityID");
-                            attr.CustomAttrDefID = reader.ValueOrDefault<int>("CustomAttrDefID");
-                            attr.Value = reader.ValueOrDefault<string>("Value", string.Empty);
-                            attr.Name = reader.ValueOrDefault<string>("CustomAttrName", string.Empty);
-                            attr.DataType = reader.ValueOrDefault<string>("DataType", string.Empty);
-                            attr.AttrTypeEnumID = reader.ValueOrDefault<int>("AttrTypeEnumID");
-                            attr.AttrTypeEnumDesc = reader.ValueOrDefault<string>("AttrTypeEnumDesc", string.Empty);
-                            attr.IsEditable = reader.ValueOrDefault<bool>("IsEditable");
+                        //reader.NextResult();
+                        //while (reader.Read())
+                        //{
+                        //    var attr = new CustomAttribute();
+                        //    attr.IdentityID = reader.ValueOrDefault<int>("IdentityID");
+                        //    attr.CustomAttrDefID = reader.ValueOrDefault<int>("CustomAttrDefID");
+                        //    attr.Value = reader.ValueOrDefault<string>("Value", string.Empty);
+                        //    attr.Name = reader.ValueOrDefault<string>("CustomAttrName", string.Empty);
+                        //    attr.DataType = reader.ValueOrDefault<string>("DataType", string.Empty);
+                        //    attr.AttrTypeEnumID = reader.ValueOrDefault<int>("AttrTypeEnumID");
+                        //    attr.AttrTypeEnumDesc = reader.ValueOrDefault<string>("AttrTypeEnumDesc", string.Empty);
+                        //    attr.IsEditable = reader.ValueOrDefault<bool>("IsEditable");
 
-                            member.CustomAttributeList.Add(attr);
-                        }
+                        //    member.CustomAttributeList.Add(attr);
+                        //}
 
                         // metadata
                         if (includeMetadata)

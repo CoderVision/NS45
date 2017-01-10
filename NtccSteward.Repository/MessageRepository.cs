@@ -1,4 +1,4 @@
-﻿using NtccSteward.Api.Framework;
+﻿using NtccSteward.Repository.Framework;
 using NtccSteward.Core.Interfaces.Messages;
 using NtccSteward.Core.Models.Message;
 using System;

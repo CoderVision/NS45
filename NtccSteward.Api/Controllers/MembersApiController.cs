@@ -144,7 +144,7 @@ namespace NtccSteward.Api.Controllers
         */
 
         // this worked with below
-        [Route("GetProfile")]
+        [Route("GetProfile/{id}")]
         [HttpGet]
         public IHttpActionResult GetProfile(int id, bool includeMetadata = true)
         //public IHttpActionResult GetProfile([FromBody] ItemByID identity)

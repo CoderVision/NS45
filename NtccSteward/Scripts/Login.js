@@ -96,7 +96,7 @@ function initializeLogin()
                     }
                     else
                     {
-                        window.location = postResponse.RedirectUrl;
+                     //   window.location = postResponse.RedirectUrl;
                         //alert(postResponse.RedirectUrl);
                     }
                         

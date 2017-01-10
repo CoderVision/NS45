@@ -2,15 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using NtccSteward.Framework;
 using NtccSteward.Core.Models.Account;
-using Microsoft.AspNetCore.Http;
 using NtccSteward.Modules.Message;
 using NtccSteward.Core.Models.Message;
 using NtccSteward.Core.Models.Common.Parameters;
-using NtccSteward.Core.Framework.Enums;
 using NtccSteward.ViewModels.Message;
+using System.Web.Mvc;
+using NtccSteward.Core.Framework;
 
 namespace NtccStewardRc2.Controllers
 {
@@ -28,7 +27,7 @@ namespace NtccStewardRc2.Controllers
         {
             if (_session == null)
             {
-                var sessionJson = HttpContext.Session.GetString("Session");
+                var sessionJson = (string)HttpContext.Session["Session"];
                 _session = _apiProvider.DeserializeJson<Session>(sessionJson);
             }
 
@@ -43,7 +42,7 @@ namespace NtccStewardRc2.Controllers
             return task.Result;
         }
 
-        public IActionResult Index()
+        public ActionResult Index()
         {
             var messageModule = LoadMessageModule();
 
@@ -57,7 +56,12 @@ namespace NtccStewardRc2.Controllers
 
             int churchId = _session?.ChurchId ?? 3; // default to Graham
             var param = new GetCorrespondenceParameter(churchId, (int)MessageType.TextMessage, 100);
-            var correspondence = SubmitRequest<GetCorrespondenceParameter>("/api/message/GetCorrespondence", param);
+
+            // The Web Api GET method needs to be changed to remove the body from the message, and use query string instead
+            //var correspondence = SubmitRequest<GetCorrespondenceParameter>("/api/message/GetCorrespondence", param);
+            //var correspondence = await _apiProvider.GetItemAsync<GetCorrespondenceParameter>(Request, "/api/message/GetCorrespondence", mp);
+            var correspondence = "";
+
             var list = _apiProvider.DeserializeJson<List<Correspondence>>(correspondence);
             messageModule.CorrespondenceList = list.Select<Correspondence, CorrespondenceVm>(c => new CorrespondenceVm(c)).ToList();
 

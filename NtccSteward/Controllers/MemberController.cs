@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using NtccSteward.Modules.Members;
 using NtccSteward.Modules;
 using NtccSteward.Core.Models.Common.Address;
 using NtccSteward.ViewModels.Common.Address;
 using NtccSteward.Framework;
 using NtccSteward.Core.Models.Account;
-using Microsoft.AspNetCore.Http;
 using cm = NtccSteward.Core.Models.Members;
 using NtccSteward.Core.Models.Common.Parameters;
 using NtccSteward.Core.Interfaces.Common.Address;
 using NtccSteward.Core.Factories;
+using System.Web;
+using System.Web.Mvc;
 
 namespace NtccSteward.Controllers
 {
@@ -31,19 +31,11 @@ namespace NtccSteward.Controllers
         {
             if (_session == null)
             {
-                var sessionJson = HttpContext.Session.GetString("Session");
+                var sessionJson = (string)HttpContext.Session["Session"];
                 _session = _apiProvider.DeserializeJson<Session>(sessionJson);
             }
 
             return _session;
-        }
-
-        private string SubmitRequest<T>(string path, T model)
-        {
-            var task = _apiProvider.PostItemAsync<T>(Request, path, model);
-            task.Wait();
-
-            return task.Result;
         }
 
         public ActionResult Index()
@@ -58,7 +50,8 @@ namespace NtccSteward.Controllers
                 return View();
         }
 
-        public ActionResult Member(int id)
+        // gets a member
+        public async Task<ActionResult> Member(int id)
         {
             InitSession();
 
@@ -68,7 +61,8 @@ namespace NtccSteward.Controllers
             }
             else
             {
-                var mpjson = SubmitRequest<ItemByID>("/api/member/GetProfile", new ItemByID(id, true));
+                var mpjson = await _apiProvider.GetItemAsync(Request, "/api/member/GetProfile", $"id={id}");
+
                 var mp = _apiProvider.DeserializeJson<cm.MemberProfile>(mpjson);
                 var memberProfileModule = this.CopyMemberProfileToVm(mp);
 
@@ -106,7 +100,7 @@ namespace NtccSteward.Controllers
         }
 
 
-        public ActionResult GetView(string viewName, int memberId)
+        public async Task<ActionResult> GetView(string viewName, int memberId)
         {
             ModuleBase viewModel = null;
             var viewPath = "/Views/Member/";
@@ -147,7 +141,7 @@ namespace NtccSteward.Controllers
                 
                 default:
                     {
-                        var mpjson = SubmitRequest<ItemByID>("/api/member/GetProfile", new ItemByID(memberId, true));
+                        var mpjson = await _apiProvider.GetItemAsync(Request, "/api/member/GetProfile", $"id={memberId}");
                         var mp = _apiProvider.DeserializeJson<cm.MemberProfile>(mpjson);
                         viewModel = CopyMemberProfileToVm(mp);
                         viewPath += "_MemberProfile.cshtml";
@@ -158,6 +152,7 @@ namespace NtccSteward.Controllers
             return PartialView(viewPath, viewModel);
         }
 
+        // Why are we copying?  
         [NonAction]
         private MemberProfile CopyMemberProfileToVm(cm.MemberProfile mp)
         {
@@ -185,7 +180,7 @@ namespace NtccSteward.Controllers
         }
 
         //[ValidateAntiForgeryToken]
-        public ActionResult SaveProfile(MemberProfile memberProfile)
+        public async Task<ActionResult> SaveProfile(MemberProfile memberProfile)
         {
             InitSession();
 
@@ -215,35 +210,45 @@ namespace NtccSteward.Controllers
                 mp.EmailList.Add(e);
             }
 
-            var memberId = SubmitRequest<cm.MemberProfile>("/api/member/SaveMemberProfile", mp);
+            var memberId = await _apiProvider.PutItemAsync<cm.MemberProfile>(Request, "/api/member/SaveMemberProfile", mp);
 
-            return Ok(memberId);
+            return  Json(memberId);
         }
 
-
-        public ActionResult RemoveAddress(int addressId)
+        [HttpDelete]
+        public async Task<ActionResult> RemoveAddress(int addressId)
         {
             bool isNew = addressId < 0;
 
             // delete from database
             //var memberId = SubmitRequest<cm.MemberProfile>("/api/member/SaveMemberProfile", mp);
 
-            return new NoContentResult(); // this prevents navigation to another page.
+            //return new NoContentResult(); // this prevents navigation to another page.
+            return Json(isNew);
+            //return Content();
         }
 
+
+        [HttpPost]
         //[HttpPost("CreateMember")]
-        public IActionResult CreateMember(cm.NewMember member)
+        public async Task<ActionResult> CreateMember(cm.NewMember member)
         {
             InitSession();
 
             member.ChurchId = _session?.ChurchId ?? 3; // default to graham
             member.CreatedByUserId = _session?.UserId ?? 0; // default to system
 
-            var memberId = SubmitRequest<cm.NewMember>("/api/member/CreateMember", member);
+            var memberId = await _apiProvider.PutItemAsync<cm.NewMember>(Request, "/api/member/CreateMember", member);
 
             string url = Url.Action("CreateMember", "Members", memberId);
 
-            return Created(url, memberId);
+            var result = new
+            {
+                url = url,
+                memberId = memberId
+            };
+
+            return Json(result);
         }
     }
 }

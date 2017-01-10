@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 using NtccSteward.ViewModels.Common.Address;
 using NtccSteward.Modules;
 using NtccSteward.Modules.Church;
 using NtccSteward.Framework;
 using NtccSteward.Core.Models.Account;
-using Microsoft.Extensions.Localization;
+using System.Web.Mvc;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -29,7 +27,7 @@ namespace NtccSteward.Controllers
         {
             if (_session == null)
             {
-                var sessionJson = HttpContext.Session.GetString("Session");
+                var sessionJson = (string)HttpContext.Session["Session"];
                 _session = _apiProvider.DeserializeJson<Session>(sessionJson);
             }
         }
@@ -148,7 +146,7 @@ namespace NtccSteward.Controllers
             //{
             ViewBag.Msg = "Saved";
             //}
-            return new NoContentResult(); // this prevents navigation to another page.
+            return new ContentResult() { Content="Saved" }; // this prevents navigation to another page.
         }
 
         public ActionResult RemoveAddress(int addressId)
@@ -157,7 +155,7 @@ namespace NtccSteward.Controllers
 
             // delete from database
 
-            return new NoContentResult(); // this prevents navigation to another page.
+            return new ContentResult(); // this prevents navigation to another page.
         }
     }
 }

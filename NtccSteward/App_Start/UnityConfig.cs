@@ -2,6 +2,7 @@ using System.Web.Mvc;
 using Microsoft.Practices.Unity;
 using Unity.Mvc5;
 using NtccSteward.Framework;
+using System.Configuration;
 
 namespace NtccSteward
 {
@@ -16,7 +17,8 @@ namespace NtccSteward
 
             // e.g. container.RegisterType<ITestService, TestService>();
 
-            container.RegisterInstance<IApiProvider>(new ApiProvider());
+            var webApiUri = ConfigurationManager.AppSettings["webApiUri"].ToString();
+            container.RegisterInstance<IApiProvider>(new ApiProvider(webApiUri));
 
 
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));

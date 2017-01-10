@@ -12,22 +12,28 @@ namespace NtccSteward.Framework
     public interface IApiProvider
     {
         T DeserializeJson<T>(string item);
-        Task<string> PostItemAsync<T>(HttpRequest request, string url, T item, string queryString = null, string version = null);
-        Task<string> PutItemAsync<T>(HttpRequest request, string relativeUrl, T item, string queryString = null, string version = null);
-        Task<string> GetItemAsync(HttpRequest request, string relativeUrl, string queryString = null, string version = null);
+        Task<string> PostItemAsync<T>(HttpRequestBase request, string url, T item, string queryString = null, string version = null);
+        Task<string> PutItemAsync<T>(HttpRequestBase request, string relativeUrl, T item, string queryString = null, string version = null);
+        Task<string> GetItemAsync(HttpRequestBase request, string relativeUrl, string queryString = null, string version = null);
         string SerializeJson<T>(T item);
-        HttpClient CreateHttpClient(HttpRequest request, string version = null);
+        HttpClient CreateHttpClient(HttpRequestBase request, string version = null);
     }
 
     public class ApiProvider : IApiProvider
     {
+        private readonly string _webApiUri;
+        public ApiProvider(string webApiUri)
+        {
+            _webApiUri = webApiUri;
+        }
+
         //NOTE:  NEED TO ADD GetItemAsync, As well as PutItemAsync
         //http://stackoverflow.com/questions/22505022/httpclient-getasync-post-object
 
-        public HttpClient CreateHttpClient(HttpRequest request, string version = null)
+        public HttpClient CreateHttpClient(HttpRequestBase request, string version = null)
         {
             var root = request.IsSecureConnection ? "https" : "http";
-            var baseUri = $"{root}://{request.Url.Authority}"; // changed to request.Url.Authority - this may not work.
+            var baseUri = $"{root}://{_webApiUri}/"; // changed to request.Url.Authority - this may not work.
 
             var client = new HttpClient();
             client.BaseAddress = new Uri(baseUri);
@@ -54,7 +60,7 @@ namespace NtccSteward.Framework
         /// <param name="item">model to be posted</param>
         /// <param name="queryString">?id=1</param>
         /// <param name="version">Verion of WebAPI method to call, e.g., 1</param>
-        public async Task<string> PostItemAsync<T>(HttpRequest request, string relativeUrl, T item, string queryString = null, string version = null)
+        public async Task<string> PostItemAsync<T>(HttpRequestBase request, string relativeUrl, T item, string queryString = null, string version = null)
         {
             using (var client = CreateHttpClient(request, version))
             {
@@ -76,7 +82,7 @@ namespace NtccSteward.Framework
         /// <param name="item">model to be posted</param>
         /// <param name="queryString">?id=1</param>
         /// <param name="version">Verion of WebAPI method to call, e.g., 1</param>
-        public async Task<string> PutItemAsync<T>(HttpRequest request, string relativeUrl, T item, string queryString = null, string version = null)
+        public async Task<string> PutItemAsync<T>(HttpRequestBase request, string relativeUrl, T item, string queryString = null, string version = null)
         {
             using (var client = CreateHttpClient(request, version))
             {
@@ -97,7 +103,7 @@ namespace NtccSteward.Framework
         /// <param name="relativeUrl">/api/account/login</param>
         /// <param name="queryString">?id=1</param>
         /// <param name="version">Verion of WebAPI method to call, e.g., 1</param>
-        public async Task<string> GetItemAsync(HttpRequest request, string relativeUrl, string queryString = null, string version = null)
+        public async Task<string> GetItemAsync(HttpRequestBase request, string relativeUrl, string queryString = null, string version = null)
         {
             using (var client = CreateHttpClient(request, version))
             {
@@ -111,9 +117,8 @@ namespace NtccSteward.Framework
 
         public string CreateUrl(string relativeUrl, string queryString = null)
         {
-            var requestUri = relativeUrl +
-                queryString != null ? $"?{queryString.TrimStart('?')}" : "";
-
+            var q = !string.IsNullOrEmpty(queryString) ? $"?{queryString.TrimStart('?')}" : "";
+            var requestUri = relativeUrl + q;
             return requestUri;
         }
 

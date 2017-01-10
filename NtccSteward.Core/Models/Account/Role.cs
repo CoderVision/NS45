@@ -10,13 +10,13 @@ namespace NtccSteward.Core.Models.Account
     {
         public Role()
         {
-            Permissions = new List<IPermission>();
+            Permissions = new List<Permission>();
         }
 
         public int RoleID { get; set; }
 
         public string RoleDesc { get; set; }
 
-        public List<IPermission> Permissions { get; set; }
+        public List<Permission> Permissions { get; set; }
     }
 }

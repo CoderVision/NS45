@@ -23,7 +23,7 @@
         <div class="nstablecell" style="padding: 0px;vertical-align:top;">
             <div id="moduleContent" class="moduleContent" style="padding:20px;">
                 @{
-                    await Html.RenderPartialAsync("~/Views/Member/_MemberProfile.cshtml", Model.InitialModule);
+                    Html.RenderPartial("~/Views/Member/_MemberProfile.cshtml", Model.InitialModule);
                 }
             </div>
 

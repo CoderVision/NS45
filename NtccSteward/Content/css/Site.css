@@ -58,11 +58,11 @@ ul.standard > li:before {
 
 /*header{
                        <ul class="float-right" style="margin-right:20px;">
-                        <li><a href=@Url.Action("Index", "Home")><img src="~/images/placeholder.gif" class="navIcon navHome" alt="Home" title="Home" /></a></li>
-                        <li><a href=@Url.Action("Index", "Members")><img src="~/images/placeholder.gif" class="navIcon navMembers" alt="Members" title="Members" /></a></li>
-                        <li><a href=@Url.Action("Index", "Church")><img src="~/images/placeholder.gif" class="navIcon navChurch" alt="Churches" title="Churches" /></a></li>
-                        <li><a href=@Url.Action("Index", "Admin")><img src="~/images/placeholder.gif" class="navIcon navAdmin" alt="Admin" title="Admin" /></a></li>
-                        <li><a href=@Url.Action("Index", "Help")><img src="~/images/placeholder.gif" class="navIcon navHelp" alt="Help" title="Help" /></a></li>
+                        <li><a href=@Url.Action("Index", "Home")><img src="~/Content/images/placeholder.gif" class="navIcon navHome" alt="Home" title="Home" /></a></li>
+                        <li><a href=@Url.Action("Index", "Members")><img src="~/Content/images/placeholder.gif" class="navIcon navMembers" alt="Members" title="Members" /></a></li>
+                        <li><a href=@Url.Action("Index", "Church")><img src="~/Content/images/placeholder.gif" class="navIcon navChurch" alt="Churches" title="Churches" /></a></li>
+                        <li><a href=@Url.Action("Index", "Admin")><img src="~/Content/images/placeholder.gif" class="navIcon navAdmin" alt="Admin" title="Admin" /></a></li>
+                        <li><a href=@Url.Action("Index", "Help")><img src="~/Content/images/placeholder.gif" class="navIcon navHelp" alt="Help" title="Help" /></a></li>
                     </ul>
 }*/
 
@@ -75,14 +75,14 @@ ul.standard > li:before {
     margin-bottom:20px;*/
 }
 
-.nscheckbox {
-    /*display:inline;
+/*.nscheckbox {
+    display:inline;
     height:16px;
     width:16px;
     vertical-align:middle;
     bottom: 1px;
-    position:relative;*/
-}
+    position:relative;
+}*/
 
 a img.toolbarIcon {
     height: 20px;
@@ -92,7 +92,7 @@ a img.toolbarIcon {
 }
 
 a img.add {
-    background:url('/images/add.png') 0 0;
+    background:url('/Content/images/add.png') 0 0;
     background-size: 18px 18px;
     background-repeat: no-repeat;
 }
@@ -160,7 +160,7 @@ img.icon-inline{
 
 
        a img.navHome {
-        background:url('/images/Home-48.png') 0 0;
+        background:url('/Content/images/Home-48.png') 0 0;
                 /*background-size: 64px 64px;
         background-repeat: no-repeat;*/
     }
@@ -168,31 +168,31 @@ img.icon-inline{
 
 
    a img.navMembers {
-    background: url('../images/members-dark-48.png') 0 0;
-}
+        background: url('/Content/images/members-dark-48.png') 0 0;
+    }
 
       a img.navMessages {
-    background: url('../images/Message-Green-48.png') 0 0;
+    background: url('/Content/images/Message-Green-48.png') 0 0;
             background-size: 48px 48px;
         background-repeat: no-repeat;
 }
     a img.navChurch {
-        /*background:url('/images/Church-48.png') 0 0;*/
-        background:url('/images/Church-48.png') 0 0;
+        /*background:url('/Content/images/Church-48.png') 0 0;*/
+        background:url('/Content/images/Church-48.png') 0 0;
         background-size: 48px 48px;
         background-repeat: no-repeat;
     }
     
     a img.navAdmin {
-        background:url('/images/Settings-48.png') 0 0;
+        background:url('/Content/images/Settings-48.png') 0 0;
     }
 
     a img.navHelp {
-        background:url('/images/Help-48.png') 0 0;
+        background:url('/Content/images/Help-48.png') 0 0;
     }
 
     a img.navReport {
-        background:url('/images/report-48.png') 0 0;
+        background:url('/Content/images/report-48.png') 0 0;
     }
 
 .float-left {
@@ -409,14 +409,14 @@ input.watermark {
 }
 
 /*img.remove {
-    content: url('../images/remove-32.png');
+    content: url('../Content/images/remove-32.png');
     height:12px;
     cursor:pointer;
 }
 
 /*For browsers that do not support content*/
 /*img.remove {
-    background-image: url('../images/remove-32.png');
+    background-image: url('../Content/images/remove-32.png');
     height:12px;
     width:32px;
     cursor:pointer;
@@ -444,8 +444,8 @@ div.ui-datepicker{
 .input-block-level {
   display: block;
   width: 100%;
-  min-height: 28px;        // Make inputs at least the height of their button counterpart
-  .box-sizing(border-box); // Makes inputs behave like true block-level elements
+  min-height: 28px;        /* Make inputs at least the height of their button counterpart */
+  box-sizing:border-box; /* Makes inputs behave like true block-level elements*/
 }
 
 .datalabel {
@@ -511,7 +511,7 @@ input.btn {
 }
 
     input[type=checkbox] + label {
-        background: url('../images/accept.png') no-repeat;
+        background: url('../Content/images/accept.png') no-repeat;
         height:32px;
         width: 32px;
         display: inline-block;
@@ -520,7 +520,7 @@ input.btn {
 
 input[type=checkbox]:checked  + label
 {
-    background: url('../images/placeholder.gif') no-repeat;
+    background: url('../Content/images/placeholder.gif') no-repeat;
     height:32px;
     width: 32px;
     display:inline-block;

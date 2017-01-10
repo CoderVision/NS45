@@ -11,7 +11,7 @@ namespace NtccSteward.Core.Models.Account
     {
         public Session()
         {
-            Roles = new List<IRole>();
+            Roles = new List<Role>();
         }
 
         public int UserId { get; set; }
@@ -20,6 +20,6 @@ namespace NtccSteward.Core.Models.Account
 
         public string SessionId { get; set; }
 
-        public List<IRole> Roles { get; set; }
+        public List<Role> Roles { get; set; }
     }
 }

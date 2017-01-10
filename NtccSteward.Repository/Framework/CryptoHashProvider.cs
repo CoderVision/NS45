@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace NtccSteward.Framework
+namespace NtccSteward.Repository.Framework
 {
     public class CryptoHashProvider
     {

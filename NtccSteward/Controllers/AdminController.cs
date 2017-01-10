@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 using NtccSteward.Framework;
 using NtccSteward.Core.Models.Account;
+using System.Web.Mvc;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -25,7 +24,7 @@ namespace NtccSteward.Controllers
         {
             if (_session == null)
             {
-                var sessionJson = HttpContext.Session.GetString("Session");
+                var sessionJson = (string)HttpContext.Session["Session"];
                 _session = _apiProvider.DeserializeJson<Session>(sessionJson);
             }
             return _session;

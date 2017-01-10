@@ -8,7 +8,7 @@ namespace NtccSteward.Core.Interfaces.Account
     {
         int UserId { get; set; }
         int ChurchId { get; set; }
-        List<IRole> Roles { get; set; }
+        List<Role> Roles { get; set; }
         string SessionId { get; set; }
     }
 }

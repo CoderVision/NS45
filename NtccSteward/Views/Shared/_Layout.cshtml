@@ -15,26 +15,24 @@
         }
     </style>
 
-    <environment names="Development,Staging,Production">
         @*<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />*@
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
-              integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+        @*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+              integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">*@
 
         @*<link href="~/lib/jqueri-ui/themes/smoothness/jquery-ui.min.css" rel="stylesheet" />*@
         @*<link href="~/lib/jqueri-ui/themes/redmond/jquery-ui.css" rel="stylesheet" />*@
-        <link rel="stylesheet" href="~/css/site.css" />
-        <link href="~/lib/slickgrid/slick.grid.css" rel="stylesheet" />
 
-        <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src="~/lib/jqueri-ui/jquery-ui.js"></script>
-        <script src="~/lib/jquery.event.drag-new/event.drag/jquery.event.drag.js"></script>
-        <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+        @*<link href="~/lib/slickgrid/slick.grid.css" rel="stylesheet" />*@
 
-        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
 
-        <script src="~/js/site.js" asp-append-version="true"></script>
-    </environment>
- 
+        @*<script src="~/lib/jquery.event.drag-new/event.drag/jquery.event.drag.js"></script>*@
+
+
+        @Styles.Render("~/Content/css")
+        @Styles.Render("~/Content/slickgridcss");
+
+        @Scripts.Render("~/bundles/modernizr")
+    
 </head>
 <body>
     
@@ -49,14 +47,14 @@
                             <span class="icon-bar"></span>
                         </button>*@
                         @*<a class="navbar-brand navbar-left hidden-xs" href="/"><img src="~/images/ntcclogo4-sml.png" /></a>*@
-                        <a class="navbar-brand navbar-left" href="/" style="float:none;"><img src="~/images/ntcclogo4-sml.png" /></a>
+                        <a class="navbar-brand navbar-left" href="/" style="float:none;"><img src="~/Content/images/ntcclogo4-sml.png" /></a>
                     </div>
 
                     <div id="navbar" class="collapse navbar-collapse" style="margin-top:0px;">
 
                         <ul class="nav navbar-nav navbar-right">
-                            @*<li><a href=@Url.Action("Index", "Home")><img src="~/images/placeholder.gif" class="navIcon navHome"  alt="Home" title="Home" /></a></li>*@
-                            <li><a href=@Url.Action("Index", "Member")><img src="~/images/placeholder.gif" class="navIcon navMembers" alt="Members" title="Members" /></a></li>
+                            <li><a href=@Url.Action("Index", "Home")><img src="~/Content/images/placeholder.gif" class="navIcon navHome"  alt="Home" title="Home" /></a></li>
+                            <li><a href=@Url.Action("Index", "Member")><img src="~/Content/images/placeholder.gif" class="navIcon navMembers" alt="Members" title="Members" /></a></li>
                             @*<li><a href=@Url.Action("Index", "Messages")><img src="~/images/placeholder.gif" class="navIcon navMessages" alt="Messages" title="Messages" /></a></li>*@
                             @*<li><a href=@Url.Action("Index", "Church")><img src="~/images/placeholder.gif" class="navIcon navChurch" alt="Churches" title="Churches" /></a></li>*@
                             @*<li class="hidden-sm"><a href=@Url.Action("Index", "Report")><img src="~/images/placeholder.gif" class="navIcon navReport" alt="Perspectives" title="Perspectives" /></a></li>
@@ -73,35 +71,14 @@
         </div>
 
 
-    <environment names="Development,Staging,Production">
-        @*<script src="~/lib/jquery/dist/jquery.js"></script>*@
-        @*<script src="~/lib/jqueri-ui/jquery-ui.js"></script>*@
+    @*<script src="~/lib/tinymce-builded/js/tinymce/tinymce.jquery.js"></script>
+    <script src="~/lib/tinymce-builded/js/tinymce/jquery.tinymce.min.js"></script>*@
 
-        @*<script src="~/lib/jquery/dist/jquery.js"></script>
-            <script src="~/lib/jqueri-ui/jquery-ui.js"></script>
-            <script src="~/lib/jquery.event.drag-new/event.drag/jquery.event.drag.js"></script>
-            <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
-
-            <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-
-            <script src="~/js/site.js" asp-append-version="true"></script>*@
-
-
-        @*<script src="~/lib/hammer.js/hammer.js"></script>*@
-        @*<script src="~/lib/bootstrap-touch-carousel/dist/js/bootstrap-touch-carousel.js"></script>*@
-
-        <script src="~/lib/slickgrid/slick.core.js"></script>
-        <script src="~/lib/slickgrid/slick.grid.js"></script>
-        <script src="~/lib/slickgrid/slick.dataview.js"></script>
-        <script src="~/lib/slickgrid/slick.remotemodel.js"></script>
-
-        <script src="~/lib/tinymce-builded/js/tinymce/tinymce.jquery.js"></script>
-        <script src="~/lib/tinymce-builded/js/tinymce/jquery.tinymce.min.js"></script>
-
-
-    </environment>
-
-
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/slickgrid")
+    @Scripts.Render("~/bundles/site")
     @RenderSection("scripts", required: false)
 
 </body>		

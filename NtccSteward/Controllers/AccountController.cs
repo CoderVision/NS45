@@ -49,40 +49,40 @@ namespace NtccSteward.Controllers
                 //     After user enters email, then async get a list of churches they have access (roles) to and have them choose one,
                 // also, cache the selected church and restore default, if there are multiple
 
-                var session = SubmitRequest<Login>("/Api/Account/Login", new Login(login));
+                var session = await _apiProvider.PostItemAsync<Login>(Request, "api/account/Login", new Login(login));
 
                 if (string.IsNullOrWhiteSpace(session))
                 {
                     
-                    return new ObjectResult(new PostResponse(Url.Action("Index", "Account"), "Login attempt failed, please try again.", false));
+                    return Json(new PostResponse(Url.Action("Index", "Account"), "Login attempt failed, please try again.", false));
                 }
                 else
                 {
-                    HttpContext.Session.SetString("Session", session);
-                    
-                    return new ObjectResult(new PostResponse(Url.Action("Index", "Member"), string.Empty, true));
+                    HttpContext.Session["Session"] = session;
+
+                    // return Json(new PostResponse(Url.Action("Index", "Member"), string.Empty, true));
+                    return RedirectToAction("Index", "Member");
                 }
             }
             else
-                return new ObjectResult(
+                return Json(
                     new PostResponse(Url.Action("Index", "Account"), "Credentials were not valid, please try again.", false)
                 );
-
         }
 
 
-        public IActionResult RequestAccount()
+        public ActionResult RequestAccount()
         {
             return View("/Views/Account/RequestAccount.cshtml");
         }
 
 
         [ValidateAntiForgeryToken]
-        public IActionResult SubmitAccountRequest(RequestAccountVm login)
+        public async Task<ActionResult> SubmitAccountRequest(RequestAccountVm login)
         {
             if (ModelState.IsValid)
             {
-                var result = SubmitRequest<AccountRequest>("/Api/Account/CreateAccountRequest", new AccountRequest(login));
+                var result = await _apiProvider.PostItemAsync<AccountRequest>(Request, "/Api/Account/CreateAccountRequest", new AccountRequest(login));
 
                 if (Convert.ToInt32(result) > 0)
                     return View("/Views/Account/AccountRequestComplete.cshtml");
@@ -90,22 +90,13 @@ namespace NtccSteward.Controllers
                     return new ContentResult() { Content = "Accout request did not complete, please try again." };
             }
             else
-                return new NoContentResult();
+                return new ContentResult();
         }
 
 
-        public IActionResult Terms()
+        public ActionResult Terms()
         {
             return View("/Views/Account/Terms.cshtml");
-        }
-
-
-        private string SubmitRequest<T>(string path, T model)
-        {
-            var task = _apiProvider.PostItemAsync<T>(Request, path, model);
-            task.Wait();
-
-            return task.Result;
         }
     }
 }

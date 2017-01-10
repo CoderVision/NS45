@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NtccSteward.Api.Framework
+namespace NtccSteward.Repository.Framework
 {
     public interface ISqlCmdExecutor
     {

@@ -1,4 +1,4 @@
-﻿using NtccSteward.Core.Framework.Enums;
+﻿using NtccSteward.Core.Framework;
 using NtccSteward.Core.Interfaces.Messages;
 using NtccSteward.Framework;
 using System;

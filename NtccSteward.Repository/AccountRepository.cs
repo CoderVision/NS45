@@ -1,12 +1,13 @@
 ﻿
 using NtccSteward.Core.Framework;
 using NtccSteward.Core.Models.Account;
-using NtccSteward.Framework;
+using NtccSteward.Repository.Framework;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+
 
 namespace NtccSteward.Api.Repository
 {
@@ -58,7 +59,7 @@ namespace NtccSteward.Api.Repository
                 return (int)reader["AccountRequestID"];
             };
 
-            var executor = new Framework.SqlCmdExecutor(ConnectionString);
+            var executor = new SqlCmdExecutor(ConnectionString);
             var list = executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, readFx);
 
             return list.First();
@@ -95,7 +96,7 @@ namespace NtccSteward.Api.Repository
                 return (bool)reader["Success"];
             };
 
-            var executor = new Framework.SqlCmdExecutor(ConnectionString);
+            var executor = new SqlCmdExecutor(ConnectionString);
             var list = executor.ExecuteSql<bool>(proc, CommandType.StoredProcedure, paramz, readFx);
 
             return list.FirstOrDefault();
@@ -130,7 +131,7 @@ namespace NtccSteward.Api.Repository
                 return spice;
             };
 
-            var executor = new Framework.SqlCmdExecutor(ConnectionString);
+            var executor = new SqlCmdExecutor(ConnectionString);
             var list = executor.ExecuteSql<LoginSpice>(proc, CommandType.StoredProcedure, paramz, readFx);
 
             return list.FirstOrDefault();
@@ -196,9 +197,9 @@ namespace NtccSteward.Api.Repository
                             }
 
                             var permission = new Permission();
-                            permission.PermissionID = (int)reader["PermissionID"];
-                            permission.PermissionDesc = reader["PermissionDesc"].ToString();
-                            permission.Value = (int)reader["PermissionValueID"];
+                            permission.PermissionID = reader.ValueOrDefault<int>("PermissionID", 0);
+                            permission.PermissionDesc = reader.ValueOrDefault<string>("PermissionDesc", "");
+                            permission.Value = reader.ValueOrDefault<int>("PermissionValueID", 0);
                             role.Permissions.Add(permission);
                         }
                     }

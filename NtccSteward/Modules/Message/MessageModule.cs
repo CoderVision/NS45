@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using NtccSteward.ViewModels.Message;
 using NtccSteward.Core.Interfaces.Messages;
-using NtccSteward.Core.Framework.Enums;
+using NtccSteward.Core.Framework;
 
 namespace NtccSteward.Modules.Message
 {

@@ -1,6 +1,6 @@
-﻿using NtccSteward.Api.Framework;
-using NtccSteward.Api.Repository.Ordinals;
+﻿using NtccSteward.Api.Repository.Ordinals;
 using NtccSteward.Core.Models.Church;
+using NtccSteward.Repository.Framework;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;

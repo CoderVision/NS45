@@ -5,7 +5,7 @@ namespace NtccSteward.Core.Interfaces.Account
 {
     public interface IRole
     {
-        List<IPermission> Permissions { get; set; }
+        List<Permission> Permissions { get; set; }
         string RoleDesc { get; set; }
         int RoleID { get; set; }
     }

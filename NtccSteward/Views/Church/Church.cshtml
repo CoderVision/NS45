@@ -21,7 +21,7 @@
         <div class="nstablecell" style="padding: 0px;vertical-align:top;">
             <div id="moduleContent" class="moduleContent" style="padding-right: 4px;">
                 @{
-                    await Html.RenderPartialAsync("~/Views/Church/_ChurchProfile.cshtml", Model.InitialModule);
+                    Html.RenderPartial("~/Views/Church/_ChurchProfile.cshtml", Model.InitialModule);
                 }
             </div>
 
@@ -31,10 +31,13 @@
 </div>
 
 
-<script src="~/js/church.js"></script>
+@section scripts {
+    
+    <script src="~/Scripts/church.js"></script>
 
-<script type="text/javascript">
-        selectModuleLink('Church Info');
+    <script type="text/javascript">
+            selectModuleLink('Church Info');
 
-        wireEventHandlers("church");
-</script>
+            wireEventHandlers("church");
+    </script>
+}
