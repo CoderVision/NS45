@@ -11,6 +11,9 @@ namespace NtccSteward.Api.Repository.Ordinals
             LastName = reader.GetOrdinal("LastName");
             Status = reader.GetOrdinal("Status");
             StatusChangeType = reader.GetOrdinal("StatusChangeType");
+            Phone = reader.GetOrdinal("Number");
+            Email = reader.GetOrdinal("Email");
+            ActivityDate = reader.GetOrdinal("ActivityDate");
         }
 
         public int Id { get; set; }
@@ -18,5 +21,8 @@ namespace NtccSteward.Api.Repository.Ordinals
         public int LastName { get; set; }
         public int Status { get; set; }
         public int StatusChangeType { get; set; }
+        public int Phone { get; set; }
+        public int Email { get; set; }
+        public int ActivityDate { get; set; }
     }
 }

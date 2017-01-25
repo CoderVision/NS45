@@ -12,7 +12,7 @@
         <input type="text" id="memberSearch" class="form-control" style="padding:3px;width:300px;margin-bottom:4px;margin-left:0px;" placeholder="Full Name Search"
                oninput="FilterTable('memberTbl', this.value, 'Full Name')" />
 
-        <a href="#newMember" data-toggle="modal" onclick="OpenNewMemberForm();return false;">Add Member</a>
+        <a href="#newMember" data-toggle="modal" onclick="OpenNewMemberForm();return false;" style="margin-left:4px;">Add Member</a>
         @*<img src="~/images/placeholder.gif" class="toolbarIcon add" alt="Add" title="Add Member" style="margin-left:10px;" />*@
     </form>
 
@@ -26,6 +26,18 @@
                 <th class="hideXs">
                     Status
                 </th>
+                <th class="hideXs">
+                    Status Description
+                </th>
+                <th class="hideXs">
+                    Last Attendance
+                </th>
+                <th class="hideXs">
+                    Phone
+                </th>
+                <th class="hideXs">
+                    Email
+                </th>
             </tr>
         </thead>
 
@@ -36,7 +48,19 @@
                     @Html.ActionLink(m.FullName, "Edit", "Members")
                 </td>
                 <td class="hideXs">
-                    @Html.DisplayText(m.Status)
+                    @m.Status
+                </td>
+                <td class="hideXs">
+                    @m.StatusChangeType
+                </td>
+                <td class="hideXs">
+                    @m.ActivityDate
+                </td>
+                <td class="hideXs">
+                    @m.Phone
+                </td>
+                <td class="hideXs">
+                    @m.Email
                 </td>
             </tr>
         }
@@ -133,9 +157,9 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" onclick="SaveNewMember(false)">Save</button>
-                <button type="button" class="btn btn-primary" onclick="SaveNewMember(true)">Save &amp; Open</button>
-                <button type="button" class="btn btn-default" onclick="SaveNewMemberAdd()">Save &amp; Add Another</button>
+                @*<button type="button" class="btn btn-default" onclick="SaveNewMember(false)">Save</button>
+                <button type="button" class="btn btn-primary" onclick="SaveNewMember(true)">Save &amp; Open</button>*@
+                <button type="button" class="btn btn-primary" onclick="SaveNewMemberAdd()">Save &amp; Add Another</button>
                 <button type="button" class="btn btn-default" onclick="CloseNewMember()">Close</button>
             </div>
         </div><!-- /.modal-content -->
@@ -144,7 +168,7 @@
 
 
 @section scripts {
-    @*<script src="~/Scripts/tinymce-builded/js/tinymce/jquery.tinymce.min.js"></script>*@
+
     <script src="~/Scripts/member.js"></script>
 
     <script type="text/javascript">

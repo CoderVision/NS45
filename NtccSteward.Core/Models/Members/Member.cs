@@ -26,5 +26,10 @@ namespace NtccSteward.Core.Models.Members
 
         public string StatusChangeType { get; set; }
 
+        public string Email { get; set; }
+
+        public string Phone { get; set; }
+
+        public string ActivityDate { get; set; }
     }
 }

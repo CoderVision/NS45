@@ -104,10 +104,13 @@ namespace NtccSteward.Api.Repository
 
                 var member = new Member();
                 member.id = reader.GetInt32(o.Id);
-                member.FirstName = reader.ValueOrDefault(o.FirstName, string.Empty);
-                member.LastName = reader.ValueOrDefault(o.LastName, string.Empty);
-                member.Status = reader.ValueOrDefault(o.Status, string.Empty);
-                member.StatusChangeType = reader.ValueOrDefault(o.StatusChangeType, string.Empty);
+                member.FirstName = reader.ValueOrDefault<string>(o.FirstName, string.Empty);
+                member.LastName = reader.ValueOrDefault<string>(o.LastName, string.Empty);
+                member.Status = reader.ValueOrDefault<string>(o.Status, string.Empty);
+                member.StatusChangeType = reader.ValueOrDefault<string>(o.StatusChangeType, string.Empty);
+                member.Email = reader.ValueOrDefault<string>(o.Email, string.Empty);
+                member.Phone = reader.ValueOrDefault<string>(o.Phone, string.Empty);
+                member.ActivityDate = reader[o.ActivityDate].ToString();
 
                 return member;
             };

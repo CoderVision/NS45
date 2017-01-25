@@ -33,7 +33,7 @@ namespace NtccSteward.Repository.Framework
         {
             var columnName = reader.GetName(columnIndex);
 
-            return ValueOrDefault<T>(reader, columnName, default(T));
+            return ValueOrDefault<T>(reader, columnName, defaultValue);
         }
 
 
