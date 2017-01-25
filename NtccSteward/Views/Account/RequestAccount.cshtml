@@ -62,8 +62,14 @@
 }
 
 
-<script src="~/js/login.js"></script>
+@section scripts
+{
+    <script type="text/javascript">
 
-<script type="text/javascript">
-        initializeRequestAccount();
-</script>
+        $(document).ready(function () {
+
+            initializeRequestAccount();
+        });
+
+    </script>
+}

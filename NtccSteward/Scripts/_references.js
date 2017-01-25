@@ -9,7 +9,6 @@
 /// <reference path="jquery-1.12.4.min.js" />
 /// <reference path="jquery-ui-1.12.1.js" />
 /// <reference path="jquery-ui-1.12.1.min.js" />
-/// <reference path="login.js" />
 /// <reference path="member.js" />
 /// <reference path="message.js" />
 /// <reference path="modernizr-2.6.2.js" />
