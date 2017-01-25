@@ -1,13 +1,14 @@
-﻿using System;
+﻿using NtccSteward.Core.Interfaces.Members;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace NtccSteward.Core.Models.Members
 {
-    public class Member
+    public class Member : IMember
     {
-        public int id { get; set; } // specific name convention necessray for SlickGrid
+        public int id { get; set; } // specific name convention necessary for SlickGrid
 
         public string FirstName { get; set; }
 
@@ -24,5 +25,6 @@ namespace NtccSteward.Core.Models.Members
         public string Status { get; set; }
 
         public string StatusChangeType { get; set; }
+
     }
 }

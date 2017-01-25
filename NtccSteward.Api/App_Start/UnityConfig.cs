@@ -36,9 +36,9 @@ namespace NtccSteward.Api
 
 
             // register controllers
-            container.RegisterType<AccountApiController>();
-            container.RegisterType<ChurchApiController>();
-            container.RegisterType<MembersApiController>();
+            container.RegisterType<AccountController>();
+            container.RegisterType<ChurchController>();
+            container.RegisterType<MembersController>();
             //container.RegisterType<MessageApiController>();
 
             //GlobalConfiguration.Configuration.DependencyResolver = new UnityDependencyResolver(container);

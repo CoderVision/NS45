@@ -55,6 +55,26 @@ function updateFilter(grid, searchString) {
     grid.render();
 }
 
+function sortComparer(a, b) {
+
+    var x = a[sortColumn];
+    var y = b[sortColumn];
+
+    if (typeof x === "string" && typeof y === "string") {
+        // convert to lower case so that it the list gets sorted correctly.
+        x = x.toLowerCase();
+        y = y.toLowerCase();
+    }
+
+    if (x === y) // compare values & nulls
+        return 0;
+    if (x === null)
+        return -1;
+    else if (y === null)
+        return 1;
+    else
+        return (x > y ? 1 : -1);
+};
 
 //function dateFormatter(row, cell, value, columnDef, dataContext) {
 //    if (value != null) {

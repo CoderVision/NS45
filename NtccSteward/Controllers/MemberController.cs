@@ -21,11 +21,15 @@ namespace NtccSteward.Controllers
     {
         private readonly IApiProvider _apiProvider;
         private Session _session = null;
+        private string _uri = "";
 
         public MemberController(IApiProvider apiProvider)
         {
             _apiProvider = apiProvider;
-        }           
+
+            _uri = "members";
+
+        }
 
         private Session InitSession()
         {
@@ -38,7 +42,8 @@ namespace NtccSteward.Controllers
             return _session;
         }
 
-        public ActionResult Index()
+        // query string parameters
+        public async Task<ActionResult> Index(int statusId, int page = 1, int pageSize = 1000)
         {
             InitSession();
 
@@ -47,11 +52,23 @@ namespace NtccSteward.Controllers
                 return RedirectToAction("Index", "Account");
             }
             else
-                return View();
+            {
+                try
+                {
+                    var queryString = $"churchId={_session.ChurchId}&statusId={statusId}&page={page}&pageSize={pageSize}";
+                    var result = await _apiProvider.GetItemAsync(_uri, queryString);
+                    var list = _apiProvider.DeserializeJson<List<cm.Member>>(result);
+                    return View(list);
+                }catch (Exception ex)
+                {
+                    return Content("Error loading Member list: " + ex.Message);
+                }
+            }
+
         }
 
         // gets a member
-        public async Task<ActionResult> Member(int id)
+        public async Task<ActionResult> Edit(int id)
         {
             InitSession();
 
@@ -61,7 +78,7 @@ namespace NtccSteward.Controllers
             }
             else
             {
-                var mpjson = await _apiProvider.GetItemAsync(Request, "/api/member/GetProfile", $"id={id}");
+                var mpjson = await _apiProvider.GetItemAsync(_uri, $"id={id}");
 
                 var mp = _apiProvider.DeserializeJson<cm.MemberProfile>(mpjson);
                 var memberProfileModule = this.CopyMemberProfileToVm(mp);
@@ -141,7 +158,7 @@ namespace NtccSteward.Controllers
                 
                 default:
                     {
-                        var mpjson = await _apiProvider.GetItemAsync(Request, "/api/member/GetProfile", $"id={memberId}");
+                        var mpjson = await _apiProvider.GetItemAsync("/api/member/GetProfile", $"id={memberId}");
                         var mp = _apiProvider.DeserializeJson<cm.MemberProfile>(mpjson);
                         viewModel = CopyMemberProfileToVm(mp);
                         viewPath += "_MemberProfile.cshtml";
@@ -184,33 +201,33 @@ namespace NtccSteward.Controllers
         {
             InitSession();
 
-            var mCopyDepot = new MemberFactory();
-            var addyCopyDepot = new AddressInfoFactory();
+            var mFactory = new MemberFactory();
+            var addyFactory = new AddressInfoFactory();
 
-            var mp = mCopyDepot.CreateMemberProfile<cm.MemberProfile>(memberProfile);
+            var mp = mFactory.CreateMemberProfile<cm.MemberProfile>(memberProfile);
 
             foreach (var addy in memberProfile.AddressList)
             {
-                var a = addyCopyDepot.CreateAddress<Address>(addy);
+                var a = addyFactory.CreateAddress<Address>(addy);
                 a.ModifiedByIdentityId = _session.UserId;
                 mp.AddressList.Add(a);
             }
 
             foreach (var addy in memberProfile.PhoneList)
             {
-                var p = addyCopyDepot.CreatePhone<Phone>(addy);
+                var p = addyFactory.CreatePhone<Phone>(addy);
                 p.ModifiedByIdentityId = _session.UserId;
                 mp.PhoneList.Add(p);
             }
                 
             foreach (var addy in memberProfile.EmailList)
             {
-                var e = addyCopyDepot.CreateEmail<Email>(addy);
+                var e = addyFactory.CreateEmail<Email>(addy);
                 e.ModifiedByIdentityId = _session.UserId;
                 mp.EmailList.Add(e);
             }
 
-            var memberId = await _apiProvider.PutItemAsync<cm.MemberProfile>(Request, "/api/member/SaveMemberProfile", mp);
+            var memberId = await _apiProvider.PutItemAsync<cm.MemberProfile>("/api/member/SaveMemberProfile", mp);
 
             return  Json(memberId);
         }
@@ -231,14 +248,14 @@ namespace NtccSteward.Controllers
 
         [HttpPost]
         //[HttpPost("CreateMember")]
-        public async Task<ActionResult> CreateMember(cm.NewMember member)
+        public async Task<ActionResult> Post(cm.NewMember member)
         {
             InitSession();
 
             member.ChurchId = _session?.ChurchId ?? 3; // default to graham
             member.CreatedByUserId = _session?.UserId ?? 0; // default to system
 
-            var memberId = await _apiProvider.PutItemAsync<cm.NewMember>(Request, "/api/member/CreateMember", member);
+            var memberId = await _apiProvider.PutItemAsync<cm.NewMember>("/api/member/CreateMember", member);
 
             string url = Url.Action("CreateMember", "Members", memberId);
 

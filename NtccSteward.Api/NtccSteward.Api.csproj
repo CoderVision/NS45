@@ -215,10 +215,10 @@
   <ItemGroup>
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\AccountApiController.cs" />
-    <Compile Include="Controllers\ChurchApiController.cs" />
-    <Compile Include="Controllers\MembersApiController.cs" />
-    <Compile Include="Controllers\MessageApiController.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ChurchController.cs" />
+    <Compile Include="Controllers\MembersController.cs" />
+    <Compile Include="Controllers\MessageController.cs" />
     <Compile Include="Framework\ErrorHelper.cs" />
     <Compile Include="Framework\VersionConstraint.cs" />
     <Compile Include="Framework\VersionedRoute.cs" />

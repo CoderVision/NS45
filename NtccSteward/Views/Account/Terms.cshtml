@@ -6,13 +6,10 @@
 
 <span class="sectionTitle">Terms of Use</span>
 
-@using (Html.BeginForm("Index", "Account", FormMethod.Post))
-{
-    <p style="margin-left:4px;">
-        This website is for use by New Testament Christian Church pastors, associated ministers, and designated members.
-    </p>
-    <p>
-        <input class="btn" type="submit" value="OK" />
-    </p>
-}
+<p style="margin-left:4px;margin-top:5px;">
+    This website is for use by New Testament Christian Church pastors, associated ministers, and designated members.
+</p>
+<p style="padding-top:30px;">
+    @Html.ActionLink("Back to log-in", "Index", "Account")
+</p>
     

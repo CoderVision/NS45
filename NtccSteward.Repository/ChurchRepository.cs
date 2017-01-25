@@ -13,7 +13,7 @@ namespace NtccSteward.Api.Repository
     {
         void Add(Church church);
         Church GetById(int id);
-        List<Church> GetList();
+        List<Church> GetList(bool showAll);
         bool TryDelete(int id);
     }
 
@@ -29,7 +29,7 @@ namespace NtccSteward.Api.Repository
             throw new NotImplementedException();
         }
 
-        public List<Church> GetList()
+        public List<Church> GetList(bool showAll)
         {
             var list = new List<Church>();
 
@@ -38,6 +38,7 @@ namespace NtccSteward.Api.Repository
                 using (var cmd = new SqlCommand("Church_Select", cn))
                 {
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("showAll", showAll);
 
                     cn.Open();
 
@@ -51,7 +52,7 @@ namespace NtccSteward.Api.Repository
                             {
                                 var church = new Church();
                                 church.id = reader.GetInt32(o.Id);
-                                church.ChurchName = reader.ValueOrDefault(o.ChurchName, string.Empty);
+                                church.Name = reader.ValueOrDefault(o.ChurchName, string.Empty);
                                 list.Add(church);
                             }
                         }

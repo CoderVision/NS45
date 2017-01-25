@@ -14,10 +14,68 @@
 */
 
 
+html, body {
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+
+.validation-summary-errors ul{
+    margin-bottom:0px!important;
+    list-style:none;
+    -webkit-padding-start: 4px;
+    padding-left:4px;
+}
+
 body {
    /*font-family: "Myriad Set Pro","Helvetica Neue","Helvetica","Arial",sans-serif;*/
    -webkit-font-smoothing: antialiased;
    background-color:  #efeeef;
+   padding-top:95px;
+}
+
+.banner{
+    background:#518262!important;
+    background: -webkit-linear-gradient(-90deg, #518262, #285939 )!important;
+}
+
+    .navbar img {
+        width:195px;
+        
+        max-width:195px;
+        margin-top:auto;
+        margin-bottom:auto;
+    }
+
+@media(max-width: 767px)
+{
+    .hideXs {
+        display:none;
+    }
+    /*.logo {
+        width:50%;
+        height:50%;
+        margin-bottom:auto;
+        margin-top:auto;
+    }*/
+    body{
+        padding-top:68px;
+    }
+    .navbar-header {
+        /* required when there is an absolute positioned child */
+        position: relative;
+    }
+    .navbar img {
+        /* absolute position will search for a relative parent */
+        position: absolute;
+
+        /*These selectors will center vertically*/
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        width: 145px;
+    }
+
 }
 
 /*body,header,div {
@@ -66,14 +124,6 @@ ul.standard > li:before {
                     </ul>
 }*/
 
-.banner {
-    background:#518262;
-    /*background: -webkit-linear-gradient(-90deg, #000099, #0026ff );  original */
-    background: -webkit-linear-gradient(-90deg, #518262, #285939 );
-    /*height:65px;
-    margin:0;
-    margin-bottom:20px;*/
-}
 
 /*.nscheckbox {
     display:inline;
@@ -271,7 +321,7 @@ input.watermark {
     
     display:block;
     color: #285939;
-    padding: 0px 0px 0px 0px;
+    padding: 0px 0px 30px 0px;
     height: 25px;
     /*margin-left: 2px;*/
     margin-bottom:0px;

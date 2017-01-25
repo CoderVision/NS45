@@ -28,7 +28,7 @@
 
                 <div class="form-group">
                     <label for="church" class="labelNormal">Church</label>
-                    @Html.DropDownListFor(m => m.ChurchId, new SelectList(Model.ChurchList, "ChurchId", "Name"), new { @class = "form-control", @id = "church", @placeholder = "Church" })
+                    @Html.DropDownListFor(m => m.ChurchId, new SelectList(Model.ChurchList, "Id", "Name"), new { @class = "form-control", @id = "church", @placeholder = "Church" })
                 </div>
 
                 <label class="labelNormal">Forgot your <a href="">password</a>?</label>
@@ -42,7 +42,9 @@
                     <input class="btn btn-primary" type="submit" value="Sign In" />
                 </p>
 
-                <div id="failureMsg" class="alert alert-danger hidden" role="alert">
+                //hidden
+                <div id="failureMsg" class="alert alert-danger @(ViewData.ModelState.IsValid ? "hidden" : "") " role="alert">
+                    @Html.ValidationSummary("",new { @class="" })
                 </div>
             }
 
@@ -76,14 +78,18 @@
     </div>
 </div>
 
+@section scripts
+{
+    @*<script src="~/js/login.js"></script>*@
+    <script src="~/Scripts/Login.js"></script>
 
-<script src="~/js/login.js"></script>
+    <script type="text/javascript">
 
-<script type="text/javascript">
+        $(document).ready(function () {
 
-    $(document).ready(function () {
+            initializeLogin();
+        });
 
-        initializeLogin();
-    });
-        
-</script>
+    </script>
+}
+

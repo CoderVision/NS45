@@ -12,11 +12,11 @@ namespace NtccSteward.Framework
     public interface IApiProvider
     {
         T DeserializeJson<T>(string item);
-        Task<string> PostItemAsync<T>(HttpRequestBase request, string url, T item, string queryString = null, string version = null);
-        Task<string> PutItemAsync<T>(HttpRequestBase request, string relativeUrl, T item, string queryString = null, string version = null);
-        Task<string> GetItemAsync(HttpRequestBase request, string relativeUrl, string queryString = null, string version = null);
+        Task<string> PostItemAsync<T>(string url, T item, string queryString = null, string version = null);
+        Task<string> PutItemAsync<T>(string relativeUrl, T item, string queryString = null, string version = null);
+        Task<string> GetItemAsync(string relativeUrl, string queryString = null, string version = null);
         string SerializeJson<T>(T item);
-        HttpClient CreateHttpClient(HttpRequestBase request, string version = null);
+        HttpClient CreateHttpClient(string version = null);
     }
 
     public class ApiProvider : IApiProvider
@@ -30,22 +30,27 @@ namespace NtccSteward.Framework
         //NOTE:  NEED TO ADD GetItemAsync, As well as PutItemAsync
         //http://stackoverflow.com/questions/22505022/httpclient-getasync-post-object
 
-        public HttpClient CreateHttpClient(HttpRequestBase request, string version = null)
+        public HttpClient CreateHttpClient(string version = null)
         {
-            var root = request.IsSecureConnection ? "https" : "http";
-            var baseUri = $"{root}://{_webApiUri}/"; // changed to request.Url.Authority - this may not work.
+            var baseUri = _webApiUri + "/"; // changed to request.Url.Authority - this may not work.
 
             var client = new HttpClient();
             client.BaseAddress = new Uri(baseUri);
 
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            // this may not be necessary.  we just want to make sure we can deserialize json
+            //client.DefaultRequestHeaders.Accept.Clear();
+            //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             if (version != null)
             {
+                // through a custom request header
+                //client.DefaultRequestHeaders.Add("api-version", version);
+
                 // this enables interaction with a versioned Web API
+                // or through content negotiation
                 client.DefaultRequestHeaders.Accept.Add(
                     new MediaTypeWithQualityHeaderValue($"application/vnd.ntccstewardapi.v{version}+json"));
+                // "api-version":version
             }
 
             return client;
@@ -60,9 +65,9 @@ namespace NtccSteward.Framework
         /// <param name="item">model to be posted</param>
         /// <param name="queryString">?id=1</param>
         /// <param name="version">Verion of WebAPI method to call, e.g., 1</param>
-        public async Task<string> PostItemAsync<T>(HttpRequestBase request, string relativeUrl, T item, string queryString = null, string version = null)
+        public async Task<string> PostItemAsync<T>(string relativeUrl, T item, string queryString = null, string version = null)
         {
-            using (var client = CreateHttpClient(request, version))
+            using (var client = CreateHttpClient(version))
             {
                 var response = await client.PostAsync(
                                         CreateUrl(relativeUrl, queryString), 
@@ -82,9 +87,9 @@ namespace NtccSteward.Framework
         /// <param name="item">model to be posted</param>
         /// <param name="queryString">?id=1</param>
         /// <param name="version">Verion of WebAPI method to call, e.g., 1</param>
-        public async Task<string> PutItemAsync<T>(HttpRequestBase request, string relativeUrl, T item, string queryString = null, string version = null)
+        public async Task<string> PutItemAsync<T>(string relativeUrl, T item, string queryString = null, string version = null)
         {
-            using (var client = CreateHttpClient(request, version))
+            using (var client = CreateHttpClient(version))
             {
                 var response = await client.PutAsync(
                                         CreateUrl(relativeUrl, queryString), 
@@ -103,9 +108,9 @@ namespace NtccSteward.Framework
         /// <param name="relativeUrl">/api/account/login</param>
         /// <param name="queryString">?id=1</param>
         /// <param name="version">Verion of WebAPI method to call, e.g., 1</param>
-        public async Task<string> GetItemAsync(HttpRequestBase request, string relativeUrl, string queryString = null, string version = null)
+        public async Task<string> GetItemAsync(string relativeUrl, string queryString = null, string version = null)
         {
-            using (var client = CreateHttpClient(request, version))
+            using (var client = CreateHttpClient(version))
             {
                 var response = await client.GetAsync(CreateUrl(relativeUrl, queryString));
 

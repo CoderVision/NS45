@@ -9,7 +9,8 @@ namespace NtccSteward
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery-{version}.js"));
+                        "~/Scripts/jquery-{version}.js",
+                        "~/Scripts/jquery-ui-{version}.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
@@ -23,22 +24,12 @@ namespace NtccSteward
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js"));
 
-            //slick grid
-            bundles.Add(new ScriptBundle("~/bundles/slickgrid").Include(
-              "~/Scripts/SlickGrid/slick.core.js",
-              "~/Scripts/SlickGrid/slick.grid.js",
-              "~/Scripts/SlickGrid/slick.dataview.js",
-              "~/Scripts/SlickGrid/slick.remotemodel.js"));
-
            bundles.Add(new ScriptBundle("~/bundles/site").Include(
                       "~/Scripts/site.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/css/bootstrap.css",
                       "~/Content/css/site.css"));
-
-            bundles.Add(new StyleBundle("~/Content/slickgridcss").Include(
-                "~/Content/css/slick.*"));
         }
     }
 }

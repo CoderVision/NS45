@@ -1,4 +1,5 @@
-﻿///// <reference path="../lib/jquery/dist/jquery.js" />
+﻿/// <reference path="jquery-1.12.4.js" />
+/// <reference path="jquery-1.12.4.intellisense.js" />
 
 function initializeRequestAccount() {
 
@@ -80,31 +81,25 @@ function initializeLogin()
             $(element).closest('.form-group').removeClass('has-error');
         },
         submitHandler: function (form) {
-            //form.submit();
-            $.ajax({
-                url: form.action,
-                type: form.method,
-                data: $(form).serialize(),
-                dataType: "text json",  // this was necessary to receive the Json() return result
-                success: function (postResponse) {
+            form.submit();
+            //alert(form.action);
+            //$.ajax({
+            //    url: form.action,
+            //    type: form.method,
+            //    data: $(form).serialize(),
+            //    dataType: "text json",  // this was necessary to receive the Json() return result
+            //    success: function (postResponse) {
 
-                    if (postResponse === undefined
-                        || !postResponse.Success) {
-                        
-                        document.getElementById("failureMsg").innerHTML = postResponse.ErrorMessage;
-                        $("#failureMsg").removeClass("hidden");
-                    }
-                    else
-                    {
-                     //   window.location = postResponse.RedirectUrl;
-                        //alert(postResponse.RedirectUrl);
-                    }
-                        
-                },
-                fail: function (data) {
-                    alert('failed to login');
-                }
-            });
+            //        window.location.href = postResponse;
+            //        // this is not working, need to figure out why
+            //        //{"RedirectUrl":"/Account","ErrorMessage":"Login attempt failed, please try again.","Success":false}
+            //        //alert(postResponse);
+                         
+            //    },
+            //    fail: function (data) {
+            //        alert(data);
+            //    }
+            //});
         }
     });
 }

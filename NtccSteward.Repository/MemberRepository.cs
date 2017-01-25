@@ -12,17 +12,18 @@ using NtccSteward.Core.Models.Common.Address;
 using NtccSteward.Core.Interfaces.Common.Address;
 using NtccSteward.Core.Models.Common.CustomAttributes;
 using NtccSteward.Core.Models.Common.Enums;
-using NtccSteward.Repository.Framework;
+
 
 namespace NtccSteward.Api.Repository
 {
     public interface IMemberRepository
     {
         RepositoryActionResult<NewMember> Add(NewMember member);
-        List<Member> GetByStatus(int churchId, int id);
+        List<Member> GetList(int churchId, int statusEnumId);
         List<Member> GetProfileMetadata(int identityTypeEnumID);
 
-        MemberProfile GetProfile(int id, bool includeMetadata);
+        MemberProfile Get(int id);
+
         RepositoryActionResult<MemberProfile> SaveProfile(MemberProfile memberProfile);
 
         RepositoryActionResult<Member> Delete(int id);
@@ -86,7 +87,7 @@ namespace NtccSteward.Api.Repository
         }
 
 
-        public List<Member> GetByStatus(int churchId, int statusEnumId)
+        public List<Member> GetList(int churchId, int statusEnumId)
         {
             var proc = "Membership_SelectByChurch";
 
@@ -117,7 +118,38 @@ namespace NtccSteward.Api.Repository
         }
 
 
-        public MemberProfile GetProfile(int id, bool includeMetadata)
+        public MemberProfile GetProfileMetadata()
+        {
+            MemberProfile member = null;
+
+            var proc = "GetMemberProfileMetadata";
+
+            using (var cn = new SqlConnection(_executor.ConnectionString))
+            using (var cmd = new SqlCommand(proc, cn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cn.Open();
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var enm = new AppEnum();
+                        enm.ID = reader.ValueOrDefault<int>("EnumID");
+                        enm.Desc = reader.ValueOrDefault<string>("EnumDesc");
+                        enm.AppEnumTypeID = reader.ValueOrDefault<int>("EnumTypeID");
+                        enm.AppEnumTypeName = reader.ValueOrDefault<string>("EnumTypeName");
+
+                        member.MetaDataList.Add(enm);
+                    }
+                }
+            }
+
+            return member;
+        }
+
+        public MemberProfile Get(int id)
         {
             MemberProfile member = null;
 
@@ -128,7 +160,6 @@ namespace NtccSteward.Api.Repository
             {
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("memberId", id);
-                cmd.Parameters.AddWithValue("includeMetaData", includeMetadata);
 
                 cn.Open();
 
@@ -221,21 +252,6 @@ namespace NtccSteward.Api.Repository
                         //    member.CustomAttributeList.Add(attr);
                         //}
 
-                        // metadata
-                        if (includeMetadata)
-                        {
-                            reader.NextResult();
-                            while (reader.Read())
-                            {
-                                var enm = new AppEnum();
-                                enm.ID = reader.ValueOrDefault<int>("EnumID");
-                                enm.Desc = reader.ValueOrDefault<string>("EnumDesc");
-                                enm.AppEnumTypeID = reader.ValueOrDefault<int>("EnumTypeID");
-                                enm.AppEnumTypeName = reader.ValueOrDefault<string>("EnumTypeName");
-
-                                member.MetaDataList.Add(enm);
-                            }
-                        }
                     }
                 }
             }
@@ -377,6 +393,8 @@ namespace NtccSteward.Api.Repository
                 return new RepositoryActionResult<Member>(null, RepositoryActionStatus.Error, ex);
             }
         }
+
+
     }
 }
 

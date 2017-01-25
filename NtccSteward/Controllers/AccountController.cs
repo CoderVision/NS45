@@ -5,6 +5,9 @@ using System;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web;
+using Newtonsoft.Json;
+using NtccSteward.ViewModels.Church;
+using System.Collections.Generic;
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace NtccSteward.Controllers
@@ -18,9 +21,13 @@ namespace NtccSteward.Controllers
             _apiProvider = apiProvider;
         }
 
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             var loginVm = new LoginVm();
+
+            var json = await _apiProvider.GetItemAsync("church", "page=1&pageSize=10000&showAll=false");
+
+            loginVm.ChurchList = _apiProvider.DeserializeJson<List<ChurchVm>>(json);
 
             var loginEmail = Request.Cookies["email"];
             if (loginEmail != null)
@@ -33,6 +40,9 @@ namespace NtccSteward.Controllers
             if (churchId != null)
                 loginVm.ChurchId = Convert.ToInt32(churchId.Value);
 
+            if (TempData["loginError"] != null)
+                ModelState.AddModelError("loginError", TempData["loginError"].ToString());
+
             return View("/Views/Account/Login.cshtml", loginVm);
         }
 
@@ -43,31 +53,33 @@ namespace NtccSteward.Controllers
             if (ModelState.IsValid)
             {
                 if (login.Remember)
-                    Response.Cookies.Add(new HttpCookie("email", login.Email));
-
-                // Church:  default to Graham, but in the future:
-                //     After user enters email, then async get a list of churches they have access (roles) to and have them choose one,
-                // also, cache the selected church and restore default, if there are multiple
-
-                var session = await _apiProvider.PostItemAsync<Login>(Request, "api/account/Login", new Login(login));
-
-                if (string.IsNullOrWhiteSpace(session))
                 {
-                    
-                    return Json(new PostResponse(Url.Action("Index", "Account"), "Login attempt failed, please try again.", false));
+                    Response.Cookies.Add(new HttpCookie("email", login.Email));
+                    Response.Cookies.Add(new HttpCookie("churchId", login.ChurchId.ToString()));
+                }
+
+                var session = await _apiProvider.PostItemAsync<Login>("account/Login", new Login(login));
+
+                if (string.IsNullOrWhiteSpace(session) 
+                    || session.IndexOf("error", StringComparison.CurrentCultureIgnoreCase) > -1)
+                {
+                    TempData["loginError"] = "Login attempt failed, please try again.";
+
+                    return RedirectToAction("Index");
                 }
                 else
                 {
                     HttpContext.Session["Session"] = session;
 
-                    // return Json(new PostResponse(Url.Action("Index", "Member"), string.Empty, true));
-                    return RedirectToAction("Index", "Member");
+                    return RedirectToAction("Index", "Member", new { churchId = login.ChurchId, statusId = 49, page = 1, pageSize = 1000, showAll = false });
                 }
             }
             else
-                return Json(
-                    new PostResponse(Url.Action("Index", "Account"), "Credentials were not valid, please try again.", false)
-                );
+            {
+                TempData["loginError"] = "Please enter a valid username and password.";
+
+                return RedirectToAction("Index");
+            }
         }
 
 
@@ -82,7 +94,7 @@ namespace NtccSteward.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _apiProvider.PostItemAsync<AccountRequest>(Request, "/Api/Account/CreateAccountRequest", new AccountRequest(login));
+                var result = await _apiProvider.PostItemAsync<AccountRequest>("Account/CreateAccountRequest", new AccountRequest(login));
 
                 if (Convert.ToInt32(result) > 0)
                     return View("/Views/Account/AccountRequestComplete.cshtml");

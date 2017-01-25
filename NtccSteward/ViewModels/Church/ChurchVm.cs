@@ -7,7 +7,7 @@ namespace NtccSteward.ViewModels.Church
 {
     public class ChurchVm
     {
-        public int ChurchId { get; set; }
+        public int id { get; set; }
         public string Name { get; set; }
     }
 }

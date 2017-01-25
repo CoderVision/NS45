@@ -36,7 +36,7 @@ function CreateGroupMemberLi(memberName)
 
 
 /////// *************************************************************** Member List Loader
-var memLstLdr = {
+var msgLstLdr = {
 
     grid: null
     , dataView: null

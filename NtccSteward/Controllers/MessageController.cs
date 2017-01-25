@@ -36,7 +36,7 @@ namespace NtccStewardRc2.Controllers
 
         private string SubmitRequest<T>(string path, T model)
         {
-            var task = _apiProvider.PostItemAsync<T>(Request, path, model);
+            var task = _apiProvider.PostItemAsync<T>(path, model);
             task.Wait();
 
             return task.Result;

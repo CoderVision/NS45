@@ -122,6 +122,7 @@
     <Compile Include="Models\Common\Parameters\GetCorrespondenceParameter.cs" />
     <Compile Include="Models\Common\Parameters\GetMessagesParameter.cs" />
     <Compile Include="Models\Common\Parameters\ItemByID.cs" />
+    <Compile Include="Interfaces\Members\IMember.cs" />
     <Compile Include="Models\Members\Member.cs" />
     <Compile Include="Models\Members\MemberProfile.cs" />
     <Compile Include="Models\Members\MembersByStatus.cs" />

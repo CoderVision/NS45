@@ -1,4 +1,5 @@
-﻿
+﻿@model IEnumerable<NtccSteward.Core.Models.Members.Member>
+
 @{
     ViewBag.Title = "Members";
 }
@@ -11,14 +12,35 @@
         <input type="text" id="memberSearch" class="form-control" style="padding:3px;width:300px;margin-bottom:4px;margin-left:0px;" placeholder="Full Name Search"
                oninput="search_oninput(memLstLdr, this.value)" />
 
-        <a href="#newMember" data-toggle="modal" onclick="OpenNewMemberForm();return false;"><img src="~/images/placeholder.gif" class="toolbarIcon add" alt="Add" title="Add Member" style="margin-left:10px;" /> Add User</a>
+        <a href="#newMember" data-toggle="modal" onclick="OpenNewMemberForm();return false;">Add Member</a>
+        @*<img src="~/images/placeholder.gif" class="toolbarIcon add" alt="Add" title="Add Member" style="margin-left:10px;" />*@
     </form>
 
-    @*<button onclick="memLstLdr.load();">test</button>*@
+    <table class="table table-hover table-bordered">
 
-    <div id="membersGrid" style="width:100%;height:500px;" />
+        <thead class="thead-default">
+            <tr>
+                <th>
+                    Full Name
+                </th>
+                <th class="hideXs">
+                    Status
+                </th>
+            </tr>
+        </thead>
 
-    <img id="loader" class="spinner" src="~/images/ajax-spinner.gif" />
+        @foreach (var m in Model)
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink(m.FullName, "Edit", "Members")
+                </td>
+                <td class="hideXs">
+                    @Html.DisplayText(m.Status)
+                </td>
+            </tr>
+        }
+    </table>
 </div>
 
 <input type="hidden" id="memberId" />
@@ -127,12 +149,7 @@
 
     <script type="text/javascript">
 
-        $(document).ready(function () {
-
-            initializeNewMember();
-
-            memLstLdr.load();
-        });
+           initializeNewMember();
 
     </script>
 }
