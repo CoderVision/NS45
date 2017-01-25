@@ -42,7 +42,6 @@
                     <input class="btn btn-primary" type="submit" value="Sign In" />
                 </p>
 
-                //hidden
                 <div id="failureMsg" class="alert alert-danger @(ViewData.ModelState.IsValid ? "hidden" : "") " role="alert">
                     @Html.ValidationSummary("",new { @class="" })
                 </div>

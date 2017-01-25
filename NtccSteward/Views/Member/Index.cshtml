@@ -9,14 +9,17 @@
 <div id="mem">
 
     <form class="form-inline">
+
+        @*How to filter a table with JavaScript:*@
+        @*http://www.w3schools.com/howto/howto_js_filter_table.asp*@
         <input type="text" id="memberSearch" class="form-control" style="padding:3px;width:300px;margin-bottom:4px;margin-left:0px;" placeholder="Full Name Search"
-               oninput="search_oninput(memLstLdr, this.value)" />
+               oninput="FilterTable('memberTbl', this.value, 'Full Name')" />
 
         <a href="#newMember" data-toggle="modal" onclick="OpenNewMemberForm();return false;">Add Member</a>
         @*<img src="~/images/placeholder.gif" class="toolbarIcon add" alt="Add" title="Add Member" style="margin-left:10px;" />*@
     </form>
 
-    <table class="table table-hover table-bordered">
+    <table id="memberTbl" class="table table-sm table-hover table-bordered">
 
         <thead class="thead-default">
             <tr>

@@ -11,5 +11,6 @@
         string Password { get; set; }
         string PastorName { get; set; }
         string State { get; set; }
+        int RequestId { get; set; }
     }
 }

@@ -35,5 +35,7 @@ namespace NtccSteward.Core.Models.Account
         public string City { get; set; }
         public string State { get; set; }
         public string Comments { get; set; }
+
+        public int RequestId { get; set; }
     }
 }

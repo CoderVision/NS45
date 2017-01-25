@@ -37,3 +37,4 @@ C:\Source\Repos\NS45\NtccSteward.Core\bin\Microsoft.CodeDom.Providers.DotNetComp
 C:\Source\Repos\NS45\NtccSteward.Core\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
 C:\Source\Repos\NS45\NtccSteward.Core\obj\Debug\NtccSteward.Core.dll
 C:\Source\Repos\NS45\NtccSteward.Core\obj\Debug\NtccSteward.Core.pdb
+C:\Source\Repos\NS45\NtccSteward.Core\obj\Debug\NtccSteward.Core.csprojResolveAssemblyReference.cache

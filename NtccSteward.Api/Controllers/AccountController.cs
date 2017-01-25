@@ -44,6 +44,8 @@ namespace NtccSteward.Api.Controllers
 
                 if (rowNo > 0)
                 {
+                    accountRequest.RequestId = rowNo;
+
                     return Created(Request.RequestUri + "/" + rowNo.ToString(), accountRequest);
                 }
               

@@ -8,6 +8,10 @@
 {
     @Html.AntiForgeryToken();
 
+    <div id="failureMsg" class="alert alert-danger @(ViewData.ModelState.IsValid ? "hidden" : "") " role="alert">
+        @Html.ValidationSummary("", new { @class = "" })
+    </div>
+
     <div class="form-group">
         <label for="FirstName" class="labelNormal">First Name</label>
         @Html.TextBoxFor(vm => vm.FirstName, new { @class = "form-control", @id = "FirstName", @placeholder = "Enter first name" })

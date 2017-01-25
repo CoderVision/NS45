@@ -64,8 +64,6 @@ namespace NtccSteward.Controllers
                     || session.IndexOf("error", StringComparison.CurrentCultureIgnoreCase) > -1)
                 {
                     TempData["loginError"] = "Login attempt failed, please try again.";
-
-                    return RedirectToAction("Index");
                 }
                 else
                 {
@@ -77,15 +75,26 @@ namespace NtccSteward.Controllers
             else
             {
                 TempData["loginError"] = "Please enter a valid username and password.";
-
-                return RedirectToAction("Index");
             }
+
+            return RedirectToAction("Index");
         }
 
 
         public ActionResult RequestAccount()
         {
-            return View("/Views/Account/RequestAccount.cshtml");
+            RequestAccountVm login;
+            if (TempData["login"] != null)
+            {
+                login = (RequestAccountVm)TempData["login"];
+
+                if (TempData["sarError"] != null)
+                    ModelState.AddModelError("sarError", TempData["sarError"].ToString());
+            }
+            else
+                login = new RequestAccountVm();
+
+            return View("/Views/Account/RequestAccount.cshtml", login);
         }
 
 
@@ -96,13 +105,21 @@ namespace NtccSteward.Controllers
             {
                 var result = await _apiProvider.PostItemAsync<AccountRequest>("Account/CreateAccountRequest", new AccountRequest(login));
 
-                if (Convert.ToInt32(result) > 0)
+                if (!string.IsNullOrWhiteSpace(result))
+                {
                     return View("/Views/Account/AccountRequestComplete.cshtml");
+                }
                 else
-                    return new ContentResult() { Content = "Accout request did not complete, please try again." };
+                {
+                    TempData["sarError"] = "Accout request did not complete, please try again.";
+                }
             }
             else
-                return new ContentResult();
+            {
+                TempData["sarError"] = "Verify all fields are correct and try again.";
+            }
+
+            return RedirectToAction("RequestAccount");
         }
 
 

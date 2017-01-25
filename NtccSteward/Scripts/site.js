@@ -1,4 +1,5 @@
-﻿// Write your Javascript code.
+﻿/// <reference path="jquery-1.12.4.intellisense.js" />
+// Write your Javascript code.
 ///// <reference path="../lib/jquery/dist/jquery.js" />
 
 
@@ -22,93 +23,63 @@
 //    return dateString;
 //}
 
-function addTiny(editorName) {
 
-    // this is necessary to remove the editor if init has already been called.
-    tinymce.execCommand('mceRemoveEditor', false, editorName);
-
-    tinymce.init({
-        selector: 'textarea',
-        auto_focus: editorName,
-        height: 300,
-        menubar: false
-    });
-};
-
-// update grid filter on search input change
-function search_oninput(loader, searchString) {
-    updateFilter(loader.grid, searchString);
-}
-
-
-// grid is an instance of SlickGrid
-function updateFilter(grid, searchString) {
-    var dataView = grid.getData();
-
-    dataView.setFilterArgs({
-        searchString: searchString
+function FilterTable(tableId,criteria,fieldsToSearch)
+{
+    var fieldAry = fieldsToSearch.split(",");
+    var fieldIdxAry = [];
+    var th = "#" + tableId + " th";
+    var list = $(th);
+    list.each(function () {
+        // loop through all fields to search for th matches
+        var fieldidx = 0;
+        for (var i = 0; i < fieldAry.length; i++)
+        {
+            if ($(this).text().trim() == fieldAry[i].trim()) {
+                fieldIdxAry[fieldidx++] = list.index(this);
+            }
+        }
     });
 
-    dataView.refresh();
+    var table = document.getElementById(tableId);
+    var rows = table.getElementsByTagName("tr");
 
-    grid.invalidateAllRows();
-    grid.render();
-}
+    if (criteria.length > 0)
+    {
+        // hide rows that do not meet the criteria
+        criteria = criteria.toLowerCase();
 
-function sortComparer(a, b) {
+        for (var i = 0; i < rows.length; i++) {
+            var td = rows[i].getElementsByTagName("td");
+            if (td.length > 0) {
+                for (var idx = 0; idx < fieldIdxAry.length; idx++) {
 
-    var x = a[sortColumn];
-    var y = b[sortColumn];
-
-    if (typeof x === "string" && typeof y === "string") {
-        // convert to lower case so that it the list gets sorted correctly.
-        x = x.toLowerCase();
-        y = y.toLowerCase();
+                    if (td[fieldIdxAry[idx]].innerText.trim().toLowerCase().indexOf(criteria) > -1) {
+                        rows[i].style.display = "";
+                    }
+                    else
+                        rows[i].style.display = "none";
+                }
+            }
+        }
+    }
+    else
+    {
+        // show all rows
+        for (var i = 0; i < rows.length; i++) {
+            rows[i].style.display = "";
+        }
     }
 
-    if (x === y) // compare values & nulls
-        return 0;
-    if (x === null)
-        return -1;
-    else if (y === null)
-        return 1;
-    else
-        return (x > y ? 1 : -1);
-};
 
-//function dateFormatter(row, cell, value, columnDef, dataContext) {
-//    if (value != null) {
-//        var dateString = value.toString();
-
-//        return parseDate(dateString);
-//    }
-//    return value;
-//}
+}
 
 
-//function moneyFormatter(row, cell, value, columnDef, dataContext) {
-//    if (value != null) {
-//        var money = new Number(value.toString())
-//        return money.toLocaleString("en-US", { style: "currency", currency: "USD" });
-//    }
-//    return value;
-//}
 
-//function decimalFormatter(row, cell, value, columnDef, dataContext) {
-//    if (value != null) {
-//        var num = new Number(value.toString())
-//        //return num.toLocaleString("en-US", { minimumSignificantDigits: "1", maximumFractionDigits: "2" });
-//        return num.toFixed(2);
-//    }
-//    return value;
-//}
 
-//var memTest = {
-//    Load:  function() 
-//    {
-//        alert('load test');
-//    }
-//}
+
+
+
 
 
 function selectModuleLink(displayText) {
