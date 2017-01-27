@@ -8,28 +8,21 @@
             <div class="form-group">
                 <label for="emailAddress" class="col-sm-1 control-label labelNormal">Email</label>
                 <div class="col-sm-11">
-                    @Html.TextBoxFor(m => m.EmailAddress, new { @class = "form-control", @id = "emailAddress", @placeholder = "Enter email address" })
+                    @Html.TextBoxFor(m => m.EmailAddress, new { @class = "form-control", @id = "emailAddress", @placeholder = "Enter email address", type="email" })
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-sm-12 center">
-                    <ul class="list-inline center-block text-center">
-                        <li class="col-sm-3">
-                            <label class="checkbox-inline">@Html.CheckBoxFor(m => m.Verified, new { @id = "verified", @class = "nscheckbox" })  Verified</label>
-                        </li>
-                        <li class="col-sm-3">
-                            <label class="checkbox-inline">@Html.CheckBoxFor(m => m.Preferred, new { @id = "preferred", @class = "nscheckbox" })  Preferred</label>
-                        </li>
-                        <li class="col-sm-3">
-                            <img class="img-responsive inline-block center icon" onclick="OpenEmail('@Model.Id')" src="~/images/Mail-32.png" alt="Open email" />
-                        </li>
-                        <li class="col-sm-3">
-                            <img class="icon" onclick="RemoveAddress(@Model.Id, 'email')" src="~/images/remove-32.png" alt="Remove Address" style="height:12px;vertical-align:middle;" />
-                        </li>
-                    </ul>
+                <div class="col-xs-1">
+                </div>
+                <div class="col-xs-11">
+                    <label class="checkbox-inline addyVerified">@Html.CheckBoxFor(m => m.Verified, new { @id = "verified", @class = "nscheckbox", type = "checkbox" })  Verified</label>
+                    <label class="checkbox-inline addyPreferred">@Html.CheckBoxFor(m => m.Preferred, new { @id = "preferred", @class = "nscheckbox", type = "checkbox" })  Preferred</label>
+                    <img class="img-responsive inline-block center icon addyActionImg" onclick="OpenEmail('@Model.Id')" src="~/content/images/Mail-32.png" alt="Open email" />
+                    <img class="icon addyRemoveImg" onclick="RemoveAddress(@Model.Id, 'email')" src="~/content/images/remove-32.png" alt="Remove Address" style="height:12px;vertical-align:middle;" />
                 </div>
             </div>
+
             <hr class="center" style="width:80%;" />
         </fieldset>
     </form>

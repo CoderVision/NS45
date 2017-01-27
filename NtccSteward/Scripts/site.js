@@ -73,29 +73,7 @@ function FilterTable(tableId,criteria,fieldsToSearch)
 }
 
 
-function selectModuleLink(displayText) {
 
-    // loop through all links and update them
-    // get all links in 'moduleMenu' whose text does not equal display text and reset their background color
-    var links = $('#moduleMenu a');
-
-    for (var i = 0; i < links.length; i++) {
-        var link = links[i];
-        console.log(link);
-
-        var text = link.innerHTML;
-        if (text === displayText) {
-            link.style.backgroundColor = '#B8DEC5';
-            link.style.margin = '0px -3.8px 4px 0px';
-            link.style.borderRightWidth = '0px';
-        }
-        else {
-            link.style.backgroundColor = '';
-            link.style.margin = '';
-            link.style.borderRightWidth = '';
-        }
-    }
-}
 
 
 
@@ -135,7 +113,7 @@ function getIdFromString(elementString) {
 
 function RemoveAddress(id, addressType) {
 
-    if (confirm("Delete address?") === false) {
+    if (confirm("Delete address?") == false) {
         return;
     }
 
@@ -174,7 +152,7 @@ function getTarget(e) {
     if (!e) e = window.event;
     if (e.target) targ = e.target;
     else if (e.srcElement) targ = e.srcElement;
-    if (targ.nodeType === 3) // defeat Safari bug
+    if (targ.nodeType == 3) // defeat Safari bug
         targ = targ.parentNode;
 
     return targ;
@@ -185,6 +163,8 @@ function keydown(e) {
 
     enableSave(true);
 
+    $("#SaveBtn").prop('disabled', false);
+
     e.currentTarget.setAttribute("data-changed", "true");
 }
 
@@ -194,7 +174,7 @@ function wireEventHandlers(entityName) {
     if (mp) {
         var inputs = mp.getElementsByTagName('input');
         for (var i = 0; i < inputs.length; i++) {
-            if (inputs[i].type === 'radio' || inputs[i].type === 'checkbox')
+            if (inputs[i].type == 'radio' || inputs[i].type == 'checkbox')
                 inputs[i].addEventListener("click", keydown, true);
             else
                 inputs[i].addEventListener("change", keydown, true);
@@ -205,7 +185,7 @@ function wireEventHandlers(entityName) {
 function GetAddresses(id) {
     var addresses = [];
     var addys = document.getElementById(id);
-    if (addys === null) return addresses;
+    if (addys == null) return addresses;
     for (
     var i = 0; i < addys.childElementCount; i++) {
         var addy = { IdentityId: 0, ContactInfoId: 0, Line1: "", Line2: "", Line3: "", City: "", State: "", Zip: "", Preferred: 0, Verified: 0, Changed: false };
@@ -218,26 +198,26 @@ function GetAddresses(id) {
             for (var n = 0; n < fields.length; n++) {
 
                 var changed = fields[n].getAttribute("data-changed");
-                if (changed !== null && changed === "true")
+                if (changed !== null && changed == "true")
                     addy.Changed = true;
 
                 var value = fields[n].value;
 
-                if (fields[n].id === "line1")
+                if (fields[n].id == "line1")
                     addy.Line1 = value;
-                else if (fields[n].id === "line2")
+                else if (fields[n].id == "line2")
                     addy.Line2 = value;
-                else if (fields[n].id === "line3")
+                else if (fields[n].id == "line3")
                     addy.Line3 = value;
-                else if (fields[n].id === "city")
+                else if (fields[n].id == "city")
                     addy.City = value;
-                else if (fields[n].id === "state")
+                else if (fields[n].id == "state")
                     addy.State = value;
-                else if (fields[n].id === "zip")
+                else if (fields[n].id == "zip")
                     addy.Zip = value;
-                else if (fields[n].id === "preferred")
+                else if (fields[n].id == "preferred")
                     addy.Preferred = value;
-                else if (fields[n].id === "verified")
+                else if (fields[n].id == "verified")
                     addy.Verified = value;
             }
 
@@ -251,12 +231,12 @@ function GetAddresses(id) {
 function GetPhoneNumbers(id) {
     var addresses = [];
     var addys = document.getElementById(id);
-    if (addys === null) return addresses;
+    if (addys == null) return addresses;
     for (var i = 0; i < addys.childElementCount; i++) {
         var addy = { IdentityId: 0, ContactInfoId: 0, PhoneNumber: "", Preferred: 0, Verified: 0, Changed: false };
         var child = addys.children[i];
 
-        if (child.id && child.id.indexOf("phone_") === -1)
+        if (child.id && child.id.indexOf("phone_") == -1)
             continue;
 
         addy.ContactInfoId = child.id.replace("phone_", "");
@@ -264,16 +244,16 @@ function GetPhoneNumbers(id) {
         for (var n = 0; n < fields.length; n++) {
 
             var changed = fields[n].getAttribute("data-changed");
-            if (changed !== null && changed === "true")
+            if (changed !== null && changed == "true")
                 addy.Changed = true;
 
             var value = fields[n].value;
 
-            if (fields[n].id === "phoneNumber")
+            if (fields[n].id == "phoneNumber")
                 addy.PhoneNumber = value;
-            else if (fields[n].id === "preferred")
+            else if (fields[n].id == "preferred")
                 addy.Preferred = value;
-            else if (fields[n].id === "verified")
+            else if (fields[n].id == "verified")
                 addy.Verified = value;
         }
         addresses.push(addy);
@@ -285,12 +265,12 @@ function GetPhoneNumbers(id) {
 function GetEmails(id) {
     var addresses = [];
     var addys = document.getElementById(id);
-    if (addys === null) return addresses;
+    if (addys == null) return addresses;
     for (var i = 0; i < addys.childElementCount; i++) {
         var addy = { IdentityId: 0, ContactInfoId: 0, EmailAddress: "", Preferred: 0, Verified: 0, Changed: false };
         var child = addys.children[i];
 
-        if (child.id && child.id.indexOf("email_") === -1)
+        if (child.id && child.id.indexOf("email_") == -1)
             continue;
 
         addy.ContactInfoId = child.id.replace("email_", "");
@@ -298,16 +278,16 @@ function GetEmails(id) {
         for (var n = 0; n < fields.length; n++) {
 
             var changed = fields[n].getAttribute("data-changed");
-            if (changed !== null && changed === "true")
+            if (changed !== null && changed == "true")
                 addy.Changed = true;
 
             var value = fields[n].value;
 
-            if (fields[n].id === "emailAddress")
+            if (fields[n].id == "emailAddress")
                 addy.EmailAddress = value;
-            else if (fields[n].id === "preferred")
+            else if (fields[n].id == "preferred")
                 addy.Preferred = value;
-            else if (fields[n].id === "verified")
+            else if (fields[n].id == "verified")
                 addy.Verified = value;
         }
         addresses.push(addy);
@@ -325,11 +305,11 @@ function OpenMap(id) {
     var identityId = $("#identityId").val()
     var addys = GetAddresses("addressList_" + identityId);
     for (var i = 0; i < addys.length; i++) {
-        if (addys[i].ContactInfoId === id)
+        if (addys[i].ContactInfoId == id)
             addy = addys[i];
     }
 
-    if (!addy || !addy.Id)
+    if (!addy)
         return;
 
     // get Address inbput boxes
@@ -338,8 +318,8 @@ function OpenMap(id) {
     if (addy.Line1.trim() !== "")
         mapAddy = addy.Line1.trim();
 
-    if (addy.Line2.trim() !== "")
-        mapAddy += (mapAddy !== "" ? "," : "") + addy.Line2.trim();
+    //if (addy.Line2.trim() !== "")
+    //    mapAddy += (mapAddy !== "" ? "," : "") + addy.Line2.trim();
 
     if (addy.City.trim() !== "")
         mapAddy += (mapAddy !== "" ? "," : "") + addy.City.trim();
@@ -362,7 +342,7 @@ function OpenText(id) {
     var identityId = $("#identityId").val()
     var phones = GetPhoneNumbers("phoneList_" + identityId);
     for (var i = 0; i < phones.length; i++) {
-        if (phones[i].ContactInfoId === id)
+        if (phones[i].ContactInfoId == id)
             phone = phones[i];
     }
 
@@ -386,7 +366,7 @@ function OpenEmail(id) {
     var identityId = $("#identityId").val()
     var emails = GetEmails("emailList_" + identityId);
     for (var i = 0; i < emails.length; i++) {
-        if (emails[i].ContactInfoId === id)
+        if (emails[i].ContactInfoId == id)
             email = emails[i];
     }
 
@@ -411,7 +391,7 @@ function SendMsg() {
     var subject = $("#subject").val();
     var body = $("#body").val();
 
-    var apiurl = "/api/message/" + (msgType === "sms" ? "SendSms" : "SendEmail");
+    var apiurl = "/api/message/" + (msgType == "sms" ? "SendSms" : "SendEmail");
     var params = { churchId: 0, recipient: recipient.trim(), subject: subject.trim(), body: body.trim() };
 
     $.ajax({

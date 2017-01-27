@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using NtccSteward.Core.Models.Common.Address;
 using NtccSteward.Core.Interfaces.Common.Address;
+using System;
 
 namespace NtccSteward.Core.Interfaces.Members
 {
     public interface IMemberProfile
     {
         //List<Address> AddressList { get; set; }
-        string BirthDate { get; set; }
+        DateTime? BirthDate { get; set; }
         int ChurchId { get; set; }
         string ChurchName { get; set; }
         string Comments { get; set; }
@@ -28,6 +29,10 @@ namespace NtccSteward.Core.Interfaces.Members
         string Sponsor { get; set; }
         int SponsorId { get; set; }
         int StatusId { get; set; }
+        string StatusDesc { get; set; }
+        int StatusChangeTypeId { get; set; }
+        string StatusChangeTypeDesc { get; set; }
+
         bool Veteran { get; set; }
     }
 }

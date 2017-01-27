@@ -16,14 +16,14 @@ namespace NtccSteward.Modules.Members
         {
             Modules = new List<string>();
             Modules.Add("Personal Info");
-            //Modules.Add("Activity");  // all soulwinning activity
-            //Modules.Add("Awards");
-            //Modules.Add("Messages");  // sent sms, email, etc.
+            Modules.Add("Activity");  // all soulwinning activity
+            Modules.Add("Awards");
+            Modules.Add("Messages");  // sent sms, email, etc.
             //Modules.Add("Notes");
-            //Modules.Add("History");
+            Modules.Add("History");
 
             if (initialModule is MemberProfile)
-                this.DisplayText = $"Member Profile for {((MemberProfile)initialModule).FullName}";
+                this.DisplayText = $"{((MemberProfile)initialModule).FullName}";
             else
                 this.DisplayText = $"Member Profile";
 

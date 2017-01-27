@@ -20,6 +20,12 @@ html, body {
     padding: 0px;
 }
 
+.btn-primary {
+    color: #fff;
+    background-color: #518262!important;
+    border-color: #295a3a!important;
+}
+
 .validation-summary-errors ul{
     margin-bottom:0px!important;
     list-style:none;
@@ -32,6 +38,9 @@ body {
    -webkit-font-smoothing: antialiased;
    background-color:  #efeeef;
    padding-top:95px;
+   padding-left:10px;
+   padding-right:10px;
+   font-family: 'Open Sans', sans-serif;
 }
 
 .banner{
@@ -47,10 +56,18 @@ body {
         margin-bottom:auto;
     }
 
-@media(max-width: 767px)
+.showXs {
+    display:none;
+}
+
+@media(max-width: 768px)
 {
+    /*try using hidden-xs instead*/
     .hideXs {
         display:none;
+    }
+    .showXs {
+        display:normal;
     }
     /*.logo {
         width:50%;
@@ -60,6 +77,10 @@ body {
     }*/
     body{
         padding-top:68px;
+    }
+    .bodyContainer{
+        margin-left:6px!important;
+        margin-right:6px!important;
     }
     .navbar-header {
         /* required when there is an absolute positioned child */
@@ -386,10 +407,6 @@ input.watermark {
 
 /*ui-state-default slick-header-column cellTextHeader slick-header-sortable*/
 
- .moduleMenu {
-     vertical-align:top;
-     /*position: absolute;*/
- }
 
  a.moduleLink {
     color:black;
@@ -452,6 +469,7 @@ input.watermark {
 
 .labelNormal {
     font-weight:normal;
+    text-align:center;
 }
 
 .column {
@@ -555,6 +573,32 @@ input.btn {
 
 .addyGutter {
     margin-top:4px;
+}
+
+.addyRemoveImg{
+    vertical-align:middle;
+    display:inline;
+    margin-left:30px;
+}
+
+.addyActionImg{
+    vertical-align:middle;
+    display:inline;
+    margin-left:30px;
+}
+
+.addyPreferred{
+    margin-left:30px!important;
+    margin-bottom:10px!important;
+}
+
+.addyVerified{
+    margin-bottom:10px!important;
+}
+.vetMrdLbl{
+    line-height:1.4285!important;
+    padding-top:0px!important;
+    padding-bottom:0px!important;
 }
 /*input[type=checkbox] {
     display:none;

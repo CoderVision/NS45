@@ -39,23 +39,17 @@
             </div>  
 
             <div class="row">
-                <div class="col-xs-12 center">
-                    <ul class="list-inline center-block text-center">
-                        <li class="col-xs-3">
-                            <label class="checkbox-inline">@Html.CheckBoxFor(m => m.Verified, new { @id = "verified", @class = "nscheckbox" })  Verified</label>
-                        </li>
-                        <li class="col-xs-3">
-                            <label class="checkbox-inline">@Html.CheckBoxFor(m => m.Preferred, new { @id = "preferred", @class = "nscheckbox" })  Preferred</label>
-                        </li>
-                        <li class="col-xs-3">
-                            <img class="img-responsive inline-block center icon" onclick="OpenMap('@Model.Id')" src="~/images/Maps-32.png" alt="Open map" />
-                        </li>
-                        <li class="col-xs-3">
-                            <img class="icon" onclick="RemoveAddress(@Model.Id, 'address')" src="~/images/remove-32.png" alt="Remove Address" style="height:12px;vertical-align:middle;" />
-                        </li>
-                    </ul>
+                <div class="col-xs-1">
+                    &nbsp;
+                </div>
+                <div class="col-xs-11" >                    
+                    <label class="checkbox-inline addyVerified">@Html.CheckBoxFor(m => m.Verified, new { @class = "form-check-inline", @id = "preferred", type = "checkbox" })  Verified</label>
+                    <label class="checkbox-inline addyPreferred">@Html.CheckBoxFor(m => m.Preferred, new { @class = "form-check-inline", @id = "preferred", type = "checkbox" })  Preferred</label>
+                    <img class="img-responsive inline-block center icon addyActionImg" onclick="OpenMap('@Model.Id')" src="~/content/images/Maps-32.png" alt="Open map" />
+                    <img class="icon addyRemoveImg" onclick="RemoveAddress(@Model.Id, 'address')" src="~/content/images/remove-32.png" alt="Remove Address" style="height:12px;vertical-align:middle;" />
                 </div>
             </div>
+
             <hr class="center" style="width:80%;" />        
         </fieldset>
     </form>

@@ -9,7 +9,7 @@
 <div id="mem">
 
     <form class="form-inline">
-        <input type="text" id="memberSearch" class="form-control" style="padding:3px;width:300px;margin-bottom:4px;margin-left:0px;" placeholder="Full Name Search"
+        <input type="search" id="memberSearch" class="form-control" style="padding:3px;width:300px;margin-bottom:4px;margin-left:0px;" placeholder="Full Name Search"
                oninput="FilterTable('memberTbl', this.value, 'Full Name')" />
 
         <a href="#newMember" data-toggle="modal" onclick="OpenNewMemberForm();return false;" style="margin-left:4px;">Add Member</a>
@@ -45,7 +45,7 @@
         {
             <tr>
                 <td>
-                    @Html.ActionLink(m.FullName, "Edit", "Members")
+                    @Html.ActionLink(m.FullName, "Edit", "Member", new { id=m.id }, null)
                 </td>
                 <td class="hideXs">
                     @m.Status
@@ -85,7 +85,7 @@
                         <div class="row">
                             <div class="col-sm-4">
                                 <label for="dateCame" class="labelNormal">Date Came</label>
-                                <input type="text" class="form-control" id="dateCame" name="dateCame" placeholder="Enter date" />
+                                <input type="date" class="form-control" id="dateCame" name="dateCame" placeholder="Enter date" />
                             </div>
                             <div class="col-sm-2">
                                 <label for="isGroup" class="labelNormal" style="margin-left:8px;">Is group?</label>
@@ -137,8 +137,8 @@
                             </div>
                             <div class="col-sm-3">
                                 <label for="Phone" class="labelNormal">Phone</label>
-                                <input type="text" class="form-control" id="phone" placeholder="Enter Phone" />
-                                <input type="text" class="form-control addyGutter" id="phone2" placeholder="Enter Phone" />
+                                <input type="tel" class="form-control" id="phone" placeholder="Enter Phone" />
+                                <input type="tel" class="form-control addyGutter" id="phone2" placeholder="Enter Phone" />
                             </div>
                         </div>
                     </div>

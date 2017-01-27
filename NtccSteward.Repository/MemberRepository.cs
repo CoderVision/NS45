@@ -26,7 +26,7 @@ namespace NtccSteward.Api.Repository
 
         RepositoryActionResult<MemberProfile> SaveProfile(MemberProfile memberProfile);
 
-        RepositoryActionResult<Member> Delete(int id);
+        RepositoryActionResult<Member> Delete(int id, int entityType);
     }
 
     public class MemberRepository : Repository, IMemberRepository
@@ -182,10 +182,19 @@ namespace NtccSteward.Api.Repository
                         member.Gender = reader.ValueOrDefault("Gender", string.Empty);
                         member.Married = reader.ValueOrDefault<bool>("Married", false);
                         member.Veteran = reader.ValueOrDefault<bool>("Veteran", false);
-                        member.BirthDate = reader.ValueOrDefault<DateTime?>("DateOfBirth", null)?.ToShortDateString();
+                        member.BirthDate = reader.ValueOrDefault<DateTime?>("DateOfBirth", null);
                         member.DateSaved = reader.ValueOrDefault<DateTime?>("DateSaved", null)?.ToShortDateString();
                         member.DateBaptizedHolyGhost = reader.ValueOrDefault<DateTime?>("DateBaptizedHolyGhost", null)?.ToShortDateString();
                         member.DateBaptizedWater = reader.ValueOrDefault<DateTime?>("DateBaptizedWater", null)?.ToShortDateString();
+                        member.ChurchId = reader.ValueOrDefault<int>("ChurchId", 0);
+                        member.ChurchName = reader["ChurchName"].ToString();
+                        member.StatusId = reader.ValueOrDefault<int>("StatusId", 0);
+                        member.StatusDesc = reader.ValueOrDefault("StatusDesc", string.Empty);
+                        member.StatusChangeTypeId = reader.ValueOrDefault<int>("StatusChangeTypeId", 0);
+                        member.StatusChangeTypeDesc = reader.ValueOrDefault("StatusChangeTypeDesc", string.Empty);
+                        member.SponsorId = reader.ValueOrDefault<int>("SponsorId", 0);
+                        member.Sponsor = reader.ValueOrDefault("Sponsor", string.Empty);
+                        member.Comments = reader.ValueOrDefault("Comment", string.Empty);
 
                         // address info
                         reader.NextResult();
@@ -293,7 +302,7 @@ namespace NtccSteward.Api.Repository
             paramz.Add(new SqlParameter("middleName", memberProfile.MiddleName.ToSqlString()));
             paramz.Add(new SqlParameter("lastName", memberProfile.LastName.ToSqlString()));
             paramz.Add(new SqlParameter("preferredName", memberProfile.PreferredName.ToSqlString()));
-            paramz.Add(new SqlParameter("birthDate", memberProfile.BirthDate.ToSqlString()));
+            paramz.Add(new SqlParameter("birthDate", memberProfile.BirthDate?.ToString().ToSqlString()));
             paramz.Add(new SqlParameter("gender", memberProfile.Gender.ToSqlString()));
             paramz.Add(new SqlParameter("comments", memberProfile.Comments.ToSqlString()));
             paramz.Add(new SqlParameter("dateSaved", memberProfile.DateSaved.ToSqlString()));
@@ -375,16 +384,28 @@ namespace NtccSteward.Api.Repository
             return paramz;
         }
 
-
-        public RepositoryActionResult<Member> Delete(int id)
+        /// <summary>
+        /// Deletes a person or contact info
+        /// </summary>
+        /// <param name="id">Person.IdentityId</param>
+        /// <param name="entityType">EnumTypeId=12:  56 person, 61 ContactInfo</param>
+        /// <returns></returns>
+        public RepositoryActionResult<Member> Delete(int id, int entityType)
         {
             try
             {
-                // DO NOT DELETE, archive or tag as deleted
+                var paramz = new List<SqlParameter>();
+                paramz.Add(new SqlParameter("id", id));
+                paramz.Add(new SqlParameter("entityType", entityType));
 
-                //  add code to archive record in database.  return count.
-                int deleteCount = 0;
-                if (deleteCount == 1)
+                Func<SqlDataReader, int> readFx = (reader) =>
+                {
+                    return (int)reader["id"];
+                };
+
+                var list = _executor.ExecuteSql<int>("DeleteEntity", CommandType.StoredProcedure, paramz, readFx);
+
+                if (list != null && list.Any())
                 {
                     return new RepositoryActionResult<Member>(null, RepositoryActionStatus.Deleted);
                 }

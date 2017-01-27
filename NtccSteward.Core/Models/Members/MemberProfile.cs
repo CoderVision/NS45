@@ -33,7 +33,7 @@ namespace NtccSteward.Core.Models.Members
 
         public string Gender { get; set; }
 
-        public string BirthDate { get; set; }
+        public DateTime? BirthDate { get; set; }
 
         public string PreferredName { get; set; }
 
@@ -54,6 +54,12 @@ namespace NtccSteward.Core.Models.Members
         public string ChurchName { get; set; }
 
         public int StatusId { get; set; } // faithful, etc.  
+
+        public string StatusDesc { get; set; }
+
+        public int StatusChangeTypeId { get; set; }
+
+        public string StatusChangeTypeDesc { get; set; }
 
         public int SponsorId { get; set; }
 

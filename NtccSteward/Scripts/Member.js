@@ -6,8 +6,6 @@
 
 function SaveMemberProfile() {
 
-    // validate first!
-
     var maleChecked = document.getElementById("maleRadio").checked;
    
     // get which radio is checked
@@ -16,19 +14,23 @@ function SaveMemberProfile() {
         , FirstName: $("#FirstName").val()
         , MiddleName: $("#MiddleName").val()
         , LastName: $("#LastName").val()
-        , ChurchId : 3 // default to Graham, but change later
-        , ChurchName: $("#ChurchName").val()
-        , StatusId: $("#Status").val()
         , PreferredName: $("#PreferredName").val()
-        , Gender: maleChecked === true ? "M" : "F"
+        , ChurchId: $("#ChurchId").val()
+        , ChurchName: $("#ChurchName").val()
+        , StatusId: $("#StatusId").val()
+        , StatusDesc: $("#StatusDesc").val()
+        , StatusChangeTypeDesc: $("#StatusChangeTypeDesc").val()
+        , StatusChangeTypeId: $("#StatusChangeTypeId").val()
+        , Gender: maleChecked == true ? "M" : "F"
         , BirthDate: $("#BirthDate").val()
-        , Married: false // hook up later
-        , Veteran: false // hook up later
-        , SponsorId: $("#Sponsor").val()
+        , Married: document.getElementById("Married").checked 
+        , Veteran: document.getElementById("Veteran").checked
+        , SponsorId: $("#SponsorId").val()
+        , Sponsor: $("#Sponsor").val()
         , Comments: $("#Comments").val()
-        , DateSaved: null
-        , DateBaptizedWater: null
-        , DateBaptizedHolyGhost: null
+        , DateSaved: $("#DateSaved").val()
+        , DateBaptizedWater: $("#DateBaptizedWater").val()
+        , DateBaptizedHolyGhost: $("#DateBaptizedHolyGhost").val()
         , AddressList: []
         , EmailList: []
         , PhoneList: []
@@ -37,7 +39,7 @@ function SaveMemberProfile() {
     var addys = GetAddresses("addressList_" + memberProfile.MemberId);
     for (var i = 0; i < addys.length; i++) {
 
-        if (addys[i].Changed === true)
+        if (addys[i].Changed == true)
         {
             addys[i].IdentityId = memberProfile.MemberId;
             memberProfile.AddressList.push(addys[i]);
@@ -47,7 +49,7 @@ function SaveMemberProfile() {
     var phones = GetPhoneNumbers("phoneList_" + memberProfile.MemberId);
     for (var i2 = 0; i2 < phones.length; i2++) {
 
-        if (phones[i2].Changed === true)
+        if (phones[i2].Changed == true)
         {
             phones[i2].IdentityId = memberProfile.MemberId;
             memberProfile.PhoneList.push(phones[i2]);
@@ -57,7 +59,7 @@ function SaveMemberProfile() {
     var emails = GetEmails("emailList_" + memberProfile.MemberId);
     for (var i3 = 0; i3 < emails.length; i3++) {
 
-        if (emails[i3].Changed === true)
+        if (emails[i3].Changed == true)
         {
             emails[i3].IdentityId = memberProfile.MemberId;
             memberProfile.EmailList.push(emails[i3]);
@@ -71,11 +73,7 @@ function SaveMemberProfile() {
         url: "/Member/SaveProfile",
         success: function (data) {
 
-            //var node = document.getElementById(userId);
-            //if (node) {
-            //    $("#" + userId).remove();
-            //}
-            alert('Save Profile Success!');
+            document.location.reload(true);
 
         },
         error: function (xhr, asaxOptions, thrownError) {
@@ -116,8 +114,6 @@ function SaveMemberProfile() {
 
 function memberModuleLinkClick(displayText, id) {
 
-    selectModuleLink(displayText);
-
     $(document).ajaxStart(function () {
         $("#profileLoader").css('visibility', 'visible');
     });
@@ -127,20 +123,20 @@ function memberModuleLinkClick(displayText, id) {
 
     //$("moduleContent").load("/Resident/GetModule" + displayText + "residentID=" + residentID);
 
-    $.ajax({
-        url: "/Member/GetView",
-        type: "POST",
-        datatype: "HTML",
-        data: { viewName: displayText, memberId: id },
-        success: function (data) {
-            $('#moduleContent').html(data);
+    //$.ajax({
+    //    url: "/Member/GetView",
+    //    type: "POST",
+    //    datatype: "HTML",
+    //    data: { viewName: displayText, memberId: id },
+    //    success: function (data) {
+    //        $('#moduleContent').html(data);
 
-            wireEventHandlers("member");
-        },
-        error: function (XMLHttpRequest, textStatus, errorThrown) {
-            alert("Status: " + textStatus); alert("Error: " + errorThrown);
-        }
-    });
+    //        wireEventHandlers("member");
+    //    },
+    //    error: function (XMLHttpRequest, textStatus, errorThrown) {
+    //        alert("Status: " + textStatus); alert("Error: " + errorThrown);
+    //    }
+    //});
 }
 
 function OpenNewMemberForm()
@@ -175,7 +171,7 @@ function SaveNewMember(open) {
     //$("#addMemberForm").validate();
 
     var isvalid = $("#addMemberForm").valid();
-    if (isvalid === false)
+    if (isvalid == false)
         return;
 
     var newMember = {
@@ -270,14 +266,14 @@ function initializeNewMember() {
                 //required: true,
                 required: function (element) {
                     var value = $("#lastName").val();
-                    return value.trim() === "";
+                    return value.trim() == "";
                 }
             },
             lastName: {
                 //required: true
                 required: function (element) {
                     var value = $("#firstName").val();
-                    return value.trim() === "";
+                    return value.trim() == "";
                 }
             },
             // validate on if it's entered, but do not require it

@@ -85,7 +85,7 @@ namespace NtccSteward.Controllers
 
                 var shell = new MemberModule(memberProfileModule);
 
-                return View(shell);
+                return View("~/Views/Member/Member.cshtml", shell);
             }
         }
 
@@ -227,22 +227,33 @@ namespace NtccSteward.Controllers
                 mp.EmailList.Add(e);
             }
 
-            var memberId = await _apiProvider.PutItemAsync<cm.MemberProfile>("/api/member/SaveMemberProfile", mp);
-
-            return  Json(memberId);
+            var json = await _apiProvider.PutItemAsync<cm.MemberProfile>($"{_uri}/{ memberProfile.MemberId}", mp);
+            
+            try
+            {
+                var m = _apiProvider.DeserializeJson<cm.MemberProfile>(json);
+                if (m != null)
+                {
+                    // reload page, so that any new id's can be loaded.
+                    return RedirectToAction("Edit", new { id = m.MemberId });
+                }
+                return Content("Error saving profile");
+            }
+            catch (Exception ex)
+            {
+                return Content("Error saving profile: " + ex.Message);
+            }
         }
 
-        [HttpDelete]
+        //[HttpDelete]
         public async Task<ActionResult> RemoveAddress(int addressId)
         {
-            bool isNew = addressId < 0;
+            var result = await _apiProvider.DeleteItemAsync($"{_uri}/{addressId}", "entityType=61");
 
-            // delete from database
-            //var memberId = SubmitRequest<cm.MemberProfile>("/api/member/SaveMemberProfile", mp);
-
-            //return new NoContentResult(); // this prevents navigation to another page.
-            return Json(isNew);
-            //return Content();
+            if (string.IsNullOrWhiteSpace(result))
+                return Content("");
+            else
+                return Content("Error removing address");
         }
 
 

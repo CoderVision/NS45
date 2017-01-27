@@ -15,6 +15,7 @@ namespace NtccSteward.Framework
         Task<string> PostItemAsync<T>(string url, T item, string queryString = null, string version = null);
         Task<string> PutItemAsync<T>(string relativeUrl, T item, string queryString = null, string version = null);
         Task<string> GetItemAsync(string relativeUrl, string queryString = null, string version = null);
+        Task<string> DeleteItemAsync(string relativeUrl, string queryString = null, string version = null);
         string SerializeJson<T>(T item);
         HttpClient CreateHttpClient(string version = null);
     }
@@ -32,7 +33,7 @@ namespace NtccSteward.Framework
 
         public HttpClient CreateHttpClient(string version = null)
         {
-            var baseUri = _webApiUri + "/"; // changed to request.Url.Authority - this may not work.
+            var baseUri = _webApiUri.TrimEnd('/') + "/"; // changed to request.Url.Authority - this may not work.
 
             var client = new HttpClient();
             client.BaseAddress = new Uri(baseUri);
@@ -123,7 +124,7 @@ namespace NtccSteward.Framework
         public string CreateUrl(string relativeUrl, string queryString = null)
         {
             var q = !string.IsNullOrEmpty(queryString) ? $"?{queryString.TrimStart('?')}" : "";
-            var requestUri = relativeUrl + q;
+            var requestUri = relativeUrl.TrimStart('/') + q;
             return requestUri;
         }
 
@@ -161,6 +162,20 @@ namespace NtccSteward.Framework
         public string SerializeJson<T>(T item)
         {
             return JsonConvert.SerializeObject(item);
+        }
+
+        public async Task<string> DeleteItemAsync(string relativeUrl, string queryString = null, string version = null)
+        {
+            using (var client = CreateHttpClient(version))
+            {
+                var url = CreateUrl(relativeUrl, queryString);
+
+                var response = await client.DeleteAsync(url);
+
+                var result = ReadResponse(response);
+
+                return result.Result;
+            }
         }
     }
 }

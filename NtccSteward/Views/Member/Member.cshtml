@@ -5,39 +5,42 @@
     ViewBag.Title = @Model.DisplayText;
 }
 
-<img src="~/images/save-32-gray.png" class="icon32 saveIcon float-right" id="memberSaveBtn" onclick="SaveMemberProfile()" />
-@*<br style="float:none;" />*@ 
-
-<span class="sectionTitle">@Model.DisplayText</span>
-
-<div id="member" class="nstable" style="width:100%;">
-    <div class="nstablerow">
-        <div class="nstablecell" style="width:115px;vertical-align:top;padding: 0px;">
-            <div id="moduleMenu">
-                @foreach (var m in @Model.Modules)
-                {
-                    <a href="#" class="moduleLink cell" onclick="memberModuleLinkClick('@m', '@Model.Id')">@m</a>
-                }
-            </div>
-        </div>
-        <div class="nstablecell" style="padding: 0px;vertical-align:top;">
-            <div id="moduleContent" class="moduleContent" style="padding:20px;">
-                @{
-                    Html.RenderPartial("~/Views/Member/_MemberProfile.cshtml", Model.InitialModule);
-                }
-            </div>
-
-            <img id="profileLoader" class="spinner" src="~/images/ajax-spinner.gif" style="visibility:hidden;" />
-        </div>
+<div class="row">
+    <div class="col-xs-6">
+        <span class="sectionTitle">@Model.DisplayText</span>
+    </div>
+    <div class="col-xs-6">
+        <input id="SaveBtn" class="btn btn-primary" style="float:right;clear:both;" type="button" onclick="SaveMemberProfile()" value="Save" disabled />
     </div>
 </div>
 
-<script src="~/js/member.js"></script>
+
+@*This is the tab menu across the top, it shows other modules.
+    <div class="row">
+    <ul class="nav nav-tabs nav-justified" >
+        @for (var i = 0; i < @Model.Modules.Count; i++)
+        {
+            onclick = "memberModuleLinkClick('@Model.Modules[i]', '@Model.Modules[i].Id')
+            <li class="@(i==0?"active":"")"><a href="#">@Model.Modules[i]</a></li>
+        }
+    </ul>
+</div>*@
+
+@*This padding may be necessary if we use the tabs style="padding-top:20px;"*@
+<div id="member" style="padding-top:10px;">
+    @{
+        Html.RenderPartial("~/Views/Member/_MemberProfile.cshtml", Model.InitialModule);
+    }
+  
+    <img id="profileLoader" class="spinner" src="~/images/ajax-spinner.gif" style="visibility:hidden;" />
+</div>
+
 
 @section scripts{
-    <script type="text/javascript">
-            selectModuleLink('Personal Info');
 
+    <script src="~/Scripts/Member.js"></script>
+
+    <script type="text/javascript">
             wireEventHandlers("member");
     </script>
 }

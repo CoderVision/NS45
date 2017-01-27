@@ -21,6 +21,7 @@ namespace NtccSteward.Core.Factories
             target.SponsorId = source.SponsorId;
             target.Sponsor = source.Sponsor;
             target.StatusId = source.StatusId;
+            target.StatusDesc = source.StatusDesc;
             target.BirthDate = source.BirthDate;
             target.ChurchId = source.ChurchId;
             target.ChurchName = source.ChurchName;
@@ -31,6 +32,8 @@ namespace NtccSteward.Core.Factories
             target.DateBaptizedHolyGhost = source.DateBaptizedHolyGhost;
             target.Married = source.Married;
             target.Veteran = source.Veteran;
+            target.StatusChangeTypeId = source.StatusChangeTypeId;
+            target.StatusChangeTypeDesc = source.StatusChangeTypeDesc;
 
             return target;
         }

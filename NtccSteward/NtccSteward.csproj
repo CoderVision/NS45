@@ -307,6 +307,14 @@
     <Content Include="Content\images\Settings-48.png" />
     <Content Include="Content\images\Text-32.png" />
     <Content Include="Content\images\warning_blue.png" />
+    <Content Include="Content\tether\tether-theme-arrows-dark.css" />
+    <Content Include="Content\tether\tether-theme-arrows-dark.min.css" />
+    <Content Include="Content\tether\tether-theme-arrows.css" />
+    <Content Include="Content\tether\tether-theme-arrows.min.css" />
+    <Content Include="Content\tether\tether-theme-basic.css" />
+    <Content Include="Content\tether\tether-theme-basic.min.css" />
+    <Content Include="Content\tether\tether.css" />
+    <Content Include="Content\tether\tether.min.css" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
     <Content Include="Content\themes\base\autocomplete.css" />
@@ -464,6 +472,8 @@
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\site.js" />
     <Content Include="Scripts\site.min.js" />
+    <Content Include="Scripts\tether\tether.js" />
+    <Content Include="Scripts\tether\tether.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Views\Member\TestHtmlPage.html" />
     <Content Include="Web.config" />
@@ -508,10 +518,12 @@
     <Content Include="Views\Report\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Shared\AddressInfo\_Address.cshtml" />
+    <Content Include="Views\Shared\AddressInfo\_Email.cshtml" />
+    <Content Include="Views\Shared\AddressInfo\_Phone.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Shared\AddressInfo\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

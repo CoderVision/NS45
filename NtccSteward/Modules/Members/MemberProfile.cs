@@ -6,6 +6,7 @@ using NtccSteward.Core.Models.Common.Enums;
 using NtccSteward.ViewModels.Common.Address;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -84,7 +85,8 @@ namespace NtccSteward.Modules.Members
 
         public string Gender { get; set; }
 
-        public string BirthDate { get; set; }
+        //[DataType(DataType.Date)]
+        public DateTime? BirthDate { get; set; }
 
         public string PreferredName { get; set; }
 
@@ -104,7 +106,13 @@ namespace NtccSteward.Modules.Members
 
         public int ChurchId { get; set; }
 
-        public int Status { get; set; } // faithful, etc.  
+        public int StatusId { get; set; } // faithful, etc.  
+
+        public string StatusDesc { get; set; }
+
+        public int StatusChangeTypeId { get; set; }
+
+        public string StatusChangeTypeDesc { get; set; }
 
         public int SponsorId { get; set; }
 
@@ -132,7 +140,5 @@ namespace NtccSteward.Modules.Members
                 base.Id = value;
             }
         }
-
-        public int StatusId { get; set; }
     }
 }

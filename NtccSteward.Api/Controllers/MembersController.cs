@@ -228,14 +228,18 @@ namespace NtccSteward.Api.Controllers
             }
         }
 
-        //// DELETE api/values/5
-        //[Route("members/{id}")]
+        /// <summary>
+        /// Deletes a person or contact info
+        /// </summary>
+        /// <param name="id">Person.IdentityId</param>
+        /// <param name="entityType">EnumTypeId=12:  56 person, 61 ContactInfo</param>
+        /// <returns></returns>
         [HttpDelete()]
-        public IHttpActionResult Delete(int id)
+        public IHttpActionResult Delete(int id, int entityType)
         {
             try
             {
-                var result = this._repository.Delete(id);
+                var result = this._repository.Delete(id, entityType);
 
                 if (result.Status == RepositoryActionStatus.Deleted)
                 {

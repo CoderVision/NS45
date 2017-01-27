@@ -40,6 +40,10 @@ namespace NtccSteward.Controllers
             if (churchId != null)
                 loginVm.ChurchId = Convert.ToInt32(churchId.Value);
 
+            var password = Request.Cookies["password"];
+            if (password != null)
+                loginVm.Password = password.Value;
+
             if (TempData["loginError"] != null)
                 ModelState.AddModelError("loginError", TempData["loginError"].ToString());
 
@@ -56,6 +60,7 @@ namespace NtccSteward.Controllers
                 {
                     Response.Cookies.Add(new HttpCookie("email", login.Email));
                     Response.Cookies.Add(new HttpCookie("churchId", login.ChurchId.ToString()));
+                    Response.Cookies.Add(new HttpCookie("password", login.Password));
                 }
 
                 var session = await _apiProvider.PostItemAsync<Login>("account/Login", new Login(login));
