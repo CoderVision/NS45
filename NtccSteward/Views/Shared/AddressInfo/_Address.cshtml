@@ -43,9 +43,9 @@
                     &nbsp;
                 </div>
                 <div class="col-xs-11" >                    
-                    <label class="checkbox-inline addyVerified">@Html.CheckBoxFor(m => m.Verified, new { @class = "form-check-inline", @id = "preferred", type = "checkbox" })  Verified</label>
-                    <label class="checkbox-inline addyPreferred">@Html.CheckBoxFor(m => m.Preferred, new { @class = "form-check-inline", @id = "preferred", type = "checkbox" })  Preferred</label>
-                    <img class="img-responsive inline-block center icon addyActionImg" onclick="OpenMap('@Model.Id')" src="~/content/images/Maps-32.png" alt="Open map" />
+                    <label class="checkbox-inline addyVerified">@Html.CheckBoxFor(m => m.Verified, new { @class = "nscheckbox", @id = "verified", type = "checkbox" })  Verified</label>
+                    <label class="checkbox-inline addyPreferred">@Html.CheckBoxFor(m => m.Preferred, new { @class = "nscheckbox", @id = "preferred", type = "checkbox" })  Preferred</label>
+                    <img disabled class="img-responsive inline-block center icon addyActionImg" onclick="OpenMap('@Model.Id')" src="~/content/images/Maps-32.png" alt="Open map" />
                     <img class="icon addyRemoveImg" onclick="RemoveAddress(@Model.Id, 'address')" src="~/content/images/remove-32.png" alt="Remove Address" style="height:12px;vertical-align:middle;" />
                 </div>
             </div>

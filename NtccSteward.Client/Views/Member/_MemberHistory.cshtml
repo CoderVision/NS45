@@ -1,0 +1,20 @@
+﻿
+
+<div>
+    This is the history area, where all historical activity for this member will be listed.  
+    <br/><br />
+    Examples of activities are: church services, bible study, soul-winning, other events that they attended.  
+    It will also include corresondence that were sent to them, such as letters, emails, text messages, etc.
+    Also, it will include visitation by soul-winners, etc., and the contacts this person has visited.
+    <br /><br />
+    All of this information will be filterable by the type of activity.
+    <br /><br />
+    <div>
+        <input type="text" id="memberSearch" placeholder="Search" style="padding:3px;width:300px;margin-bottom:4px;margin-left:0px;" 
+               onfocus="search_onfocus(this)"
+               onblur="search_onblur(this, 'Full Name')"
+               oninput="search_oninput(memLstLdr, this.value)" />
+
+        <div id="memActivityGrid" style="width:100%;height:100px;" />
+    </div>
+</div>

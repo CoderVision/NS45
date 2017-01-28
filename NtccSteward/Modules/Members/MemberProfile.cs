@@ -118,11 +118,11 @@ namespace NtccSteward.Modules.Members
 
         public string Sponsor { get; set; }
 
-        public string DateSaved { get; set; }
+        public DateTime? DateSaved { get; set; }
 
-        public string DateBaptizedHolyGhost { get; set; }
+        public DateTime? DateBaptizedHolyGhost { get; set; }
 
-        public string DateBaptizedWater { get; set; }
+        public DateTime? DateBaptizedWater { get; set; }
 
         public int MemberStatusEnumType { get; set; }
 

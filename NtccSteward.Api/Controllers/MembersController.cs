@@ -34,17 +34,29 @@ namespace NtccSteward.Api.Controllers
             _logger = logger;
         }
 
-
+        /// <summary>
+        /// Gets a list of members for the specified church
+        /// </summary>
+        /// <param name="churchId">Church ID</param>
+        /// <param name="statusIds">EnumID separated by a dash -, e.g. (49-50)</param>
+        /// <param name="page">page number</param>
+        /// <param name="pageSize">page size</param>
+        /// <returns></returns>
         //[VersionedRoute("members/Get", 1)] // indicates Version 1 of the route.
         [HttpGet]
-        public IHttpActionResult Get(int churchId, int statusId, int page = 1, int pageSize = 10000, bool showAll = false)
+        public IHttpActionResult Get(int churchId, string statusIds, int page = 1, int pageSize = 10000)
         {
             try
             {
-                if (churchId == 0 || statusId == 0)
+                if (churchId == 0)
                     return BadRequest();
 
-                var list = _repository.GetList(churchId, statusId);
+                if (string.IsNullOrWhiteSpace(statusIds))
+                    statusIds = "49-50";
+
+                var idlist = statusIds.Split(new[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
+
+                var list = _repository.GetList(churchId, Array.ConvertAll<string,int>(idlist, int.Parse));
 
                 var totalCount = list.Count();
                 var totalPages = (int)Math.Ceiling((decimal)totalCount / pageSize);
@@ -54,7 +66,7 @@ namespace NtccSteward.Api.Controllers
                 var prevLink = page > 1 ? urlHelper.Link("Get"
                     , new {
                         churchId = churchId
-                        , statusId = statusId
+                        , statusIds = statusIds
                         , page = page - 1
                         , pageSize = pageSize
                     }) : "";
@@ -62,7 +74,7 @@ namespace NtccSteward.Api.Controllers
                     , new
                     {
                         churchId = churchId
-                        , statusId = statusId
+                        , statusIds = statusIds
                         , page = page + 1
                         , pageSize = pageSize
                     }) : "";
@@ -89,6 +101,14 @@ namespace NtccSteward.Api.Controllers
 
                 return InternalServerError();
             }
+        }
+
+
+        [Route("members/metadata")]
+        [HttpGet]
+        public IHttpActionResult GetProfileMetadata(int churchId)
+        {
+            return Ok(_repository.GetProfileMetadata(churchId));
         }
 
 

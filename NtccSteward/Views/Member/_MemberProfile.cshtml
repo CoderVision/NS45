@@ -1,9 +1,15 @@
-﻿@model NtccSteward.Modules.Members.MemberProfile
+﻿@using NtccSteward.Framework
+@model NtccSteward.Modules.Members.MemberProfile
+
 
 @* This is the Member Profile (info and addresses) *@
 
 @{
     ViewBag.Title = @Model.DisplayText;
+
+    var sponsorList = SelectListItemFactory.Create(Model.MetaDataList.Where(e => e.AppEnumTypeID == -1).OrderBy(e => e.Desc), Model.SponsorId, "Sponsor", "-1");
+    var reasonList = SelectListItemFactory.Create(Model.MetaDataList.Where(e => e.AppEnumTypeID == 7).OrderBy(e => e.SortOrder), Model.StatusChangeTypeId, "Reason", "-1");
+    var statusList = SelectListItemFactory.Create(Model.MetaDataList.Where(e => e.AppEnumTypeID == 9).OrderBy(e => e.SortOrder), Model.StatusId, "Status", "-1");
 }
 
 @*Add checkbox for Holy Spirit Baptism and Water Baptism*@
@@ -101,16 +107,18 @@
                 <div class="form-group">
                     <label for="status" class="col-sm-2 control-label labelNormal">Status</label>
                     <div class="col-sm-10">
-                        @Html.TextBoxFor(m => m.StatusDesc, new { @class = "form-control", @id = "StatusDesc", @readonly = "readonly" })
-                        @Html.HiddenFor(m => m.StatusId, new { @id= "StatusId" })
+                        @Html.HiddenFor(m => m.StatusId, new { @id = "StatusId" })
+
+                        @Html.DropDownListFor(m => m.StatusId, statusList, new { @class = "form-control", @id = "status", @placeholder = "Status" })
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="status" class="col-sm-2 control-label labelNormal">Reason</label>
                     <div class="col-sm-10">
-                        @Html.TextBoxFor(m => m.StatusChangeTypeDesc, new { @class = "form-control", @id = "StatusChangeTypeDesc", @readonly = "readonly" })
                         @Html.HiddenFor(m => m.StatusChangeTypeId, new { @id= "StatusChangeTypeId" })
+
+                        @Html.DropDownListFor(m => m.StatusChangeTypeId, reasonList, new { @class = "form-control", @id = "reasonId", @placeholder = "Reason" })
                     </div>
                 </div>
 
@@ -118,8 +126,9 @@
                 <div class="form-group">
                     <label for="sponsor" class="col-sm-2 control-label labelNormal">Sponsor</label>
                     <div class="col-sm-10">
-                        @Html.TextBoxFor(m => m.Sponsor, new { @class = "form-control", @id = "Sponsor", @readonly = "readonly" })
-                        @Html.HiddenFor(m => m.SponsorId, new { @id = "SponsorId" })
+                        @*@Html.TextBoxFor(m => m.Sponsor, new { @class = "form-control", @id = "Sponsor", @readonly = "readonly" })*@
+                        @*@Html.HiddenFor(m => m.SponsorId, new { @id = "SponsorId" })*@
+                        @Html.DropDownListFor(m => m.StatusChangeTypeId, sponsorList, new { @class = "form-control", @id = "SponsorId", @placeholder = "Sponsor" })
                     </div>
                 </div>
 
@@ -214,14 +223,4 @@
     Html.RenderPartial("~/Views/Message/_Message.cshtml");
 }
 
-@*<script type="text/javascript">
-    $(function () {
-        $("#birthDate").datepicker({
-            showOtherMonths: true,
-            selectOtherMonths: true,
-            changeMonth: true,
-            changeYear: true,
-            yearRange: "-100:+0"
-        });
-    });
-</script>*@
+

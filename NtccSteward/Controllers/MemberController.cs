@@ -14,6 +14,8 @@ using NtccSteward.Core.Interfaces.Common.Address;
 using NtccSteward.Core.Factories;
 using System.Web;
 using System.Web.Mvc;
+using NtccSteward.Core.Models.Common.Enums;
+using NtccSteward.ViewModels.Member;
 
 namespace NtccSteward.Controllers
 {
@@ -43,7 +45,7 @@ namespace NtccSteward.Controllers
         }
 
         // query string parameters
-        public async Task<ActionResult> Index(int statusId, int page = 1, int pageSize = 1000)
+        public async Task<ActionResult> Index(string statusIds, int page = 1, int pageSize = 1000)
         {
             InitSession();
 
@@ -55,10 +57,16 @@ namespace NtccSteward.Controllers
             {
                 try
                 {
-                    var queryString = $"churchId={_session.ChurchId}&statusId={statusId}&page={page}&pageSize={pageSize}";
+                    var queryString = $"churchId={_session.ChurchId}&statusIds={statusIds}&page={page}&pageSize={pageSize}";
                     var result = await _apiProvider.GetItemAsync(_uri, queryString);
                     var list = _apiProvider.DeserializeJson<List<cm.Member>>(result);
-                    return View(list);
+
+                    var metajson = await _apiProvider.GetItemAsync($"{_uri}/metadata", $"churchId={_session.ChurchId}");
+                    var metaList = _apiProvider.DeserializeJson<List<AppEnum>>(metajson);
+
+                    var viewModel = new MemberIndexViewModel() { MemberList = list, MetaList = metaList };
+
+                    return View(viewModel);
                 }catch (Exception ex)
                 {
                     return Content("Error loading Member list: " + ex.Message);
@@ -79,9 +87,14 @@ namespace NtccSteward.Controllers
             else
             {
                 var mpjson = await _apiProvider.GetItemAsync(_uri, $"id={id}");
-
                 var mp = _apiProvider.DeserializeJson<cm.MemberProfile>(mpjson);
+
                 var memberProfileModule = this.CopyMemberProfileToVm(mp);
+
+                var metajson = await _apiProvider.GetItemAsync($"{_uri}/metadata", $"churchId={_session.ChurchId}");
+                var metaList = _apiProvider.DeserializeJson<List<AppEnum>>(metajson);
+
+                memberProfileModule.MetaDataList = metaList.ToList();
 
                 var shell = new MemberModule(memberProfileModule);
 
@@ -258,25 +271,34 @@ namespace NtccSteward.Controllers
 
 
         [HttpPost]
-        //[HttpPost("CreateMember")]
-        public async Task<ActionResult> Post(cm.NewMember member)
+        public async Task<ActionResult> CreateMember(cm.NewMember member)
         {
             InitSession();
 
             member.ChurchId = _session?.ChurchId ?? 3; // default to graham
             member.CreatedByUserId = _session?.UserId ?? 0; // default to system
 
-            var memberId = await _apiProvider.PutItemAsync<cm.NewMember>("/api/member/CreateMember", member);
+            var memberId = await _apiProvider.PostItemAsync<cm.NewMember>(_uri, member);
 
-            string url = Url.Action("CreateMember", "Members", memberId);
+            return Content("Created " + member.id.ToString());
+        }
 
-            var result = new
+        //[HttpPost]
+        public async Task<ActionResult> DeleteMember(int id)
+        {
+            try
             {
-                url = url,
-                memberId = memberId
-            };
+                var result = await _apiProvider.DeleteItemAsync($"{_uri}/{id.ToString()}?entityType=56");
 
-            return Json(result);
+                if (string.IsNullOrWhiteSpace(result))
+                    return RedirectToAction("Index", new { statusIds = "49-50" });
+                else
+                    return Content("Error deleting member");
+            }
+            catch(Exception ex)
+            {
+                return Content("Error deleting member: " + ex.Message);
+            }
         }
     }
 }

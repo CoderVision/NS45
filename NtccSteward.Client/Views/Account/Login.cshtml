@@ -1,0 +1,91 @@
+﻿@using NtccSteward.ViewModels.Church
+@model NtccSteward.ViewModels.Account.LoginVm
+
+
+@{
+    ViewBag.Title = "Log In";
+}
+
+
+@*<div>
+    <div class="row">
+        <div class="col-sm-6 col-md-6 col-lg-6">
+            <span class="sectionTitle">I Have An Account</span>
+
+            @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @id = "loginForm", @class = "form" })) 
+            {
+                @Html.AntiForgeryToken();
+
+                <div class="form-group">
+                    <label for="email" class="labelNormal">Email Address</label>
+                    @Html.TextBoxFor(m => m.Email, new { @type = "email", @class = "form-control", @id = "Email", @placeholder = "Enter email" })
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="labelNormal">Password</label>
+                    @Html.PasswordFor(m => m.Password, new { @type = "password", @class = "form-control", @id = "password", @placeholder = "Password" })
+                </div>
+
+                <div class="form-group">
+                    <label for="church" class="labelNormal">Church</label>
+                    @Html.DropDownListFor(m => m.ChurchId, new SelectList(Model.ChurchList, "Id", "Name"), new { @class = "form-control", @id = "church", @placeholder = "Church" })
+                </div>
+
+                <label class="labelNormal">Forgot your <a href="">password</a>?</label>
+
+                <div class="checkbox">
+                    <label>
+                        @Html.CheckBoxFor(m => m.Remember) Remember Me
+                    </label>
+                </div>
+                <p style="margin-top:20px;margin-bottom:20px;">
+                    <input class="btn btn-primary" type="submit" value="Sign In" />
+                </p>
+
+                <div id="failureMsg" class="alert alert-danger @(ViewData.ModelState.IsValid ? "hidden" : "") " role="alert">
+                    @Html.ValidationSummary("",new { @class="" })
+                </div>
+            }
+
+        </div>
+
+        <div class="col-sm-6 col-md-6 col-lg-6">
+            <span class="sectionTitle">Request A New Account</span>
+
+            @using (Html.BeginForm("RequestAccount", "Account", FormMethod.Post, new { id = "requestForm" }))
+            {
+                //type = "submit"
+                <input class="btn" type="submit"  value="Request an Account" style="margin-top:6px;" />
+
+                //onclick = "DoValidate()"
+                <p style="margin-top:30px;">
+                    Request a new account today to start enjoying the benefits of using a website that is designed to help you run your church effectively!
+                </p>
+
+                <ul class="standard">
+                    <li>Keep track of the important information about your church members, such as their address, phone number, email address, etc.</li>
+                    <li>Keep track of activities, such as who attended what church service and when.</li>
+                    <li>Send out emails or text notifications to your church members individually or to a group.</li>
+                    <li>Keep track of sponsors and their guests.</li>
+                </ul>
+
+                <p class="terms">
+                    <a href=@Url.Action("Terms", "Account")>Terms and Conditions</a>
+                </p>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            initializeLogin();
+        });
+
+    </script>
+}*@
+

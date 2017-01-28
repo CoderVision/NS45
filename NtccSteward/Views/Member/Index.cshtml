@@ -1,4 +1,4 @@
-﻿@model IEnumerable<NtccSteward.Core.Models.Members.Member>
+﻿@model NtccSteward.ViewModels.Member.MemberIndexViewModel
 
 @{
     ViewBag.Title = "Members";
@@ -12,8 +12,7 @@
         <input type="search" id="memberSearch" class="form-control" style="padding:3px;width:300px;margin-bottom:4px;margin-left:0px;" placeholder="Full Name Search"
                oninput="FilterTable('memberTbl', this.value, 'Full Name')" />
 
-        <a href="#newMember" data-toggle="modal" onclick="OpenNewMemberForm();return false;" style="margin-left:4px;">Add Member</a>
-        @*<img src="~/images/placeholder.gif" class="toolbarIcon add" alt="Add" title="Add Member" style="margin-left:10px;" />*@
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newMember" style="margin-left:8px;margin-bottom:4px;">Add</button>
     </form>
 
     <table id="memberTbl" class="table table-sm table-hover table-bordered">
@@ -38,10 +37,13 @@
                 <th class="hideXs">
                     Email
                 </th>
+                <th>
+                    &nbsp;
+                </th>
             </tr>
         </thead>
 
-        @foreach (var m in Model)
+        @foreach (var m in Model.MemberList)
         {
             <tr>
                 <td>
@@ -62,6 +64,9 @@
                 <td class="hideXs">
                     @m.Email
                 </td>
+                <td class="hideXs">
+                    @Html.ActionLink("Delete", "DeleteMember", "Member", new { @id=m.id }, null)
+                </td> 
             </tr>
         }
     </table>
@@ -70,12 +75,12 @@
 <input type="hidden" id="memberId" />
 
 
-<div class="modal fade" id="newMember">
+<div class="modal fade" id="newMember" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title">Add Member</h4>
+                <h4 class="modal-title ">Add Member</h4>
             </div>
 
             <div class="modal-body">
@@ -99,8 +104,8 @@
                                     <label><input type="checkbox" id="prayed" /></label>
                                 </div>
                             </div>
-                            <div class="col-sm-4">
-                                &nbsp;
+                            <div class="col-sm-4" style="text-align:center;">
+                                <h2 id="svdMsg" class="success" style="line-height:75px;height:75px;color:lime;margin-right:10px;visibility:hidden;">Saved!</h2>
                             </div>
                         </div>
                     </div>
@@ -120,7 +125,7 @@
 
                     <div class="form-group" style="margin-bottom: 0px !important;">
                         <div class="row">
-                            <div class="col-sm-9">
+                            <div class="col-sm-8">
                                 <label for="line1" class="labelNormal">Address</label>
                                 <input type="text" class="form-control" id="line1" placeholder="Enter line 1" />
                                 <div class="form-group row">
@@ -135,10 +140,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-4">
                                 <label for="Phone" class="labelNormal">Phone</label>
-                                <input type="tel" class="form-control" id="phone" placeholder="Enter Phone" />
-                                <input type="tel" class="form-control addyGutter" id="phone2" placeholder="Enter Phone" />
+                                <input id="phone" type="tel" class="form-control" pattern="^(\s+)?\(?([0-9]{3})\)?(\s+)?[0-9]{3}-?[0-9]{4}$" value="(___) ___-____" />
+                                <input id="phone2" type="tel" class="form-control addyGutter" pattern="^(\s+)?\(?([0-9]{3})\)?(\s+)?[0-9]{3}-?[0-9]{4}$" value="(___) ___-____"/>
                             </div>
                         </div>
                     </div>
@@ -149,23 +154,26 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="sponsor" class="labelNormal">Sponsor</label>
-                        <input type="text" class="form-control" id="sponsor" name="sponsor" placeholder="Enter sponsor" />
+                        <label for="sponsor" class="labelNormal" >Sponsor</label>
+                        <select class="form-control" id="Sponsor">
+                            <option disabled selected value="">Sponsor</option>
+                            @foreach (var meta in Model.MetaList.Where(m => m.AppEnumTypeID == -1).OrderBy(m => m.Desc))
+                            {
+                                <option value="@meta.ID">@meta.Desc</option>
+                            }
+                        </select>
                     </div>
 
                     <div class="clearfix" />
                 </form>
             </div>
             <div class="modal-footer">
-                @*<button type="button" class="btn btn-default" onclick="SaveNewMember(false)">Save</button>
-                <button type="button" class="btn btn-primary" onclick="SaveNewMember(true)">Save &amp; Open</button>*@
                 <button type="button" class="btn btn-primary" onclick="SaveNewMemberAdd()">Save &amp; Add Another</button>
                 <button type="button" class="btn btn-default" onclick="CloseNewMember()">Close</button>
             </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
+        </div>
+    </div>
+</div>
 
 @section scripts {
 
@@ -173,7 +181,13 @@
 
     <script type="text/javascript">
 
-           initializeNewMember();
+        $(function () {
+            initializeNewMember();
+
+            MaskPhone('phone');
+
+            MaskPhone('phone2');
+        });
 
     </script>
 }

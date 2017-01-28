@@ -12,9 +12,9 @@ namespace NtccSteward.Core.Interfaces.Members
         int ChurchId { get; set; }
         string ChurchName { get; set; }
         string Comments { get; set; }
-        string DateBaptizedHolyGhost { get; set; }
-        string DateBaptizedWater { get; set; }
-        string DateSaved { get; set; }
+        DateTime? DateBaptizedHolyGhost { get; set; }
+        DateTime? DateBaptizedWater { get; set; }
+        DateTime? DateSaved { get; set; }
         //List<Email> EmailList { get; set; }
         string FirstName { get; set; }
         string FullName { get; }

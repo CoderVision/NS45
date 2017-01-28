@@ -19,8 +19,8 @@ namespace NtccSteward.Api.Repository
     public interface IMemberRepository
     {
         RepositoryActionResult<NewMember> Add(NewMember member);
-        List<Member> GetList(int churchId, int statusEnumId);
-        List<Member> GetProfileMetadata(int identityTypeEnumID);
+        List<Member> GetList(int churchId, IEnumerable<int> statusEnumId);
+        List<AppEnum> GetProfileMetadata(int churchId);
 
         MemberProfile Get(int id);
 
@@ -87,13 +87,17 @@ namespace NtccSteward.Api.Repository
         }
 
 
-        public List<Member> GetList(int churchId, int statusEnumId)
+        public List<Member> GetList(int churchId, IEnumerable<int> statusEnumIds)
         {
             var proc = "Membership_SelectByChurch";
 
+            var table = new DataTable();
+            table.Columns.Add("Id", typeof(int));
+            statusEnumIds.ToList().ForEach(s => table.Rows.Add(s));
+
             var paramz = new List<SqlParameter>();
             paramz.Add(new SqlParameter("ChurchId", churchId));
-            paramz.Add(new SqlParameter("StatusEnumID", statusEnumId));
+            paramz.Add(new SqlParameter("StatusEnumIDs", table));
 
             MemberListOrdinals o = null;
 
@@ -121,36 +125,6 @@ namespace NtccSteward.Api.Repository
         }
 
 
-        public MemberProfile GetProfileMetadata()
-        {
-            MemberProfile member = null;
-
-            var proc = "GetMemberProfileMetadata";
-
-            using (var cn = new SqlConnection(_executor.ConnectionString))
-            using (var cmd = new SqlCommand(proc, cn))
-            {
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                cn.Open();
-
-                using (var reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        var enm = new AppEnum();
-                        enm.ID = reader.ValueOrDefault<int>("EnumID");
-                        enm.Desc = reader.ValueOrDefault<string>("EnumDesc");
-                        enm.AppEnumTypeID = reader.ValueOrDefault<int>("EnumTypeID");
-                        enm.AppEnumTypeName = reader.ValueOrDefault<string>("EnumTypeName");
-
-                        member.MetaDataList.Add(enm);
-                    }
-                }
-            }
-
-            return member;
-        }
 
         public MemberProfile Get(int id)
         {
@@ -183,9 +157,9 @@ namespace NtccSteward.Api.Repository
                         member.Married = reader.ValueOrDefault<bool>("Married", false);
                         member.Veteran = reader.ValueOrDefault<bool>("Veteran", false);
                         member.BirthDate = reader.ValueOrDefault<DateTime?>("DateOfBirth", null);
-                        member.DateSaved = reader.ValueOrDefault<DateTime?>("DateSaved", null)?.ToShortDateString();
-                        member.DateBaptizedHolyGhost = reader.ValueOrDefault<DateTime?>("DateBaptizedHolyGhost", null)?.ToShortDateString();
-                        member.DateBaptizedWater = reader.ValueOrDefault<DateTime?>("DateBaptizedWater", null)?.ToShortDateString();
+                        member.DateSaved = reader.ValueOrDefault<DateTime?>("DateSaved", null);
+                        member.DateBaptizedHolyGhost = reader.ValueOrDefault<DateTime?>("DateBaptizedHolyGhost", null);
+                        member.DateBaptizedWater = reader.ValueOrDefault<DateTime?>("DateBaptizedWater", null);
                         member.ChurchId = reader.ValueOrDefault<int>("ChurchId", 0);
                         member.ChurchName = reader["ChurchName"].ToString();
                         member.StatusId = reader.ValueOrDefault<int>("StatusId", 0);
@@ -271,12 +245,10 @@ namespace NtccSteward.Api.Repository
             return member;
         }
 
-        public List<Member> GetProfileMetadata(int identityTypeEnumID)
+        public List<AppEnum> GetProfileMetadata(int churchId)
         {
-            var list = new List<Member>();
-
             var paramz = new List<SqlParameter>();
-            paramz.Add(new SqlParameter("identityTypeEnumID", identityTypeEnumID));
+            paramz.Add(new SqlParameter("churchId", churchId));
 
             Func<SqlDataReader, AppEnum> readFx = (reader) =>
             {
@@ -289,7 +261,7 @@ namespace NtccSteward.Api.Repository
                 return appEnum;
             };
 
-            _executor.ExecuteSql<AppEnum>("GetMemberProfile", CommandType.StoredProcedure, paramz, readFx);
+            var list = _executor.ExecuteSql<AppEnum>("GetMemberProfileMetadata", CommandType.StoredProcedure, paramz, readFx);
 
             return list;
         }
@@ -298,6 +270,7 @@ namespace NtccSteward.Api.Repository
         {
             var paramz = new List<SqlParameter>();
             paramz.Add(new SqlParameter("memberId", memberProfile.MemberId));
+            paramz.Add(new SqlParameter("churchId", memberProfile.ChurchId));
             paramz.Add(new SqlParameter("firstName", memberProfile.FirstName.ToSqlString()));
             paramz.Add(new SqlParameter("middleName", memberProfile.MiddleName.ToSqlString()));
             paramz.Add(new SqlParameter("lastName", memberProfile.LastName.ToSqlString()));
@@ -305,13 +278,14 @@ namespace NtccSteward.Api.Repository
             paramz.Add(new SqlParameter("birthDate", memberProfile.BirthDate?.ToString().ToSqlString()));
             paramz.Add(new SqlParameter("gender", memberProfile.Gender.ToSqlString()));
             paramz.Add(new SqlParameter("comments", memberProfile.Comments.ToSqlString()));
-            paramz.Add(new SqlParameter("dateSaved", memberProfile.DateSaved.ToSqlString()));
-            paramz.Add(new SqlParameter("dateBaptizedWater", memberProfile.DateBaptizedWater.ToSqlString()));
-            paramz.Add(new SqlParameter("dateBaptizedHolyGhost", memberProfile.DateBaptizedHolyGhost.ToSqlString()));
+            paramz.Add(new SqlParameter("dateSaved", memberProfile.DateSaved));
+            paramz.Add(new SqlParameter("dateBaptizedWater", memberProfile.DateBaptizedWater));
+            paramz.Add(new SqlParameter("dateBaptizedHolyGhost", memberProfile.DateBaptizedHolyGhost));
             paramz.Add(new SqlParameter("married", memberProfile.Married));
             paramz.Add(new SqlParameter("veteran", memberProfile.Veteran));
             paramz.Add(new SqlParameter("sponsorId", memberProfile.SponsorId));
-            paramz.Add(new SqlParameter("memberStatusEnumType", memberProfile.MemberStatusEnumType));
+            paramz.Add(new SqlParameter("memberStatusEnumId", memberProfile.StatusId));
+            paramz.Add(new SqlParameter("statusChangeTypeEnumId", memberProfile.StatusChangeTypeId));
 
             Func<SqlDataReader, int> readFx = (reader) =>
             {

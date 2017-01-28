@@ -74,7 +74,7 @@ namespace NtccSteward.Controllers
                 {
                     HttpContext.Session["Session"] = session;
 
-                    return RedirectToAction("Index", "Member", new { churchId = login.ChurchId, statusId = 49, page = 1, pageSize = 1000, showAll = false });
+                    return RedirectToAction("Index", "Member", new { churchId = login.ChurchId, statusIds = "49-50", page = 1, pageSize = 1000, showAll = false });
                 }
             }
             else

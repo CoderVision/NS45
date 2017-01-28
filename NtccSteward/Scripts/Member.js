@@ -7,6 +7,23 @@
 function SaveMemberProfile() {
 
     var maleChecked = document.getElementById("maleRadio").checked;
+
+    var statusId = $("#StatusId").val();
+    var status = $("#status").val();
+    if (statusId != status)
+    {
+        // status has changed, make sure reason has changed
+        var statusChangeTypeId = $("#StatusChangeTypeId").val();
+        var reason = $("#reason").val();
+        if (statusChangeTypeId == reason)
+        {
+            $("#reason").closest('.form-group').addClass('has-error');
+            alert("You must select a different reason when the status changes");
+            return;
+        }
+        else
+            $("#reason").closest('.form-group').removeClass('has-error');
+    }
    
     // get which radio is checked
     var memberProfile = {
@@ -17,16 +34,16 @@ function SaveMemberProfile() {
         , PreferredName: $("#PreferredName").val()
         , ChurchId: $("#ChurchId").val()
         , ChurchName: $("#ChurchName").val()
-        , StatusId: $("#StatusId").val()
-        , StatusDesc: $("#StatusDesc").val()
-        , StatusChangeTypeDesc: $("#StatusChangeTypeDesc").val()
-        , StatusChangeTypeId: $("#StatusChangeTypeId").val()
+        , StatusId: $("#status").val()
+        //, StatusDesc: $("#StatusDesc").val()
+        //, StatusChangeTypeDesc: $("#StatusChangeTypeDesc").val()
+        , StatusChangeTypeId: $("#reasonId").val()
         , Gender: maleChecked == true ? "M" : "F"
         , BirthDate: $("#BirthDate").val()
         , Married: document.getElementById("Married").checked 
         , Veteran: document.getElementById("Veteran").checked
         , SponsorId: $("#SponsorId").val()
-        , Sponsor: $("#Sponsor").val()
+        //, Sponsor: $("#Sponsor").val()
         , Comments: $("#Comments").val()
         , DateSaved: $("#DateSaved").val()
         , DateBaptizedWater: $("#DateBaptizedWater").val()
@@ -148,8 +165,11 @@ function OpenNewMemberForm()
 
 function ClearNewMemberForm()
 {
+    var today = new Date();
+    var todayFormatted = (today.getMonth() + 1) + "/" + today.getDate() + "/" + today.getFullYear();
+    $("#dateCame").val(todayFormatted);
+
     // clear previous values and open form
-    $("#dateCame").val("");
     $("#isGroup").prop("checked", false);
     $("#prayed").prop("checked", false);
     $("#firstName").val("");
@@ -158,21 +178,26 @@ function ClearNewMemberForm()
     $("#city").val("");
     $("#state").val("");
     $("#zip").val("");
-    $("#phone").val("");
+    $("#phone").val("(___) ___-____");
+    $("#phone2").val("(___) ___-____");
     $("#email").val("");
     $("#sponsor").val("");
+    $("#svdMsg").css("visibility", "hidden");
 
     var validator = $("#addMemberForm").validate();
     validator.resetForm();
 }
 
-function SaveNewMember(open) {
 
-    //$("#addMemberForm").validate();
+function SaveNewMember(open) {
 
     var isvalid = $("#addMemberForm").valid();
     if (isvalid == false)
         return;
+
+    var regX = /_|\(|\)|\s|-/g;
+    var ph = $("#phone").val().replace(regX, "");
+    var ph2 = $("#phone2").val().replace(regX, "");
 
     var newMember = {
         id:-1,
@@ -185,8 +210,8 @@ function SaveNewMember(open) {
         City: $("#city").val(),
         State: $("#state").val(),
         Zip: $("#zip").val(),
-        Phone: $("#phone").val(),
-        Phone2: $("#phone2").val(),
+        Phone: ph,
+        Phone2: ph2,
         Email: $("#email").val(),
         SponsorId: $("#sponsor").val(),
 
@@ -198,18 +223,25 @@ function SaveNewMember(open) {
     var newId = 0;
 
     $.ajax({
-        url: "/Member",
+        url: "/Member/CreateMember",
         type: "POST",
         datatype: "Json",
         data: newMember,
         success: function (newId) {
 
-            if (open)
-                OpenNewMember(newId)
+            $("#svdMsg").val("Saved");
+            $("#svdMsg").css("visibility", "visible");
+            
+            setTimeout(OpenNewMemberForm, 2000);
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+            $("#svdMsg").val("Error");
+            $("#svdMsg").css("visibility", "visible");
+
             alert("Status: " + textStatus + "\r\n" + "Error: " + errorThrown);
-        }
+        },
+        context: this
     });
 
     if (!open)
@@ -256,6 +288,14 @@ function OpenNewMember(id) {
 }
 
 function initializeNewMember() {
+
+    var today = new Date();
+    var todayFormatted = (today.getMonth()+1) + "/" + today.getDate() + "/" + today.getFullYear();
+    $("#dateCame").val(todayFormatted);
+
+    $("#newMember").on("hidden.bs.modal", function () {
+        window.location.reload();
+    });
 
     $('#addMemberForm').validate({
         rules: {
