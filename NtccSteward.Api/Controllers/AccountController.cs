@@ -17,7 +17,7 @@ using System.Web;
 
 namespace NtccSteward.Api.Controllers
 {
-    [RoutePrefix("api")]
+    //[RoutePrefix("api")]
     public class AccountController : ApiController
     {
         private readonly IAccountRepository _repository = null;

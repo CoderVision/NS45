@@ -306,14 +306,6 @@
     <Content Include="Content\images\Settings-48.png" />
     <Content Include="Content\images\Text-32.png" />
     <Content Include="Content\images\warning_blue.png" />
-    <Content Include="Content\tether\tether-theme-arrows-dark.css" />
-    <Content Include="Content\tether\tether-theme-arrows-dark.min.css" />
-    <Content Include="Content\tether\tether-theme-arrows.css" />
-    <Content Include="Content\tether\tether-theme-arrows.min.css" />
-    <Content Include="Content\tether\tether-theme-basic.css" />
-    <Content Include="Content\tether\tether-theme-basic.min.css" />
-    <Content Include="Content\tether\tether.css" />
-    <Content Include="Content\tether\tether.min.css" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
     <Content Include="Content\themes\base\autocomplete.css" />
@@ -362,6 +354,7 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <None Include="Properties\PublishProfiles\SmarterASP.NET.pubxml" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.1.1.js" />
     <Content Include="Scripts\jquery-3.1.1.min.js" />
@@ -387,8 +380,6 @@
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\site.js" />
     <Content Include="Scripts\site.min.js" />
-    <Content Include="Scripts\tether\tether.js" />
-    <Content Include="Scripts\tether\tether.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Views\Member\TestHtmlPage.html" />
     <Content Include="Web.config" />

@@ -23,31 +23,37 @@ namespace NtccSteward.Controllers
 
         public async Task<ActionResult> Index()
         {
-            var loginVm = new LoginVm();
-
-            var json = await _apiProvider.GetItemAsync("church", "page=1&pageSize=10000&showAll=false");
-
-            loginVm.ChurchList = _apiProvider.DeserializeJson<List<ChurchVm>>(json);
-
-            var loginEmail = Request.Cookies["email"];
-            if (loginEmail != null)
+            try
             {
-                loginVm.Email = loginEmail.Value;
-                loginVm.Remember = true;
+                var loginVm = new LoginVm();
+
+                var json = await _apiProvider.GetItemAsync("church", "page=1&pageSize=10000&showAll=false");
+
+                loginVm.ChurchList = _apiProvider.DeserializeJson<List<ChurchVm>>(json);
+
+                var loginEmail = Request.Cookies["email"];
+                if (loginEmail != null)
+                {
+                    loginVm.Email = loginEmail.Value;
+                    loginVm.Remember = true;
+                }
+
+                var churchId = Request.Cookies["churchId"];
+                if (churchId != null)
+                    loginVm.ChurchId = Convert.ToInt32(churchId.Value);
+
+                var password = Request.Cookies["password"];
+                if (password != null)
+                    loginVm.Password = password.Value;
+
+                if (TempData["loginError"] != null)
+                    ModelState.AddModelError("loginError", TempData["loginError"].ToString());
+
+                return View("/Views/Account/Login.cshtml", loginVm);
+            }catch (Exception ex)
+            {
+                return Content("The following error occurred while trying to load the login page:  " + ex.Message);
             }
-
-            var churchId = Request.Cookies["churchId"];
-            if (churchId != null)
-                loginVm.ChurchId = Convert.ToInt32(churchId.Value);
-
-            var password = Request.Cookies["password"];
-            if (password != null)
-                loginVm.Password = password.Value;
-
-            if (TempData["loginError"] != null)
-                ModelState.AddModelError("loginError", TempData["loginError"].ToString());
-
-            return View("/Views/Account/Login.cshtml", loginVm);
         }
 
 

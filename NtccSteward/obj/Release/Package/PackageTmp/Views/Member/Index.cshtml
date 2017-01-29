@@ -1,0 +1,195 @@
+﻿@model NtccSteward.ViewModels.Member.MemberIndexViewModel
+
+@{
+    ViewBag.Title = "Members";
+}
+
+<span class="sectionTitle">Member List</span>
+
+<div id="mem">
+
+    <form class="form-inline">
+        <input type="search" id="memberSearch" class="form-control" style="padding:3px;width:300px;margin-bottom:4px;margin-left:0px;" placeholder="Full Name Search"
+               oninput="FilterTable('memberTbl', this.value, 'Full Name')" />
+
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newMember" style="margin-left:8px;margin-bottom:4px;">Add</button>
+    </form>
+
+    <table id="memberTbl" class="table table-sm table-hover table-bordered">
+
+        <thead class="thead-default">
+            <tr>
+                <th>
+                    Full Name
+                </th>
+                <th class="hideXs">
+                    Status
+                </th>
+                <th class="hideXs">
+                    Status Description
+                </th>
+                <th class="hideXs">
+                    Last Attendance
+                </th>
+                <th class="hideXs">
+                    Phone
+                </th>
+                <th class="hideXs">
+                    Email
+                </th>
+                <th>
+                    &nbsp;
+                </th>
+            </tr>
+        </thead>
+
+        @foreach (var m in Model.MemberList)
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink(m.FullName, "Edit", "Member", new { id=m.id }, null)
+                </td>
+                <td class="hideXs">
+                    @m.Status
+                </td>
+                <td class="hideXs">
+                    @m.StatusChangeType
+                </td>
+                <td class="hideXs">
+                    @m.ActivityDate
+                </td>
+                <td class="hideXs">
+                    @m.Phone
+                </td>
+                <td class="hideXs">
+                    @m.Email
+                </td>
+                <td class="hideXs">
+                    @Html.ActionLink("Delete", "DeleteMember", "Member", new { @id=m.id }, null)
+                </td> 
+            </tr>
+        }
+    </table>
+</div>
+
+<input type="hidden" id="memberId" />
+
+
+<div class="modal fade" id="newMember" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title ">Add Member</h4>
+            </div>
+
+            <div class="modal-body">
+                <form class="form" id="addMemberForm">
+
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label for="dateCame" class="labelNormal">Date Came</label>
+                                <input type="date" class="form-control" id="dateCame" name="dateCame" placeholder="Enter date" />
+                            </div>
+                            <div class="col-sm-2">
+                                <label for="isGroup" class="labelNormal" style="margin-left:8px;">Is group?</label>
+                                <div class="checkbox" style="margin-top:4px;margin-left:28px;">
+                                    <label><input type="checkbox" id="isGroup" /></label>
+                                </div>
+                            </div>
+                            <div class="col-sm-2" style="padding-left:0px;">
+                                <label for="prayed" class="labelNormal">Prayed?</label>
+                                <div class="checkbox" style="margin-top:4px;margin-left:20px;">
+                                    <label><input type="checkbox" id="prayed" /></label>
+                                </div>
+                            </div>
+                            <div class="col-sm-4" style="text-align:center;">
+                                <h2 id="svdMsg" class="success" style="line-height:75px;height:75px;color:lime;margin-right:10px;visibility:hidden;">Saved!</h2>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label for="firstName" class="labelNormal">First Name</label>
+                                <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Enter first name" />
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="lastName" class="labelNormal">Last Name</label>
+                                <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Enter last name" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0px !important;">
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <label for="line1" class="labelNormal">Address</label>
+                                <input type="text" class="form-control" id="line1" placeholder="Enter line 1" />
+                                <div class="form-group row">
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control addyGutter" id="city" placeholder="City" />
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control addyGutter" id="state" placeholder="State" />
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control addyGutter" id="zip" placeholder="Zip" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="Phone" class="labelNormal">Phone</label>
+                                <input id="phone" type="tel" class="form-control" pattern="^(\s+)?\(?([0-9]{3})\)?(\s+)?[0-9]{3}-?[0-9]{4}$" value="(___) ___-____" />
+                                <input id="phone2" type="tel" class="form-control addyGutter" pattern="^(\s+)?\(?([0-9]{3})\)?(\s+)?[0-9]{3}-?[0-9]{4}$" value="(___) ___-____"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email" class="labelNormal">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sponsor" class="labelNormal" >Sponsor</label>
+                        <select class="form-control" id="Sponsor">
+                            <option disabled selected value="">Sponsor</option>
+                            @foreach (var meta in Model.MetaList.Where(m => m.AppEnumTypeID == -1).OrderBy(m => m.Desc))
+                            {
+                                <option value="@meta.ID">@meta.Desc</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="clearfix" />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="SaveNewMemberAdd()">Save &amp; Add Another</button>
+                <button type="button" class="btn btn-default" onclick="CloseNewMember()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+
+    <script src="~/Scripts/member.js"></script>
+
+    <script type="text/javascript">
+
+        $(function () {
+            initializeNewMember();
+
+            MaskPhone('phone');
+
+            MaskPhone('phone2');
+        });
+
+    </script>
+}
+
+

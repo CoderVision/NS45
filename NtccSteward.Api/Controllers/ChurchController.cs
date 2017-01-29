@@ -16,7 +16,7 @@ using Newtonsoft.Json;
 
 namespace NtccSteward.Api.Controllers
 {
-    [RoutePrefix("api")]
+    //[RoutePrefix("api")]
     public class ChurchController : ApiController
     {
         private readonly ILogger _logger;

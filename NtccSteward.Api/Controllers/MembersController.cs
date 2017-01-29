@@ -22,7 +22,7 @@ namespace NtccSteward.Api.Controllers
     // this can be added to the WebApiConfig, or to a class specifically.
     //  you can enter specific domains separated by a comma, or a * for all
     [EnableCors("*", "*", "*")]
-    [RoutePrefix("api")]
+    //[RoutePrefix("api")]
     public class MembersController : ApiController
     {
         private readonly ILogger _logger;

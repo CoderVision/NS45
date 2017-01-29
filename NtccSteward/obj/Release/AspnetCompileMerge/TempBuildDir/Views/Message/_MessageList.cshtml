@@ -1,0 +1,15 @@
+﻿@model List<NtccSteward.ViewModels.Message.MessageVm> 
+@using NtccSteward.Core.Framework.Enums
+
+@*style="height:75vh;border: solid lightgrey 1px;"*@
+<ul id="messageList" class="list-group listbox" >
+    @foreach (var msg in Model)
+    {
+        <li id="msg_@msg.MessageID">
+            @{
+                await Html.RenderPartialAsync("~/Views/Messages/_FormattedMsg.cshtml", msg);
+            }
+        </li>
+        <div style="clear:right" />
+    }
+</ul>

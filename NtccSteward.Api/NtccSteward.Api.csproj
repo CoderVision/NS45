@@ -245,6 +245,7 @@
   <ItemGroup>
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
+    <None Include="Properties\PublishProfiles\SmarterASP.NET-Api.pubxml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NtccSteward.Core\NtccSteward.Core.csproj">
