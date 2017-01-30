@@ -14,6 +14,7 @@ namespace NtccSteward.Api.Repository
     public interface IAccountRepository
     {
         int CreateAccountRequest(AccountRequest accountRequest);
+        string GetAccountRequestStatus(int accountRequestId);
         Session Login(string email, string password, int churchId);
         bool ChangePassword(AccountPasswordChange accountRequest);
     }
@@ -64,6 +65,31 @@ namespace NtccSteward.Api.Repository
 
             return list.First();
         }
+
+
+        /// <summary>
+        /// Creates an account request for a new user.  New request will be in pending status until approved or denied.
+        /// </summary>
+        /// <param name="accountRequest">AccountRequest</param>
+        /// <returns>The RowNo of the new account request.</returns>
+        public string GetAccountRequestStatus(int accountRequestId)
+        {
+            var proc = "[Security].[GetAccountRequestStatus]";
+
+            var paramz = new List<SqlParameter>();
+            paramz.Add(new SqlParameter("accountRequestId", accountRequestId));
+
+            Func<SqlDataReader, string> readFx = (reader) =>
+            {
+                return reader["Status"].ToString();
+            };
+
+            var executor = new SqlCmdExecutor(ConnectionString);
+            var list = executor.ExecuteSql<string>(proc, CommandType.StoredProcedure, paramz, readFx);
+
+            return list.First();
+        }
+
 
         /// <summary>
         /// Change a user's password

@@ -40,13 +40,13 @@ namespace NtccSteward.Api.Controllers
                 if (accountRequest == null)
                     return BadRequest();
 
-                var rowNo = _repository.CreateAccountRequest(accountRequest);
+                var accountRequestId = _repository.CreateAccountRequest(accountRequest);
 
-                if (rowNo > 0)
+                if (accountRequestId > 0)
                 {
-                    accountRequest.RequestId = rowNo;
+                    accountRequest.RequestId = accountRequestId;
 
-                    return Created(Request.RequestUri + "/" + rowNo.ToString(), accountRequest);
+                    return Created(Request.RequestUri + "/" + accountRequestId.ToString(), accountRequest);
                 }
               
                 return BadRequest();
@@ -58,6 +58,29 @@ namespace NtccSteward.Api.Controllers
                 return InternalServerError();
             }
         }
+
+
+        [Route("account/GetAccountRequestStatus/{accountRequestId}")]
+        public IHttpActionResult GetAccountRequestStatus(int accountRequestId)
+        {
+            try
+            {
+                var status = _repository.GetAccountRequestStatus(accountRequestId);
+
+                if (!string.IsNullOrWhiteSpace(status))
+                    return Ok(status);
+                else
+                    return BadRequest("Invalid accountRequestId");
+
+            }
+            catch (Exception ex)
+            {
+                new ErrorHelper().ProcessError(_logger, ex, nameof(CreateAccountRequest));
+
+                return InternalServerError();
+            }
+        }
+
 
         [Route("account/login")]
         [HttpPost]
