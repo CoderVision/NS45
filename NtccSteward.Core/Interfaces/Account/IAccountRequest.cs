@@ -2,6 +2,7 @@
 {
     public interface IAccountRequest
     {
+        int ChurchId { get; set; }
         string ChurchName { get; set; }
         string City { get; set; }
         string Comments { get; set; }

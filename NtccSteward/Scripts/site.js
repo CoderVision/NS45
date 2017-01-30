@@ -441,7 +441,7 @@ function initializeRequestAccount() {
                 required: true,
                 equalTo: "#Password"
             },
-            ChurchName: {
+            Church: {
                 required: true
             },
             PastorName: {

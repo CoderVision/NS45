@@ -20,6 +20,7 @@ namespace NtccSteward.Core.Models.Account
             Email = ar.Email;
             Password = ar.Password;
             PastorName = ar.PastorName;
+            ChurchId = ar.ChurchId;
             ChurchName = ar.ChurchName;
             City = ar.City;
             State = ar.State;
@@ -31,6 +32,7 @@ namespace NtccSteward.Core.Models.Account
         public string Email { get; set; }
         public string Password { get; set; }
         public string PastorName { get; set; }
+        public int ChurchId { get; set; }
         public string ChurchName { get; set; }
         public string City { get; set; }
         public string State { get; set; }

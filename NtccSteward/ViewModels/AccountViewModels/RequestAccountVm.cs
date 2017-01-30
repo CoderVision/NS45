@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using ch = NtccSteward.Core.Models.Church;
 
 namespace NtccSteward.ViewModels.Account
 {
@@ -29,6 +30,9 @@ namespace NtccSteward.ViewModels.Account
         public string Password { get; set; }
 
         [Required]
+        [Display(Name = "Church")]
+        public int ChurchId { get; set; }
+
         [Display(Name = "Church Name")]
         public string ChurchName { get; set; }
 
@@ -48,5 +52,7 @@ namespace NtccSteward.ViewModels.Account
         public string State { get; set; }
 
         public int RequestId { get; set; }
+
+        public List<ch.Church> ChurchList { get; set; }
     }
 }

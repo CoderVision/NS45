@@ -8,6 +8,7 @@ using System.Web;
 using Newtonsoft.Json;
 using NtccSteward.ViewModels.Church;
 using System.Collections.Generic;
+using NtccSteward.Core.Models.Church;
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace NtccSteward.Controllers
@@ -92,7 +93,7 @@ namespace NtccSteward.Controllers
         }
 
 
-        public ActionResult RequestAccount()
+        public async Task<ActionResult> RequestAccount()
         {
             RequestAccountVm login;
             if (TempData["login"] != null)
@@ -104,6 +105,10 @@ namespace NtccSteward.Controllers
             }
             else
                 login = new RequestAccountVm();
+
+            var churchJson = await _apiProvider.GetItemAsync("church", "page=1&pageSize=10000&showAll=false");
+
+            login.ChurchList = _apiProvider.DeserializeJson<List<Church>>(churchJson);
 
             return View("/Views/Account/RequestAccount.cshtml", login);
         }
