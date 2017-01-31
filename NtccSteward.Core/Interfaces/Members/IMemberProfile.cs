@@ -34,5 +34,7 @@ namespace NtccSteward.Core.Interfaces.Members
         string StatusChangeTypeDesc { get; set; }
 
         bool Veteran { get; set; }
+
+        int MemberTypeEnumId { get; set; }
     }
 }

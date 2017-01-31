@@ -62,6 +62,25 @@ namespace NtccSteward.Repository.Framework
             return ValueOrDefault<T>(reader, columnIndex, default(T));
         }
 
+        public static SqlDateTime ToSqlDateTime(this DateTime? date)
+        {
+            SqlDateTime returnDate = SqlDateTime.Null;
+
+            if (date.HasValue)
+            {
+                var minDate = new DateTime(SqlDateTime.MinValue.TimeTicks);
+                var maxDate = new DateTime(SqlDateTime.MaxValue.TimeTicks);
+
+                if (date > minDate && date < maxDate)
+                    returnDate = new SqlDateTime(date.Value);
+
+                return returnDate;
+            }
+
+            return returnDate;
+        }
+
+
         public static SqlDateTime ToSqlDateTime(this DateTime date)
         {
             SqlDateTime returnDate = SqlDateTime.Null;
@@ -71,7 +90,6 @@ namespace NtccSteward.Repository.Framework
 
             if (date > minDate && date < maxDate)
                 returnDate = new SqlDateTime(date);
-
 
             return returnDate;
         }

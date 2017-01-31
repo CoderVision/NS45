@@ -66,21 +66,49 @@
                 </td>
                 <td class="text-center">
                     <span class="hidden-sm hidden-md hidden-lg">
-                        <a href="tel://@(!string.IsNullOrWhiteSpace(m.Phone) ? String.Format("{0:###-###-####}", double.Parse(m.Phone)) : "")"><img class="icon32" src="~/Content/images/Calls-32.png" alt="call" /></a>
+                        @if (!string.IsNullOrWhiteSpace(m.Phone))
+                        {
+                            <a href="tel://@(String.Format("{0:###-###-####}", double.Parse(m.Phone)))"><img class="icon32" src="~/Content/images/Calls-32.png" alt="call" /></a>
+                        }
+                        else
+                        {
+                            <span>&nbsp;</span>
+                        }
                     </span>
                     <span class="hidden-xs">@m.Phone</span>
                 </td>
                 <td class="visible-xs text-center">
-                    <a href="sms://@(!string.IsNullOrWhiteSpace(m.Phone) ? String.Format("{0:###-###-####}", double.Parse(m.Phone)) : "")"><img class="icon32" src="~/Content/images/Text-32.png" alt="call" /></a>
+                    @if (!string.IsNullOrWhiteSpace(m.Phone))
+                    {
+                        <a href="sms://@(String.Format("{0:###-###-####}", double.Parse(m.Phone)))"><img class="icon32" src="~/Content/images/Text-32.png" alt="call" /></a>
+                    }
+                    else
+                    {
+                        <span>&nbsp;</span>
+                    }
                 </td>
                 <td class="text-center">
                     <span class="hidden-sm hidden-md hidden-lg">
-                        <a href="mailto://@m.Email"><img class="icon32" src="~/Content/images/Mail-32.png" alt="call" /></a>
+                        @if (!string.IsNullOrWhiteSpace(m.Email))
+                        {
+                            <a href="mailto://@m.Email"><img class="icon32" src="~/Content/images/Mail-32.png" alt="email" /></a>
+                        }
+                        else
+                        {
+                            <span>&nbsp;</span>
+                        }
                     </span>
                     <span class="hidden-xs">@m.Email</span>
                 </td>
                 <td class="text-center">
-                    <a href="@(!string.IsNullOrWhiteSpace(m.Address) ? "https://www.google.com/maps/place/(m.Address?.Replace(' ', '+'))" : "")"><img class="icon32" src="~/Content/images/Maps-32.png" alt="map" /></a>
+                    @if (!string.IsNullOrWhiteSpace(m.Address))
+                    {
+                        <a href="https://www.google.com/maps/place/@(m.Address?.Replace(' ', '+'))")><img class="icon32" src="~/Content/images/Maps-32.png" alt="map" /></a>
+                    }
+                    else
+                    {
+                        <span>&nbsp;</span>
+                    }
                 </td>
                 <td class="text-center hideXs">
                     @Html.ActionLink("Delete", "DeleteMember", "Member", new { @id=m.id }, null)

@@ -34,6 +34,7 @@ namespace NtccSteward.Core.Factories
             target.Veteran = source.Veteran;
             target.StatusChangeTypeId = source.StatusChangeTypeId;
             target.StatusChangeTypeDesc = source.StatusChangeTypeDesc;
+            target.MemberTypeEnumId = source.MemberTypeEnumId;
 
             return target;
         }

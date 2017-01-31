@@ -10,6 +10,7 @@
     var sponsorList = SelectListItemFactory.Create(Model.MetaDataList.Where(e => e.AppEnumTypeID == -1).OrderBy(e => e.Desc), Model.SponsorId, "Sponsor", "-1");
     var reasonList = SelectListItemFactory.Create(Model.MetaDataList.Where(e => e.AppEnumTypeID == 7).OrderBy(e => e.SortOrder), Model.StatusChangeTypeId, "Reason", "-1");
     var statusList = SelectListItemFactory.Create(Model.MetaDataList.Where(e => e.AppEnumTypeID == 9).OrderBy(e => e.SortOrder), Model.StatusId, "Status", "-1");
+    var memberTypeList = SelectListItemFactory.Create(Model.MetaDataList.Where(e => e.AppEnumTypeID == 14).OrderBy(e => e.SortOrder), Model.StatusId, "Member Type", "-1");
 }
 
 @*Add checkbox for Holy Spirit Baptism and Water Baptism*@
@@ -100,6 +101,13 @@
                     <div class="col-sm-10">
                         @Html.TextBoxFor(m => m.ChurchName, new { @class = "form-control", @id = "ChurchName", @placeholder = "Church name", @readonly="readonly" })
                         @Html.HiddenFor(m => m.ChurchId, new { @id="ChurchId" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="memberType" class="col-sm-2 control-label labelNormal">Type</label>
+                    <div class="col-sm-10">
+                        @Html.DropDownListFor(m => m.MemberTypeEnumId, memberTypeList, new { @class = "form-control", @id = "memberType", @placeholder = "Status" })
                     </div>
                 </div>
 

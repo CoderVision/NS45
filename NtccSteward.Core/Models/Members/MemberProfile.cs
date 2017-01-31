@@ -76,5 +76,7 @@ namespace NtccSteward.Core.Models.Members
         public DateTime? DateBaptizedWater { get; set; }
 
         public int MemberStatusEnumType { get; set; }
+
+        public int MemberTypeEnumId { get; set; }
     }
 }

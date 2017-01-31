@@ -170,6 +170,7 @@ namespace NtccSteward.Api.Repository
                         member.SponsorId = reader.ValueOrDefault<int>("SponsorId", 0);
                         member.Sponsor = reader.ValueOrDefault("Sponsor", string.Empty);
                         member.Comments = reader.ValueOrDefault("Comment", string.Empty);
+                        member.MemberTypeEnumId = reader.ValueOrDefault<int>("MemberTypeEnumID", 0);
 
                         // address info
                         reader.NextResult();
@@ -276,17 +277,18 @@ namespace NtccSteward.Api.Repository
             paramz.Add(new SqlParameter("middleName", memberProfile.MiddleName.ToSqlString()));
             paramz.Add(new SqlParameter("lastName", memberProfile.LastName.ToSqlString()));
             paramz.Add(new SqlParameter("preferredName", memberProfile.PreferredName.ToSqlString()));
-            paramz.Add(new SqlParameter("birthDate", memberProfile.BirthDate?.ToString().ToSqlString()));
+            paramz.Add(new SqlParameter("birthDate", memberProfile.BirthDate.ToSqlDateTime()));
             paramz.Add(new SqlParameter("gender", memberProfile.Gender.ToSqlString()));
             paramz.Add(new SqlParameter("comments", memberProfile.Comments.ToSqlString()));
-            paramz.Add(new SqlParameter("dateSaved", memberProfile.DateSaved));
-            paramz.Add(new SqlParameter("dateBaptizedWater", memberProfile.DateBaptizedWater));
-            paramz.Add(new SqlParameter("dateBaptizedHolyGhost", memberProfile.DateBaptizedHolyGhost));
+            paramz.Add(new SqlParameter("dateSaved", memberProfile.DateSaved.ToSqlDateTime()));
+            paramz.Add(new SqlParameter("dateBaptizedWater", memberProfile.DateBaptizedWater.ToSqlDateTime()));
+            paramz.Add(new SqlParameter("dateBaptizedHolyGhost", memberProfile.DateBaptizedHolyGhost.ToSqlDateTime()));
             paramz.Add(new SqlParameter("married", memberProfile.Married));
             paramz.Add(new SqlParameter("veteran", memberProfile.Veteran));
             paramz.Add(new SqlParameter("sponsorId", memberProfile.SponsorId));
             paramz.Add(new SqlParameter("memberStatusEnumId", memberProfile.StatusId));
             paramz.Add(new SqlParameter("statusChangeTypeEnumId", memberProfile.StatusChangeTypeId));
+            paramz.Add(new SqlParameter("memberTypeEnumId", memberProfile.MemberTypeEnumId));
 
             Func<SqlDataReader, int> readFx = (reader) =>
             {

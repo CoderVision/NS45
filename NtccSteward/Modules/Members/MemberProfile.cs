@@ -140,5 +140,7 @@ namespace NtccSteward.Modules.Members
                 base.Id = value;
             }
         }
+
+        public int MemberTypeEnumId { get; set; }
     }
 }
