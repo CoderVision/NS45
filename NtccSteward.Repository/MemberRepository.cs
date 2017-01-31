@@ -114,7 +114,8 @@ namespace NtccSteward.Api.Repository
                 member.StatusChangeType = reader.ValueOrDefault<string>(o.StatusChangeType, string.Empty);
                 member.Email = reader.ValueOrDefault<string>(o.Email, string.Empty);
                 member.Phone = reader.ValueOrDefault<string>(o.Phone, string.Empty);
-                member.ActivityDate = reader[o.ActivityDate].ToString();
+                member.Address = reader.ValueOrDefault<string>(o.Address, string.Empty);
+                member.ActivityDate = reader.ValueOrDefault<DateTime?>(o.ActivityDate, null);
 
                 return member;
             };

@@ -277,6 +277,7 @@
     <Content Include="Content\images\ajax-spinner.gif" />
     <Content Include="Content\images\blue_accept.png" />
     <Content Include="Content\images\blue_add.png" />
+    <Content Include="Content\images\Calls-32.png" />
     <Content Include="Content\images\Cancel.png" />
     <Content Include="Content\images\Church-32.png" />
     <Content Include="Content\images\church-48.png" />

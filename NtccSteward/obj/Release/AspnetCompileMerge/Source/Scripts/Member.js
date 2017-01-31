@@ -182,7 +182,8 @@ function ClearNewMemberForm()
     $("#phone2").val("(___) ___-____");
     $("#email").val("");
     $("#sponsor").val("");
-    $("#svdMsg").css("visibility", "hidden");
+    //$("#svdMsg").css("visibility", "hidden");
+    $("#addMbrTitle").val("Add Member");
 
     var validator = $("#addMemberForm").validate();
     validator.resetForm();
@@ -229,15 +230,19 @@ function SaveNewMember(open) {
         data: newMember,
         success: function (newId) {
 
-            $("#svdMsg").val("Saved");
-            $("#svdMsg").css("visibility", "visible");
+            //$("#svdMsg").val("Saved");
+            //$("#svdMsg").css("visibility", "visible");
+
+            $("#addMbrTitle").val("Add Member - Saved");
+            var cnt = $("#addCount").val();
+            $("#addCount").val((cnt+1));
             
             setTimeout(OpenNewMemberForm, 2000);
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
 
-            $("#svdMsg").val("Error");
-            $("#svdMsg").css("visibility", "visible");
+            //$("#svdMsg").val("Error");
+            //$("#svdMsg").css("visibility", "visible");
 
             alert("Status: " + textStatus + "\r\n" + "Error: " + errorThrown);
         },
@@ -294,7 +299,12 @@ function initializeNewMember() {
     $("#dateCame").val(todayFormatted);
 
     $("#newMember").on("hidden.bs.modal", function () {
-        window.location.reload();
+
+        var cnt = $("#addCount").val();
+        if (cnt > 0)
+        {
+            window.location.reload();
+        }
     });
 
     $('#addMemberForm').validate({

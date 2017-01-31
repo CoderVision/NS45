@@ -13,6 +13,7 @@ namespace NtccSteward.Api.Repository.Ordinals
             StatusChangeType = reader.GetOrdinal("StatusChangeType");
             Phone = reader.GetOrdinal("Number");
             Email = reader.GetOrdinal("Email");
+            Address = reader.GetOrdinal("Address");
             ActivityDate = reader.GetOrdinal("ActivityDate");
         }
 
@@ -23,6 +24,7 @@ namespace NtccSteward.Api.Repository.Ordinals
         public int StatusChangeType { get; set; }
         public int Phone { get; set; }
         public int Email { get; set; }
+        public int Address { get; set; }
         public int ActivityDate { get; set; }
     }
 }

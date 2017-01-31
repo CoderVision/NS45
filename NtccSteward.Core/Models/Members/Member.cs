@@ -30,6 +30,8 @@ namespace NtccSteward.Core.Models.Members
 
         public string Phone { get; set; }
 
-        public string ActivityDate { get; set; }
+        public string Address { get; set; }
+
+        public DateTime? ActivityDate { get; set; }
     }
 }

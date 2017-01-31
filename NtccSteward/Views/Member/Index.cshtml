@@ -19,23 +19,29 @@
 
         <thead class="thead-default">
             <tr>
-                <th>
+                <th class="text-center">
                     Full Name
                 </th>
-                <th class="hideXs">
+                <th class="hideXs text-center">
                     Status
                 </th>
-                <th class="hideXs">
+                <th class="hideXs text-center">
                     Status Description
                 </th>
-                <th class="hideXs">
+                <th class="hideXs text-center">
                     Last Attendance
                 </th>
-                <th class="hideXs">
+                <th class="text-center">
                     Phone
                 </th>
-                <th class="hideXs">
+                <th class="visible-xs text-center">
+                    Text
+                </th>
+                <th class="text-center">
                     Email
+                </th>
+                <th class="text-center">
+                    Map
                 </th>
                 <th class="hideXs">
                     &nbsp;
@@ -55,16 +61,28 @@
                 <td class="hideXs">
                     @m.StatusChangeType
                 </td>
-                <td class="hideXs">
-                    @m.ActivityDate
+                <td class="hideXs text-center">
+                    @(m.ActivityDate?.ToString("MM/dd/yyyy"))
                 </td>
-                <td class="hideXs">
-                    @m.Phone
+                <td class="text-center">
+                    <span class="hidden-sm hidden-md hidden-lg">
+                        <a href="tel://@(!string.IsNullOrWhiteSpace(m.Phone) ? String.Format("{0:###-###-####}", double.Parse(m.Phone)) : "")"><img class="icon32" src="~/Content/images/Calls-32.png" alt="call" /></a>
+                    </span>
+                    <span class="hidden-xs">@m.Phone</span>
                 </td>
-                <td class="hideXs">
-                    @m.Email
+                <td class="visible-xs text-center">
+                    <a href="sms://@(!string.IsNullOrWhiteSpace(m.Phone) ? String.Format("{0:###-###-####}", double.Parse(m.Phone)) : "")"><img class="icon32" src="~/Content/images/Text-32.png" alt="call" /></a>
                 </td>
-                <td class="hideXs">
+                <td class="text-center">
+                    <span class="hidden-sm hidden-md hidden-lg">
+                        <a href="mailto://@m.Email"><img class="icon32" src="~/Content/images/Mail-32.png" alt="call" /></a>
+                    </span>
+                    <span class="hidden-xs">@m.Email</span>
+                </td>
+                <td class="text-center">
+                    <a href="@(!string.IsNullOrWhiteSpace(m.Address) ? "https://www.google.com/maps/place/(m.Address?.Replace(' ', '+'))" : "")"><img class="icon32" src="~/Content/images/Maps-32.png" alt="map" /></a>
+                </td>
+                <td class="text-center hideXs">
                     @Html.ActionLink("Delete", "DeleteMember", "Member", new { @id=m.id }, null)
                 </td> 
             </tr>
@@ -73,14 +91,14 @@
 </div>
 
 <input type="hidden" id="memberId" />
-
+<input id="addCount" type="hidden" value="0" />
 
 <div class="modal fade" id="newMember" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title ">Add Member</h4>
+                <h4 id="addMbrTitle" class="modal-title ">Add Member</h4>
             </div>
 
             <div class="modal-body">
@@ -108,9 +126,6 @@
                                     </label>
                                 </div>
                             </div>
-                            @*<div class="col-sm-4" style="text-align:center;">
-                                <h2 id="svdMsg" class="success" style="line-height:75px;height:75px;color:lime;margin-right:10px;visibility:collapse;">Saved!</h2>
-                            </div>*@
                         </div>
                     </div>
 

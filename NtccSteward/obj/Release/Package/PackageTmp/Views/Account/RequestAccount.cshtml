@@ -39,8 +39,8 @@
     </div>
 
     <div class="form-group">
-        <label for="ChurchName" class="labelNormal">Church Name</label>
-        @Html.TextBoxFor(vm => vm.ChurchName, new { @class = "form-control", @id = "ChurchName", @placeholder = "Enter church name" })
+        <label for="Church" class="labelNormal">Church Name</label>
+        @Html.DropDownListFor(vm => vm.ChurchId, new SelectList(Model.ChurchList.OrderBy(c => c.Name), "Id", "Name"), new { @class = "form-control", @id = "Church", @placeholder = "Select church" })
     </div>
 
     <div class="form-group">

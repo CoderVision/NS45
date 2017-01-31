@@ -195,6 +195,11 @@ ul.nav > li.nav {
     width:32px;
 }
 
+.icon16 {
+    height:16px;
+    width:16x;
+}
+
 img.saveIcon {
     margin:-7px 4px 0px 0px;
 }
