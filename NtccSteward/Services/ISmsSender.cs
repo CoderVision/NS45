@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NtccStewardRc2.Services
+namespace NtccSteward.Services
 {
     public interface ISmsSender
     {

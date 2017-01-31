@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using NtccSteward.Core.Models.Common.Enums;
+using System.Data;
 
 namespace NtccSteward.Api.Repository
 {
@@ -15,13 +17,18 @@ namespace NtccSteward.Api.Repository
         Church GetById(int id);
         List<Church> GetList(bool showAll);
         bool TryDelete(int id);
+        List<AppEnum> GetProfileMetadata(int churchId);
     }
 
     public class ChurchRepository : Repository, IChurchRepository
     {
+        private readonly SqlCmdExecutor _executor;
+
         public ChurchRepository(string connectionString)
         {
             this.ConnectionString = connectionString;
+
+            _executor = new SqlCmdExecutor(connectionString);
         }
 
         public void Add(Church church)
@@ -73,6 +80,27 @@ namespace NtccSteward.Api.Repository
             throw new NotImplementedException();
 
             //return true;
+        }
+
+        public List<AppEnum> GetProfileMetadata(int churchId)
+        {
+            var paramz = new List<SqlParameter>();
+            paramz.Add(new SqlParameter("churchId", churchId));
+
+            Func<SqlDataReader, AppEnum> readFx = (reader) =>
+            {
+                var appEnum = new AppEnum();
+                appEnum.ID = reader.ValueOrDefault<int>("EnumID");
+                appEnum.Desc = reader.ValueOrDefault<string>("EnumDesc");
+                appEnum.AppEnumTypeID = reader.ValueOrDefault<int>("EnumTypeID");
+                appEnum.AppEnumTypeName = reader.ValueOrDefault<string>("EnumTypeName");
+
+                return appEnum;
+            };
+
+            var list = _executor.ExecuteSql<AppEnum>("GetChurchProfileMetadata", CommandType.StoredProcedure, paramz, readFx);
+
+            return list;
         }
     }
 }

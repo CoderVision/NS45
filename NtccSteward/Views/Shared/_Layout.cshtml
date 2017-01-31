@@ -42,11 +42,13 @@
 
                         <ul class="nav navbar-nav navbar-right">
 
-                            <li class="hidden-xs"><a href=@Url.Action("Index", "Home")><img src="~/Content/images/placeholder.gif" class="navIcon navHome" alt="Home" title="Home" /></a></li>
+                            @*<li class="hidden-xs"><a href=@Url.Action("Index", "Home")><img src="~/Content/images/placeholder.gif" class="navIcon navHome" alt="Home" title="Home" /></a></li>*@
                             <li class="hidden-xs"><a href=@Url.Action("Index", "Member", new { statusId=49 })><img src="~/Content/images/placeholder.gif" class="navIcon navMembers" alt="Members" title="Members" /></a></li>
+                            <li class="hidden-xs"><a href=@Url.Action("Index", "Church")><img src="~/images/placeholder.gif" class="navIcon navChurch" alt="Churches" title="Churches" /></a></li>
 
-                            <li class="hidden-sm hidden-md hidden-lg">@Html.ActionLink("Home", "Index", "Home", new { @class = "hidden-sm-up" })</li>
-                            <li class="hidden-sm hidden-md hidden-lg">@Html.ActionLink("Members", "Index", "Member", new { statusIds = "49-50" })</li>
+                            @*<li class="hidden-sm hidden-md hidden-lg">@Html.ActionLink("Home", "Index", "Home", new { @class = "hidden-sm-up" })</li>*@
+                            <li class="hidden-sm hidden-md hidden-lg">@Html.ActionLink("Member", "Index", "Member", new { statusIds = "49-50" })</li>
+                            <li class="hidden-sm hidden-md hidden-lg">@Html.ActionLink("Church", "Index", "Church")</li>
 
                             @*<li><a href=@Url.Action("Index", "Home")><img src="~/Content/images/placeholder.gif" class="navIcon navHome"  alt="Home" title="Home" /></a></li>
                             <li><a href=@Url.Action("Index", "Member", new { statusId=49 })><img src="~/Content/images/placeholder.gif" class="navIcon navMembers" alt="Members" title="Members" /></a></li>*@

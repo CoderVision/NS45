@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
-namespace NtccStewardRc2.Models.ManageViewModels
+namespace NtccSteward.Models.ManageViewModels
 {
     public class ConfigureTwoFactorViewModel
     {

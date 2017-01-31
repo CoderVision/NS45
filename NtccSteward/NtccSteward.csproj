@@ -208,6 +208,7 @@
     <Compile Include="Framework\PagingInfo.cs" />
     <Compile Include="Framework\PostResponse.cs" />
     <Compile Include="Framework\SelectListItemFactory.cs" />
+    <Compile Include="Framework\VerifySessionAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -246,6 +247,7 @@
     <Compile Include="ViewModels\AccountViewModels\ResetPasswordViewModel.cs" />
     <Compile Include="ViewModels\AccountViewModels\SendCodeViewModel.cs" />
     <Compile Include="ViewModels\AccountViewModels\VerifyCodeViewModel.cs" />
+    <Compile Include="ViewModels\Church\ChurchIndexViewModel.cs" />
     <Compile Include="ViewModels\Church\ChurchVm.cs" />
     <Compile Include="ViewModels\Common\Address\AddressInfoVm.cs" />
     <Compile Include="ViewModels\Common\Address\AddressVm.cs" />

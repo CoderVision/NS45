@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NtccStewardRc2.Models.ManageViewModels
+namespace NtccSteward.Models.ManageViewModels
 {
     public class IndexViewModel
     {

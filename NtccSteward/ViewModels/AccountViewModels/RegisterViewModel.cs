@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NtccStewardRc2.Models.AccountViewModels
+namespace NtccSteward.Models.AccountViewModels
 {
     public class RegisterViewModel
     {

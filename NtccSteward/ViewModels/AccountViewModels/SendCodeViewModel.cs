@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
-namespace NtccStewardRc2.Models.AccountViewModels
+namespace NtccSteward.Models.AccountViewModels
 {
     public class SendCodeViewModel
     {

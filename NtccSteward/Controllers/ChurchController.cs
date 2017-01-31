@@ -8,7 +8,9 @@ using NtccSteward.Modules.Church;
 using NtccSteward.Framework;
 using NtccSteward.Core.Models.Account;
 using System.Web.Mvc;
-
+using NtccSteward.ViewModels.Church;
+using cm = NtccSteward.Core.Models.Church;
+using NtccSteward.Core.Models.Common.Enums;
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace NtccSteward.Controllers
@@ -17,47 +19,35 @@ namespace NtccSteward.Controllers
     {
         private readonly IApiProvider _apiProvider;
         private Session _session;
+        private string _uri = "";
 
         public ChurchController(IApiProvider apiProvider)
         {
             _apiProvider = apiProvider;
+
+            _uri = "church";
         }
 
-        private void Initialize()
+        [VerifySessionAttribute]
+        public async Task<ActionResult> Index()
         {
-            if (_session == null)
-            {
-                var sessionJson = (string)HttpContext.Session["Session"];
-                _session = _apiProvider.DeserializeJson<Session>(sessionJson);
-            }
+            var result = await _apiProvider.GetItemAsync(_uri, "");
+            var list = _apiProvider.DeserializeJson<List<cm.Church>>(result);
+
+            var metajson = await _apiProvider.GetItemAsync($"{_uri}/metadata", $"churchId={_session.ChurchId}");
+            var metaList = _apiProvider.DeserializeJson<List<AppEnum>>(metajson);
+
+            var viewModel = new ChurchIndexViewModel() { ChurchList = list, MetaList = metaList };
+
+            return View();
         }
 
-        public ActionResult Index()
+        [VerifySessionAttribute]
+        public ActionResult Edit(int id)
         {
-            Initialize();
+            var shell = new ChurchModule(id);
 
-            if (string.IsNullOrWhiteSpace(_session?.SessionId))
-            {
-                return RedirectToAction("Index", "Account");
-            }
-            else
-                return View();
-        }
-
-        public ActionResult Church(int id)
-        {
-            Initialize();
-
-            if (string.IsNullOrWhiteSpace(_session?.SessionId))
-            {
-                return RedirectToAction("Index", "Account");
-            }
-            else
-            {
-                var shell = new ChurchModule(id);
-
-                return View(shell);
-            }
+            return View(shell);
         }
 
         public ActionResult CreateAddress(string addyType, int churchId)

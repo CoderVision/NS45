@@ -11,7 +11,7 @@ using NtccSteward.ViewModels.Message;
 using System.Web.Mvc;
 using NtccSteward.Core.Framework;
 
-namespace NtccStewardRc2.Controllers
+namespace NtccSteward.Controllers
 {
     public class MessagesController : Controller
     {

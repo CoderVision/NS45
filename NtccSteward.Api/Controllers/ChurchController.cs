@@ -79,5 +79,12 @@ namespace NtccSteward.Api.Controllers
                 return InternalServerError();
             }
         }
+
+        [Route("church/metadata")]
+        [HttpGet]
+        public IHttpActionResult GetProfileMetadata(int churchId)
+        {
+            return Ok(_repository.GetProfileMetadata(churchId));
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿@*
+﻿@model NtccSteward.ViewModels.Church.ChurchIndexViewModel
+@*
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
@@ -10,17 +11,107 @@
 <div id="chu">
 
     <form class="form-inline">
-        <input type="text" id="churchSearch" class="form-control" style="padding:3px;width:300px;margin-bottom:4px;margin-left:0px;" placeholder="Church Name Search"
-               oninput="search_oninput(chuLstLdr, this.value)" />
+        <input type="search" id="churchSearch" class="form-control" style="padding:3px;width:300px;margin-bottom:4px;margin-left:0px;" placeholder="Church Name Search"
+               oninput="FilterTable('memberTbl', this.value, 'Full Name')" />
 
-        <a href="#addChurch" data-toggle="modal"><img src="~/images/placeholder.gif" class="toolbarIcon add" alt="Add" title="Add Church " style="margin-left:10px;" /> Add Church</a>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addChurch" style="margin-left:8px;margin-bottom:4px;">Add</button>
     </form>
 
-    @*<button onclick="memLstLdr.load();">test</button>*@
+    <table id="memberTbl" class="table table-sm table-hover table-bordered">
 
-    <div id="churchGrid" style="width:100%;height:500px;" />
+        <thead class="thead-default">
+            <tr>
+                <th class="text-center">
+                    Church Name
+                </th>
+                <th class="hideXs text-center">
+                    Status
+                </th>
+                <th class="hideXs text-center">
+                    Pastor
+                </th>
+                <th class="text-center">
+                    Phone
+                </th>
+                <th class="visible-xs text-center">
+                    Text
+                </th>
+                <th class="text-center">
+                    Email
+                </th>
+                <th class="text-center">
+                    Map
+                </th>
+                <th class="hideXs">
+                    &nbsp;
+                </th>
+            </tr>
+        </thead>
 
-    <img id="loader" class="spinner" src="~/images/ajax-spinner.gif" />
+        @foreach (var m in Model.ChurchList)
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink(m.Name, "Edit", "Church", new { id = m.id }, null)
+                </td>
+                <td class="hideXs">
+                    @m.Status
+                </td>
+                <td>
+                    @m.Pastor 
+                </td>
+                <td class="text-center">
+                    <span class="hidden-sm hidden-md hidden-lg">
+                        @if (!string.IsNullOrWhiteSpace(m.Phone))
+                        {
+                            <a href="tel://@(String.Format("{0:###-###-####}", double.Parse(m.Phone)))"><img class="icon32" src="~/Content/images/Calls-32.png" alt="call" /></a>
+                        }
+                        else
+                        {
+                            <span>&nbsp;</span>
+                        }
+                    </span>
+                    <span class="hidden-xs">@m.Phone</span>
+                </td>
+                <td class="visible-xs text-center">
+                    @if (!string.IsNullOrWhiteSpace(m.Phone))
+                    {
+                        <a href="sms://@(String.Format("{0:###-###-####}", double.Parse(m.Phone)))"><img class="icon32" src="~/Content/images/Text-32.png" alt="call" /></a>
+                    }
+                    else
+                    {
+                        <span>&nbsp;</span>
+                    }
+                </td>
+                <td class="text-center">
+                    <span class="hidden-sm hidden-md hidden-lg">
+                        @if (!string.IsNullOrWhiteSpace(m.Email))
+                        {
+                            <a href="mailto://@m.Email"><img class="icon32" src="~/Content/images/Mail-32.png" alt="email" /></a>
+                        }
+                        else
+                        {
+                            <span>&nbsp;</span>
+                        }
+                    </span>
+                    <span class="hidden-xs">@m.Email</span>
+                </td>
+                <td class="text-center">
+                    @if (!string.IsNullOrWhiteSpace(m.Address))
+                    {
+                        <a href="https://www.google.com/maps/place/@(m.Address?.Replace(' ', '+'))" )><img class="icon32" src="~/Content/images/Maps-32.png" alt="map" /></a>
+                    }
+                    else
+                    {
+                        <span>&nbsp;</span>
+                    }
+                </td>
+                <td class="text-center hideXs">
+                    @Html.ActionLink("Delete", "DeleteChurch", "Church", new { @id = m.id }, null)
+                </td>
+            </tr>
+        }
+    </table>
 </div>
 
 <input type="hidden" id="memberId" />
@@ -95,7 +186,5 @@
 
     <script src="~/js/church.js"></script>
 
-    <script type="text/javascript">
-        chuLstLdr.load();
-    </script>
+
 }

@@ -33,73 +33,45 @@ namespace NtccSteward.Controllers
 
         }
 
-        private Session InitSession()
-        {
-            if (_session == null)
-            {
-                var sessionJson = (string)HttpContext.Session["Session"];
-                _session = _apiProvider.DeserializeJson<Session>(sessionJson);
-            }
-
-            return _session;
-        }
-
-        // query string parameters
+        [VerifySessionAttribute]
         public async Task<ActionResult> Index(string statusIds, int page = 1, int pageSize = 1000)
         {
-            InitSession();
-
-            if (string.IsNullOrWhiteSpace(_session?.SessionId))
+            try
             {
-                return RedirectToAction("Index", "Account");
-            }
-            else
-            {
-                try
-                {
-                    var queryString = $"churchId={_session.ChurchId}&statusIds={statusIds}&page={page}&pageSize={pageSize}";
-                    var result = await _apiProvider.GetItemAsync(_uri, queryString);
-                    var list = _apiProvider.DeserializeJson<List<cm.Member>>(result);
-
-                    var metajson = await _apiProvider.GetItemAsync($"{_uri}/metadata", $"churchId={_session.ChurchId}");
-                    var metaList = _apiProvider.DeserializeJson<List<AppEnum>>(metajson);
-
-                    var viewModel = new MemberIndexViewModel() { MemberList = list, MetaList = metaList };
-
-                    return View(viewModel);
-                }catch (Exception ex)
-                {
-                    return Content("Error loading Member list: " + ex.Message);
-                }
-            }
-
-        }
-
-        // gets a member
-        public async Task<ActionResult> Edit(int id)
-        {
-            InitSession();
-
-            if (string.IsNullOrWhiteSpace(_session?.SessionId))
-            {
-                return RedirectToAction("Index", "Account");
-            }
-            else
-            {
-                var mpjson = await _apiProvider.GetItemAsync(_uri, $"id={id}");
-                var mp = _apiProvider.DeserializeJson<cm.MemberProfile>(mpjson);
-
-                var memberProfileModule = this.CopyMemberProfileToVm(mp);
+                var queryString = $"churchId={_session.ChurchId}&statusIds={statusIds}&page={page}&pageSize={pageSize}";
+                var result = await _apiProvider.GetItemAsync(_uri, queryString);
+                var list = _apiProvider.DeserializeJson<List<cm.Member>>(result);
 
                 var metajson = await _apiProvider.GetItemAsync($"{_uri}/metadata", $"churchId={_session.ChurchId}");
                 var metaList = _apiProvider.DeserializeJson<List<AppEnum>>(metajson);
 
-                memberProfileModule.MetaDataList = metaList.ToList();
+                var viewModel = new MemberIndexViewModel() { MemberList = list, MetaList = metaList };
 
-                var shell = new MemberModule(memberProfileModule);
-
-                return View("~/Views/Member/Member.cshtml", shell);
+                return View(viewModel);
             }
+            catch (Exception ex)
+            {
+                return Content("Error loading Member list: " + ex.Message);
+            }
+        }
+
+        // gets a member
+        [VerifySessionAttribute]
+        public async Task<ActionResult> Edit(int id)
+        {
+            var mpjson = await _apiProvider.GetItemAsync(_uri, $"id={id}");
+            var mp = _apiProvider.DeserializeJson<cm.MemberProfile>(mpjson);
+
+            var memberProfileModule = this.CopyMemberProfileToVm(mp);
+
+            var metajson = await _apiProvider.GetItemAsync($"{_uri}/metadata", $"churchId={_session.ChurchId}");
+            var metaList = _apiProvider.DeserializeJson<List<AppEnum>>(metajson);
+
+            memberProfileModule.MetaDataList = metaList.ToList();
+
+            var shell = new MemberModule(memberProfileModule);
+
+            return View("~/Views/Member/Member.cshtml", shell);
         }
 
 
@@ -210,10 +182,9 @@ namespace NtccSteward.Controllers
         }
 
         //[ValidateAntiForgeryToken]
+        [VerifySessionAttribute]
         public async Task<ActionResult> SaveProfile(MemberProfile memberProfile)
         {
-            InitSession();
-
             var mFactory = new MemberFactory();
             var addyFactory = new AddressInfoFactory();
 
@@ -269,12 +240,10 @@ namespace NtccSteward.Controllers
                 return Content("Error removing address");
         }
 
-
+        [VerifySessionAttribute]
         [HttpPost]
         public async Task<ActionResult> CreateMember(cm.NewMember member)
         {
-            InitSession();
-
             member.ChurchId = _session?.ChurchId ?? 3; // default to graham
             member.CreatedByUserId = _session?.UserId ?? 0; // default to system
 
