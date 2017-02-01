@@ -34,6 +34,7 @@ function SaveMemberProfile() {
         , PreferredName: $("#PreferredName").val()
         , ChurchId: $("#ChurchId").val()
         , ChurchName: $("#ChurchName").val()
+        , MemberTypeEnumId: $("#memberType").val()
         , StatusId: $("#status").val()
         //, StatusDesc: $("#StatusDesc").val()
         //, StatusChangeTypeDesc: $("#StatusChangeTypeDesc").val()

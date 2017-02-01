@@ -33,11 +33,25 @@ namespace NtccSteward.Controllers
 
         }
 
+        private Session InitSession()
+        {
+            if (_session == null)
+            {
+                var sessionJson = (string)HttpContext.Session["Session"];
+                _session = _apiProvider.DeserializeJson<Session>(sessionJson);
+            }
+
+            return _session;
+        }
+
+
         [VerifySessionAttribute]
         public async Task<ActionResult> Index(string statusIds, int page = 1, int pageSize = 1000)
         {
             try
             {
+                InitSession();
+
                 var queryString = $"churchId={_session.ChurchId}&statusIds={statusIds}&page={page}&pageSize={pageSize}";
                 var result = await _apiProvider.GetItemAsync(_uri, queryString);
                 var list = _apiProvider.DeserializeJson<List<cm.Member>>(result);
@@ -59,6 +73,8 @@ namespace NtccSteward.Controllers
         [VerifySessionAttribute]
         public async Task<ActionResult> Edit(int id)
         {
+            InitSession();
+
             var mpjson = await _apiProvider.GetItemAsync(_uri, $"id={id}");
             var mp = _apiProvider.DeserializeJson<cm.MemberProfile>(mpjson);
 
@@ -185,6 +201,8 @@ namespace NtccSteward.Controllers
         [VerifySessionAttribute]
         public async Task<ActionResult> SaveProfile(MemberProfile memberProfile)
         {
+            InitSession();
+
             var mFactory = new MemberFactory();
             var addyFactory = new AddressInfoFactory();
 
@@ -244,12 +262,15 @@ namespace NtccSteward.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateMember(cm.NewMember member)
         {
+            InitSession();
+
             member.ChurchId = _session?.ChurchId ?? 3; // default to graham
             member.CreatedByUserId = _session?.UserId ?? 0; // default to system
 
-            var memberId = await _apiProvider.PostItemAsync<cm.NewMember>(_uri, member);
+            var mjson = await _apiProvider.PostItemAsync<cm.NewMember>(_uri, member);
+            var m = _apiProvider.DeserializeJson<cm.NewMember>(mjson);
 
-            return Content("Created " + member.id.ToString());
+            return Content("Created " + m.id.ToString());
         }
 
         //[HttpPost]

@@ -1,211 +1,129 @@
 ﻿
-/////// *************************************************************** Church List Loader
-var chuLstLdr = {
+function SaveNewChurch() {
 
-    grid: null
-    , dataView: null
+    var isvalid = $("#addChurchForm").valid();
+    if (isvalid == false)
+        return;
 
-    , dispose: function () {
-        this.grid = null;
-        this.dataView = null;
-    }
+    var regX = /_|\(|\)|\s|-/g;
+    var ph = $("#phone").val().replace(regX, "");
 
-    , loadgrid: function (data) {
+    var newChurch = {
+        id: -1,
+        Name: $("#churchName").val(),
+        PastorId: $("#pastorId").val(),
+        Line1: $("#line1").val(),
+        City: $("#city").val(),
+        State: $("#state").val(),
+        Zip: $("#zip").val(),
+        Phone: ph,
+        Email: $("#email").val(),
+    };
 
-        function filter(item, args) {
-
-            var fullName = (item["ChurchName"] + "").toLowerCase();
-            var ss = (args.searchString + "").toLowerCase();
-
-            return (fullName.indexOf(ss + "") > -1);
-        };
-
-
-
-        ///* grid */
-        //function alertFormatter(row, cell, value, columnDef, dataContext) {
-        //    if (value) {
-        //        return "<img class='smallImg' src='/Content/images/placeholder.gif' style='background:url(/Content/images/residentListImages16.png) 0 0;' />";
-        //    }
-        //    else
-        //        return null;
-        //}
-
-        //function genderFormatter(row, cell, value, columnDef, dataContext) {
-
-        //    if (value == null || value.trim() == "")
-        //        return null;
-        //    else {
-        //        if (value == "F")
-        //            return "<img class='smallImg' src='/Content/images/placeholder.gif' style='background:url(/Content/images/residentListImages16.png) -48px 0;' />";
-        //        else
-        //            return "<img class='smallImg' src='/Content/images/placeholder.gif' style='background:url(/Content/images/residentListImages16.png) -33px 0;' />";
-        //    }
-        //}
-
-
-        function nameFormatter(row, cell, value, columnDef, dataContext) {
-            if (value) {
-                //return "<img class='smallImg' src='/Content/images/placeholder.gif' style='background:url(/Content/images/residentListImages16.png) 0 0;' />";
-                return "<a href='/Church/Church?id=" + dataContext.id + "'>" + value + "</a>"
-                //alert(dataContext.id);
-            }
-            else
-                return null;
-        }
-
-        // Add a Formatter 
-        var columns = [
-            { id: "fullName", name: "Church Name", field: "ChurchName", minWidth: 150, sortable: true, headerCssClass: "cellTextHeader", cssClass: "cellText", formatter: nameFormatter },
-            { id: "status", name: "Status", field: "Status", sortable: true, width: 125, headerCssClass: "cellTextHeader", cssClass: "cellText" },
-            { id: "preferredCity", name: "Preferred City", sortable: true, width: 125, headerCssClass: "cellTextHeader", cssClass: "cellText" },
-            { id: "preferredState", name: "Preferred State", sortable: true, width: 125, headerCssClass: "cellTextHeader", cssClass: "cellText" },
-            { id: "preferredZip", name: "Preferred Zip", sortable: true, width: 125, headerCssClass: "cellTextHeader", cssClass: "cellText" },
-            { id: "preferredPhone", name: "Preferred Phone", sortable: true, width: 125, headerCssClass: "cellTextHeader", cssClass: "cellText" },
-            { id: "preferredEmail", name: "Preferred Email", sortable: true, width: 125, headerCssClass: "cellTextHeader", cssClass: "cellText" },
-        ];
-
-
-        var options = {
-            enableCellNavigation: true
-            , enableColumnReorder: false
-            , fullWidthRows: true
-            , rowHeight: 22
-            , headerRowHeight: 22
-        };
-
-
-        var sortAsc = true;
-        var sortColumn;
-
-        function sortComparer(a, b) {
-
-            var x = a[sortColumn];
-            var y = b[sortColumn];
-
-            if (typeof x === "string" && typeof y === "string") {
-                // convert to lower case so that it the list gets sorted correctly.
-                x = x.toLowerCase();
-                y = y.toLowerCase();
-            }
-
-            if (x === y) // compare values & nulls
-                return 0;
-            if (x === null)
-                return -1;
-            else if (y === null)
-                return 1;
-            else
-                return (x > y ? 1 : -1);
-        };
-
-
-        this.dataView = new Slick.Data.DataView({ inlineFilters: true });
-        this.dataView.beginUpdate();
-        this.dataView.setItems(data);
-        this.dataView.setFilterArgs({
-            searchString: ""
-        });
-        this.dataView.setFilter(filter);
-        this.dataView.endUpdate();
-
-        this.grid = new Slick.Grid("#churchGrid", this.dataView, columns, options);
-        $("#churchGrid").data("gridInstance", this.grid);
-
-        this.grid.onSort.subscribe(function (e, args) {
-
-            sortColumn = args.sortCol.field;
-            sortAsc = args.sortAsc;
-
-            var dataView = this.getData();
-            dataView.sort(sortComparer, sortAsc);
-
-            this.invalidateAllRows();
-            this.render();
-        });
-
-        $(window).resize(function () {
-
-            var grid = $("#churchGrid").data("gridInstance");
-            if (grid !== undefined)
-                grid.resizeCanvas();
-        });
-
-        $("#loader").css('display', 'none');
-    }
-
-    , load: function () {
-
-        $.ajax({
-            type: "POST",
-            url: "/api/church/GetList",
-            contentType: "application/json",
-            success: function (data) {
-                // this refers to the "context: this" that is passed in as the context
-                this.loadgrid(data);
-            },
-            fail: function (data) {
-                alert('failed to load church list');
-            }
-            , context: this
-        });
-    }
-};
-
-/////// *************************************************************** Church List Loader
-
-
-function churchModuleLinkClick(displayText, id) {
-
-    selectModuleLink(displayText);
-
-    $(document).ajaxStart(function () {
-        $("#profileLoader").css('visibility', 'visible');
-    });
-    $(document).ajaxStop(function () {
-        $("#profileLoader").css('visibility', 'hidden');
-    });
-
-    //$("moduleContent").load("/Resident/GetModule" + displayText + "residentID=" + residentID);
+    var newId = 0;
 
     $.ajax({
-        url: "/Church/GetView",
+        url: "/Church/CreateChurch",
         type: "POST",
-        datatype: "HTML",
-        data: { viewName: displayText, churchId: id },
-        success: function (data) {
-            $('#moduleContent').html(data);
+        datatype: "Json",
+        data: newChurch,
+        success: function (newId) {
 
-            wireEventHandlers("church");
+            $("#addChurchTitle").val("Add Church - Saved");
+            var cnt = $("#addCount").val();
+            $("#addCount").val((cnt + 1));
+
+            setTimeout(OpenNewChurchForm, 2000);
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
-            alert("Status: " + textStatus); alert("Error: " + errorThrown);
+
+            //$("#svdMsg").val("Error");
+            //$("#svdMsg").css("visibility", "visible");
+
+            alert("Status: " + textStatus + "\r\n" + "Error: " + errorThrown);
+        },
+        context: this
+    });
+
+    if (!open)
+        return newId;
+}
+
+function SaveNewChurchAdd() {
+
+    SaveNewChurch(false);
+
+    ClearNewChurchForm();
+
+    document.getElementById("addChurch").focus();
+}
+
+function CloseNewChurch() {
+
+    ClearNewChurchForm();
+
+    $("#addChurch").modal("hide"); // close
+}
+
+function OpenNewChurchForm() {
+
+    ClearNewChurchForm();
+
+    document.getElementById("churchName").focus();
+}
+
+function ClearNewChurchForm() {
+
+    // clear previous values and open form
+    $("#churchName").val("");
+    $("#pastorId").val("");
+    $("#line1").val("");
+    $("#city").val("");
+    $("#state").val("");
+    $("#zip").val("");
+    $("#phone").val("(___) ___-____");
+    $("#email").val("");
+    $("#addChurchTitle").val("Add Church");
+
+    var validator = $("#addChurchForm").validate();
+    validator.resetForm();
+}
+
+function initializeNewChurch() {
+
+    $("#addChurch").on("hidden.bs.modal", function () {
+
+        var cnt = $("#addCount").val();
+        if (cnt > 0) {
+            window.location.reload();
+        }
+    });
+
+    $('#addChurchForm').validate({
+        rules: {
+            churchName: {
+                //required: true,
+                required: function (element) {
+                    var value = $("#churchName").val();
+                    return value.trim() == "";
+                }
+            },
+            phone: {
+                phone: true
+            },
+            // validate on if it's entered, but do not require it
+            email: {
+                email: true
+            }
+        },
+        highlight: function (element, errorClass) {
+            $(element).closest('.form-group').addClass('has-error');
+        },
+        unhighlight: function (element, errorClass) {
+            $(element).closest('.form-group').removeClass('has-error');
+        },
+        messages: {
+            churchName: "Church name is required",
         }
     });
 }
-
-
-$(document).ready(function () {
-
-    //selectModuleLink('Personal Info');
-
-    //wireEventHandlers();
-
-    //$("#datepicker").datepicker({
-    //    showOtherMonths: true,
-    //    selectOtherMonths: true,
-    //    changeMonth: true,
-    //    changeYear: true,
-    //    yearRange: "-100:+0"
-    //});
-
-    //var form = $("#_memberProfileForm");
-    //form.submit(function () { $.post($(this).attr('action'), $(this).serialize(), function (response) { return; }, 'json'); return false; });
-    //form.submit(submitForm(this));
-
-    //var forms = document.getElementsByTagName("form");
-    //for (var i = 0; i < forms; i++)
-    //{
-    //    forms[i].submit(function () { $.post($(this).attr('action'), $(this).serialize(), function (response) { return; }, 'json'); return false; });
-    //}
-});

@@ -19,23 +19,29 @@
 
         <thead class="thead-default">
             <tr>
-                <th>
+                <th class="text-center">
                     Full Name
                 </th>
-                <th class="hideXs">
+                <th class="hideXs text-center">
                     Status
                 </th>
-                <th class="hideXs">
+                <th class="hideXs text-center">
                     Status Description
                 </th>
-                <th class="hideXs">
+                <th class="hideXs text-center">
                     Last Attendance
                 </th>
-                <th class="hideXs">
+                <th class="text-center">
                     Phone
                 </th>
-                <th class="hideXs">
+                <th class="visible-xs text-center">
+                    Text
+                </th>
+                <th class="text-center">
                     Email
+                </th>
+                <th class="text-center">
+                    Map
                 </th>
                 <th class="hideXs">
                     &nbsp;
@@ -55,16 +61,56 @@
                 <td class="hideXs">
                     @m.StatusChangeType
                 </td>
-                <td class="hideXs">
-                    @m.ActivityDate
+                <td class="hideXs text-center">
+                    @(m.ActivityDate?.ToString("MM/dd/yyyy"))
                 </td>
-                <td class="hideXs">
-                    @m.Phone
+                <td class="text-center">
+                    <span class="hidden-sm hidden-md hidden-lg">
+                        @if (!string.IsNullOrWhiteSpace(m.Phone))
+                        {
+                            <a href="tel://@(String.Format("{0:###-###-####}", double.Parse(m.Phone)))"><img class="icon32" src="~/Content/images/Calls-32.png" alt="call" /></a>
+                        }
+                        else
+                        {
+                            <span>&nbsp;</span>
+                        }
+                    </span>
+                    <span class="hidden-xs">@m.Phone</span>
                 </td>
-                <td class="hideXs">
-                    @m.Email
+                <td class="visible-xs text-center">
+                    @if (!string.IsNullOrWhiteSpace(m.Phone))
+                    {
+                        <a href="sms://@(String.Format("{0:###-###-####}", double.Parse(m.Phone)))"><img class="icon32" src="~/Content/images/Text-32.png" alt="call" /></a>
+                    }
+                    else
+                    {
+                        <span>&nbsp;</span>
+                    }
                 </td>
-                <td class="hideXs">
+                <td class="text-center">
+                    <span class="hidden-sm hidden-md hidden-lg">
+                        @if (!string.IsNullOrWhiteSpace(m.Email))
+                        {
+                            <a href="mailto://@m.Email"><img class="icon32" src="~/Content/images/Mail-32.png" alt="email" /></a>
+                        }
+                        else
+                        {
+                            <span>&nbsp;</span>
+                        }
+                    </span>
+                    <span class="hidden-xs">@m.Email</span>
+                </td>
+                <td class="text-center">
+                    @if (!string.IsNullOrWhiteSpace(m.Address))
+                    {
+                        <a href="https://www.google.com/maps/place/@(m.Address?.Replace(' ', '+'))")><img class="icon32" src="~/Content/images/Maps-32.png" alt="map" /></a>
+                    }
+                    else
+                    {
+                        <span>&nbsp;</span>
+                    }
+                </td>
+                <td class="text-center hideXs">
                     @Html.ActionLink("Delete", "DeleteMember", "Member", new { @id=m.id }, null)
                 </td> 
             </tr>

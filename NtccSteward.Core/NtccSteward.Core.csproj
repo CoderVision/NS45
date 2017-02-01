@@ -111,6 +111,8 @@
     <Compile Include="Models\Account\Role.cs" />
     <Compile Include="Models\Account\Session.cs" />
     <Compile Include="Models\Church\Church.cs" />
+    <Compile Include="Models\Church\ChurchProfile.cs" />
+    <Compile Include="Interfaces\Church\IChurchProfile.cs" />
     <Compile Include="Models\Common\Address\Address.cs" />
     <Compile Include="Models\Common\Address\AddressInfo.cs" />
     <Compile Include="Models\Common\Address\Email.cs" />

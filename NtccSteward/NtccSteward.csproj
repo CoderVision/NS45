@@ -297,6 +297,7 @@
     <Content Include="Content\images\Message-Green-48.png" />
     <Content Include="Content\images\ntcclogo.png" />
     <Content Include="Content\images\ntcclogo4-sml.png" />
+    <Content Include="Content\images\ntccShield-48.png" />
     <Content Include="Content\images\paste.png" />
     <Content Include="Content\images\placeholder.gif" />
     <Content Include="Content\images\print.png" />

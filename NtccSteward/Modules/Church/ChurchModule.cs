@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NtccSteward.Core.Interfaces.Church;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,29 +8,27 @@ namespace NtccSteward.Modules.Church
 {
     public class ChurchModule : ModuleBase
     {
-        public ChurchModule(int id)
+        public ChurchModule(ModuleBase initialModule)
         {
-            this.Id = id;
-
-            Initialize();
+            Initialize(initialModule);
         }
 
-        private void Initialize()
+        private void Initialize(ModuleBase initialModule)
         {
             Modules = new List<string>();
             Modules.Add("Church Info");
             //Modules.Add("Attributes");  // all soulwinning activity
-            Modules.Add("Communication");  // all soulwinning activity
+            //Modules.Add("Communication");  // all soulwinning activity
             //Modules.Add("Notes");
             //Modules.Add("History");
             //Modules.Add("Teams");
 
-            var profile = new ChurchProfile(this.Id);
-            //profile.Load();
+            if (initialModule is ChurchProfile)
+                this.DisplayText = $"{((ChurchProfile)initialModule).Name}";
+            else
+                this.DisplayText = $"Church Profile";
 
-            this.DisplayText = $"Church Profile for {profile.ChurchName}";
-
-            InitialModule = profile;
+            InitialModule = initialModule;
         }
 
         public List<string> Modules { get; set; }

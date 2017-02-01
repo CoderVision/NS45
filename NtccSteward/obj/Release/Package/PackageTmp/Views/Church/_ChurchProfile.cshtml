@@ -1,73 +1,81 @@
-﻿@model NtccSteward.Modules.Church.ChurchProfile
+﻿@using NtccSteward.Framework
+@model NtccSteward.Modules.Church.ChurchProfile
 
 
-
-@using (Html.BeginForm("SaveProfile", "Members", FormMethod.Post, new { id = "_memberProfileForm", @class = "form", @role = "form" }))
-{
-    @Html.AntiForgeryToken();
+<div class="row">
 
     <input type="hidden" name="identityId" id="identityId" value="@Model.Id" />
+    @using (Html.BeginForm("SaveProfile", "Members", FormMethod.Post, new { id = "_memberProfileForm", @class = "form", @role = "form" }))
+    {
+        @Html.AntiForgeryToken();
 
-    <div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+        <input type="hidden" name="identityId" id="identityId" value="@Model.Id" />
 
-                <fieldset class="form-group">
-                    <label for="churchName" class="labelNormal">Church Name</label>
-                    @Html.TextBoxFor(m => m.ChurchName, new { @class = "form-control", @id = "churchName", @placeholder = "Enter church name" })
-                </fieldset>
-
+        <fieldset class="col-sm-6">
+            <div class="form-group">
+                <label for="churchName" class="col-sm-2 control-label labelNormal">Name</label>
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(m => m.Name, new { @class = "form-control", @id = "churchName", @placeholder = "Enter church name" })
+                </div>
             </div>
+        </fieldset>
+    }
+</div>
 
-            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                &nbsp;
-            </div>
+<p>&nbsp;</p>
+<p><h2 class="text-danger text-center">This page is in development</h2></p>
+<p>&nbsp;</p>
 
+<div class="row" style="margin-top:10px;">
+    <div id="addressList">
+        <div class="sectionBand">
+            <span class="sectionTitle">Address</span>
+            <hr class="help-block" />
         </div>
-    </div>
-}
-
-
-<div class="moduleContent" style="margin-top:10px;padding-right: 4px;">
-
-    <span class="sectionTitle">Address</span>
-    <div id="addressList_@Model.Id">
-        @for (var i = 0; i < Model.Addys.Count; i++)
-        {
-            await Html.RenderPartialAsync("~/Views/Shared/AddressInfo/_Address.cshtml", Model.Addys[i]);
-        }
-    </div>
-    <div>
-        <label style="cursor:pointer;" onclick="AddAddress(@Model.Id, 'address', 'addressList_@Model.Id' )"><img id="addAddy" src="~/images/add.png" style="width:20px;height:20px;vertical-align:middle;margin-bottom:4px;" />  Add address</label>
+        <div id="addressList_@Model.Id">
+            @for (var i = 0; i < Model.AddressList.Count; i++)
+            {
+                Html.RenderPartial("~/Views/Shared/AddressInfo/_Address.cshtml", Model.AddressList[i]);
+            }
+        </div>
+        <div class="sectionBand">
+            <label style="cursor:pointer;" onclick="AddAddress(@Model.Id, 'address', 'addressList_@Model.Id' )"><img id="addAddy" src="~/content/images/add.png" style="width:20px;height:20px;vertical-align:middle;margin-bottom:4px;" />  Add address</label>
+        </div>
     </div>
 </div>
 
-<div class="moduleContent" style="margin-top:10px;padding-right: 4px;">
+<div class="row" style="margin-top:10px;">
     <div id="phoneList">
-        <span class="sectionTitle">Phone</span>
+        <div class="sectionBand">
+            <span class="sectionTitle">Phone</span>
+            <hr class="help-block" />
+        </div>
         <div id="phoneList_@Model.Id">
-            @for (var i = 0; i < Model.PhoneNums.Count; i++)
+            @for (var i = 0; i < Model.PhoneList.Count; i++)
             {
-                await Html.RenderPartialAsync("~/Views/Shared/AddressInfo/_Phone.cshtml", Model.PhoneNums[i]);
+                Html.RenderPartial("~/Views/Shared/AddressInfo/_Phone.cshtml", Model.PhoneList[i]);
             }
         </div>
-        <div>
-            <label style="cursor:pointer;" onclick="AddAddress(@Model.Id, 'phone', 'phoneList_@Model.Id')"><img id="addAddy" src="~/images/add.png" style="width:20px;height:20px;vertical-align:middle;margin-bottom:4px;" />  Add phone</label>
+        <div class="sectionBand">
+            <label style="cursor:pointer;" onclick="AddAddress(@Model.Id, 'phone', 'phoneList_@Model.Id')"><img id="addAddy" src="~/content/images/add.png" style="width:20px;height:20px;vertical-align:middle;margin-bottom:4px;" />  Add phone</label>
         </div>
     </div>
 </div>
 
-<div class="moduleContent" style="margin-top:10px;padding-right: 4px;">
+<div class="row" style="margin-top:10px;">
     <div id="emailList">
-        <span class="sectionTitle">Email</span>
+        <div class="sectionBand">
+            <span class="sectionTitle">Email</span>
+            <hr class="help-block" />
+        </div>
         <div id="emailList_@Model.Id">
-            @for (var i = 0; i < Model.EmailAddys.Count; i++)
+            @for (var i = 0; i < Model.EmailList.Count; i++)
             {
-                await Html.RenderPartialAsync("~/Views/Shared/AddressInfo/_Email.cshtml", Model.EmailAddys[i]);
+                Html.RenderPartial("~/Views/Shared/AddressInfo/_Email.cshtml", Model.EmailList[i]);
             }
         </div>
-        <div>
-            <label style="cursor:pointer;" onclick="AddAddress(@Model.Id, 'email', 'emailList_@Model.Id' )"><img id="addEmail" src="~/images/add.png" style="width:20px;height:20px;vertical-align:middle;margin-bottom:4px;" />  Add email</label>
+        <div class="sectionBand">
+            <label style="cursor:pointer;" onclick="AddAddress(@Model.Id, 'email', 'emailList_@Model.Id' )"><img id="addEmail" src="~/Content/images/add.png" style="width:20px;height:20px;vertical-align:middle;margin-bottom:4px;" />  Add email</label>
         </div>
     </div>
 </div>

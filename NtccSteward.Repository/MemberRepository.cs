@@ -79,6 +79,8 @@ namespace NtccSteward.Api.Repository
 
             if (memberId != 0)
             {
+                member.id = memberId;
+
                 return new RepositoryActionResult<NewMember>(member, RepositoryActionStatus.Created);
             }
             else

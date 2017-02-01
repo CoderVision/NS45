@@ -28,26 +28,75 @@ namespace NtccSteward.Controllers
             _uri = "church";
         }
 
+        private Session InitSession()
+        {
+            if (_session == null)
+            {
+                var sessionJson = (string)HttpContext.Session["Session"];
+                _session = _apiProvider.DeserializeJson<Session>(sessionJson);
+            }
+
+            return _session;
+        }
+
         [VerifySessionAttribute]
         public async Task<ActionResult> Index()
         {
+            InitSession();
+
             var result = await _apiProvider.GetItemAsync(_uri, "");
             var list = _apiProvider.DeserializeJson<List<cm.Church>>(result);
 
-            var metajson = await _apiProvider.GetItemAsync($"{_uri}/metadata", $"churchId={_session.ChurchId}");
+            var metajson = await _apiProvider.GetItemAsync($"{_uri}/metadata");
             var metaList = _apiProvider.DeserializeJson<List<AppEnum>>(metajson);
 
             var viewModel = new ChurchIndexViewModel() { ChurchList = list, MetaList = metaList };
 
-            return View();
+            return View(viewModel);
         }
 
-        [VerifySessionAttribute]
-        public ActionResult Edit(int id)
+        [HttpPost]
+        public async Task<ActionResult> CreateChurch(cm.Church church)
         {
-            var shell = new ChurchModule(id);
+            try
+            {
+                InitSession();
 
-            return View(shell);
+               church.CreatedByUserId = _session.UserId;
+
+                var json = await _apiProvider.PostItemAsync<cm.Church>(_uri, church);
+                var ch = _apiProvider.DeserializeJson<cm.Church>(json);
+
+                if (ch != null)
+                {
+                    return Content("Created: " + ch.id.ToString());
+                }
+                else
+                    return Content("Error creating church");
+            }
+            catch (Exception ex)
+            {
+                return Content("Error creating church: " + ex.Message);
+            }
+        }
+
+
+        [VerifySessionAttribute]
+        public async Task<ActionResult> Edit(int id)
+        {
+            InitSession();
+
+            var mpjson = await _apiProvider.GetItemAsync(_uri, $"id={id}");
+            var cp = _apiProvider.DeserializeJson<ChurchProfile>(mpjson);
+
+            var metajson = await _apiProvider.GetItemAsync($"{_uri}/metadata", $"churchId={_session.ChurchId}");
+            var metaList = _apiProvider.DeserializeJson<List<AppEnum>>(metajson);
+
+            cp.MetaDataList = metaList.ToList();
+
+            var churchModule = new ChurchModule(cp);
+
+            return View("~/Views/Church/Church.cshtml", churchModule);
         }
 
         public ActionResult CreateAddress(string addyType, int churchId)
@@ -117,7 +166,7 @@ namespace NtccSteward.Controllers
                     }
                 default:
                     {
-                        viewModel = new ChurchProfile(churchId);
+                        viewModel = new ChurchProfile();
                         viewPath += "_ChurchProfile.cshtml";
                         break;
                     }
@@ -146,6 +195,23 @@ namespace NtccSteward.Controllers
             // delete from database
 
             return new ContentResult(); // this prevents navigation to another page.
+        }
+
+        public async Task<ActionResult> DeleteChurch(int id)
+        {
+            try
+            {
+                var result = await _apiProvider.DeleteItemAsync($"{_uri}/{id.ToString()}?entityType=55");
+
+                if (string.IsNullOrWhiteSpace(result))
+                    return RedirectToAction("Index");
+                else
+                    return Content("Error deleting church");
+            }
+            catch (Exception ex)
+            {
+                return Content("Error deleting church: " + ex.Message);
+            }
         }
     }
 }

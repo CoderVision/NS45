@@ -11,7 +11,9 @@ namespace NtccSteward.Core.Models.Church
 
         public string Name { get; set; }
 
-        public int Status { get; set; }
+        public int StatusId { get; set; }
+
+        public string StatusDesc { get; set; }
 
         public string Email { get; set; }
 
@@ -19,8 +21,16 @@ namespace NtccSteward.Core.Models.Church
 
         public string Address { get; set; }
 
+        public string Line1 { get; set; }
+        public string Line2 { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string Zip { get; set; }
+
         public int PastorId { get; set; }
 
         public string Pastor { get; set; }
+
+        public int CreatedByUserId { get; set; }
     }
 }

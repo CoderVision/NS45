@@ -11,6 +11,8 @@ using System.Web;
 using NtccSteward.Api.Framework;
 using System.Web.Http.Routing;
 using Newtonsoft.Json;
+using NtccSteward.Repository.Framework;
+using NtccSteward.Core.Models.Church;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -82,9 +84,90 @@ namespace NtccSteward.Api.Controllers
 
         [Route("church/metadata")]
         [HttpGet]
-        public IHttpActionResult GetProfileMetadata(int churchId)
+        public IHttpActionResult GetProfileMetadata()
         {
-            return Ok(_repository.GetProfileMetadata(churchId));
+            return Ok(_repository.GetProfileMetadata());
         }
+
+        [HttpGet]
+        public IHttpActionResult Edit(int id)
+        {
+            try
+            {
+                if (id <= 0)
+                    return BadRequest();
+
+                var profile = _repository.Get(id);
+                if (profile == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(profile);
+            }
+            catch (Exception ex)
+            {
+                new ErrorHelper().ProcessError(_logger, ex, nameof(Get));
+
+                return InternalServerError();
+            }
+        }
+
+        // create
+        [HttpPost]
+        public IHttpActionResult Post(Church church)
+        {
+            try
+            {
+                if (church == null)
+                    return BadRequest("church required");
+
+                var result = _repository.Add(church);
+
+                if (result.Status == RepositoryActionStatus.Created)
+                    return Created(Request.RequestUri + "/" + result.Entity.id.ToString(), result.Entity);
+
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                new ErrorHelper().ProcessError(_logger, ex, nameof(Delete));
+
+                return InternalServerError();
+            }
+        }
+
+        /// <summary>
+        /// Deletes a church or contact info
+        /// </summary>
+        /// <param name="id">Church.IdentityId</param>
+        /// <param name="entityType">EnumTypeId=12:  55 church, 61 ContactInfo</param>
+        /// <returns></returns>
+        [HttpDelete()]
+        public IHttpActionResult Delete(int id, int entityType)
+        {
+            try
+            {
+                var result = this._repository.Delete(id, entityType);
+
+                if (result.Status == RepositoryActionStatus.Deleted)
+                {
+                    return StatusCode(HttpStatusCode.NoContent);
+                }
+                else if (result.Status == RepositoryActionStatus.NotFound)
+                {
+                    return NotFound();
+                }
+
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                new ErrorHelper().ProcessError(_logger, ex, nameof(Delete));
+
+                return InternalServerError();
+            }
+        }
+
     }
 }

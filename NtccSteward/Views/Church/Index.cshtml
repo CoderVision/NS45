@@ -1,9 +1,8 @@
-﻿@model NtccSteward.ViewModels.Church.ChurchIndexViewModel
-@*
-    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using NtccSteward.Framework
+@model NtccSteward.ViewModels.Church.ChurchIndexViewModel
+
 @{
-     ViewBag.Title = "Churches";
+    ViewBag.Title = "Churches";
 }
 
 <span class="sectionTitle">Church List</span>
@@ -12,12 +11,12 @@
 
     <form class="form-inline">
         <input type="search" id="churchSearch" class="form-control" style="padding:3px;width:300px;margin-bottom:4px;margin-left:0px;" placeholder="Church Name Search"
-               oninput="FilterTable('memberTbl', this.value, 'Full Name')" />
+               oninput="FilterTable('churchTbl', this.value, 'Church Name')" />
 
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addChurch" style="margin-left:8px;margin-bottom:4px;">Add</button>
     </form>
 
-    <table id="memberTbl" class="table table-sm table-hover table-bordered">
+    <table id="churchTbl" class="table table-sm table-hover table-bordered">
 
         <thead class="thead-default">
             <tr>
@@ -55,7 +54,7 @@
                     @Html.ActionLink(m.Name, "Edit", "Church", new { id = m.id }, null)
                 </td>
                 <td class="hideXs">
-                    @m.Status
+                    @m.StatusDesc
                 </td>
                 <td>
                     @m.Pastor 
@@ -114,23 +113,38 @@
     </table>
 </div>
 
-<input type="hidden" id="memberId" />
+<input id="addCount" type="hidden" value="0" />
 
 <div class="modal fade" id="addChurch">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title">Add Church</h4>
+                <h4 id="addChurchTitle" class="modal-title">Add Church</h4>
             </div>
 
             <div class="modal-body">
-                <form class="form">
+                <form class="form" id="addChurchForm">
                     <div class="form-group">
                         <div class="row">
                             <div class="col-xs-12">
                                 <label for="firstName" class="labelNormal">Church Name</label>
-                                <input type="text" class="form-control" id="firstName" placeholder="Enter first name" />
+                                <input type="text" class="form-control" id="churchName" placeholder="Enter church name" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <label for="pastorId" class="labelNormal">Pastor</label>
+                                <select id="pastorId" class="form-control">
+                                    <option selected value="-1">Pastor</option>
+                                    @foreach (var itm in Model.MetaList.Where(e => e.AppEnumTypeID == -1).OrderBy(e => e.Desc))
+                                    {
+                                        <option value="@itm.ID">@itm.Desc</option>
+                                    }
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -173,10 +187,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default">Save</button>
-                <button type="button" class="btn btn-primary">Save &amp; Open</button>
-                <button type="button" class="btn btn-default">Save &amp; Add Another</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="SaveNewChurch()">Save &amp; Add Another</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="CloseNewChurch()">Close</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -184,7 +196,13 @@
 
 @section scripts {
 
-    <script src="~/js/church.js"></script>
+    <script src="~/Scripts/Church.js"></script>
 
+    <script>
+        $(function () {
+            initializeNewChurch();
 
+            MaskPhone('phone');
+        });
+    </script>
 }
