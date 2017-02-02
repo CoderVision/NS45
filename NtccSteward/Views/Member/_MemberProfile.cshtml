@@ -136,7 +136,7 @@
                     <div class="col-sm-10">
                         @*@Html.TextBoxFor(m => m.Sponsor, new { @class = "form-control", @id = "Sponsor", @readonly = "readonly" })*@
                         @*@Html.HiddenFor(m => m.SponsorId, new { @id = "SponsorId" })*@
-                        @Html.DropDownListFor(m => m.StatusChangeTypeId, sponsorList, new { @class = "form-control", @id = "SponsorId", @placeholder = "Sponsor" })
+                        @Html.DropDownListFor(m => m.SponsorId, sponsorList, new { @class = "form-control", @id = "SponsorId", @placeholder = "Sponsor" })
                     </div>
                 </div>
 

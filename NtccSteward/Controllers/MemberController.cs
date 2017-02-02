@@ -16,6 +16,7 @@ using System.Web;
 using System.Web.Mvc;
 using NtccSteward.Core.Models.Common.Enums;
 using NtccSteward.ViewModels.Member;
+using NtccSteward.Core.Models.Church;
 
 namespace NtccSteward.Controllers
 {
@@ -59,7 +60,11 @@ namespace NtccSteward.Controllers
                 var metajson = await _apiProvider.GetItemAsync($"{_uri}/metadata", $"churchId={_session.ChurchId}");
                 var metaList = _apiProvider.DeserializeJson<List<AppEnum>>(metajson);
 
+                var churchjson = await _apiProvider.GetItemAsync("church/" + _session.ChurchId);
+                var church = _apiProvider.DeserializeJson<Church>(churchjson);
+
                 var viewModel = new MemberIndexViewModel() { MemberList = list, MetaList = metaList };
+                viewModel.Title = $"{church.Name} Member List";
 
                 return View(viewModel);
             }

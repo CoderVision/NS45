@@ -12,5 +12,7 @@ namespace NtccSteward.ViewModels.Member
         public List<cm.Member> MemberList { get; set; }
 
         public List<AppEnum> MetaList { get; set; }
+
+        public string Title { get; set; }
     }
 }
