@@ -8,7 +8,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NtccSteward.Api.Repository
+namespace NtccSteward.Repository
 {
     public interface IMessageRepository
     {
@@ -24,7 +24,7 @@ namespace NtccSteward.Api.Repository
         int SaveRecipientGroup(RecipientGroup group);
     }
 
-    public class MessageRepository : Repository, IMessageRepository
+    public class MessageRepository : NtccSteward.Repository.Repository, IMessageRepository
     {
         private readonly ISqlCmdExecutor _executor;
 

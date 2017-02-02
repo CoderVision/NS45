@@ -88,31 +88,28 @@ namespace NtccSteward.Controllers
         {
             InitSession();
 
+            // Get Church Profile
             var mpjson = await _apiProvider.GetItemAsync(_uri, $"id={id}");
             var cp = _apiProvider.DeserializeJson<ChurchProfile>(mpjson);
 
+            // Get Metadata
             var metajson = await _apiProvider.GetItemAsync($"{_uri}/metadata", $"churchId={_session.ChurchId}");
             var metaList = _apiProvider.DeserializeJson<List<AppEnum>>(metajson);
 
             cp.MetaDataList = metaList.ToList();
 
-            // temp data
-            var teammate = new Teammate();
-            teammate.Id = 1;
-            teammate.Name = "PA Kinson";
-            teammate.PersonId = 22;
-            teammate.TeamId = 1;
-            teammate.TeamPositionEnumId = 71;
+            // Get Pastoral Team
+            var teamsjson = await _apiProvider.GetItemAsync("team/" + _session.ChurchId);
+            var teamList = _apiProvider.DeserializeJson<List<TeamViewModel>>(teamsjson);
+            var pastoralTeam = teamList.FirstOrDefault(t => t.TeamTypeEnumId == 17); // pastoral team
+            if (pastoralTeam != null)
+            {
+                var teammatejson = await _apiProvider.GetItemAsync($"team/{pastoralTeam.Id}/teammates");
+                var teammateList = _apiProvider.DeserializeJson<List<Teammate>>(teammatejson);
+                pastoralTeam.Teammates = teammateList;
 
-            var team = new TeamViewModel();
-            team.Id = 1;
-            team.ChurchId = 3;
-            team.Name = "Graham Pastoral Team";
-            team.TeamPositionEnumTypeId = 17;
-            team.TeamTypeEnumId = 16;
-            team.Teammates.Add(teammate);
-
-            cp.PastoralTeam = team;
+                cp.PastoralTeam = pastoralTeam;
+            }
 
             var churchModule = new ChurchModule(cp);
 

@@ -1,7 +1,6 @@
 ﻿
 using NtccSteward.Repository.Framework;
 using NtccSteward.Core.Models.Members;
-using NtccSteward.Api.Repository.Ordinals;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -12,9 +11,9 @@ using NtccSteward.Core.Models.Common.Address;
 using NtccSteward.Core.Interfaces.Common.Address;
 using NtccSteward.Core.Models.Common.CustomAttributes;
 using NtccSteward.Core.Models.Common.Enums;
+using NtccSteward.Repository.Ordinals;
 
-
-namespace NtccSteward.Api.Repository
+namespace NtccSteward.Repository
 {
     public interface IMemberRepository
     {
@@ -29,7 +28,7 @@ namespace NtccSteward.Api.Repository
         RepositoryActionResult<Member> Delete(int id, int entityType);
     }
 
-    public class MemberRepository : Repository, IMemberRepository
+    public class MemberRepository : NtccSteward.Repository.Repository, IMemberRepository
     {
         private readonly SqlCmdExecutor _executor;
 

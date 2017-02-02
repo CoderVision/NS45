@@ -9,7 +9,7 @@ using System.Data.SqlClient;
 using System.Linq;
 
 
-namespace NtccSteward.Api.Repository
+namespace NtccSteward.Repository
 {
     public interface IAccountRepository
     {
@@ -20,7 +20,7 @@ namespace NtccSteward.Api.Repository
     }
 
 
-    public class AccountRepository : Repository, IAccountRepository
+    public class AccountRepository : NtccSteward.Repository.Repository, IAccountRepository
     {
         private readonly string _pepper;
 

@@ -1,4 +1,4 @@
-﻿using NtccSteward.Api.Repository.Ordinals;
+﻿
 using NtccSteward.Core.Models.Church;
 using NtccSteward.Repository.Framework;
 using System;
@@ -9,8 +9,9 @@ using System.Threading.Tasks;
 using NtccSteward.Core.Models.Common.Enums;
 using System.Data;
 using NtccSteward.Core.Models.Common.Address;
+using NtccSteward.Repository.Ordinals;
 
-namespace NtccSteward.Api.Repository
+namespace NtccSteward.Repository
 {
     public interface IChurchRepository
     {
@@ -22,7 +23,7 @@ namespace NtccSteward.Api.Repository
         List<AppEnum> GetProfileMetadata();
     }
 
-    public class ChurchRepository : Repository, IChurchRepository
+    public class ChurchRepository : NtccSteward.Repository.Repository, IChurchRepository
     {
         private readonly SqlCmdExecutor _executor;
 

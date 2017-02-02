@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Net;
-using NtccSteward.Api.Repository;
 using NtccSteward.Core.Models.Members;
 using NtccSteward.Core.Models.Common.Parameters;
 using NtccSteward.Core.Framework;
@@ -16,6 +15,7 @@ using System.Web.Http.Routing;
 using Newtonsoft.Json;
 using System.Web.Http.Cors;
 using NtccSteward.Repository.Framework;
+using NtccSteward.Repository;
 
 namespace NtccSteward.Api.Controllers
 {
@@ -116,7 +116,7 @@ namespace NtccSteward.Api.Controllers
         //[Route("members/{id}/profile")]
         //could also have:  [Route("members/{id}/history")] for history, etc.
         [HttpGet]
-        public IHttpActionResult Edit(int id)
+        public IHttpActionResult Get(int id)
         //public IHttpActionResult GetProfile([FromBody] ItemByID identity)
         {
             try
