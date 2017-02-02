@@ -22,6 +22,14 @@ html, body {
     padding: 0px;
 }
 
+.navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:hover {
+    background-color: #295a3a;
+}
+bootstrap.css:4626
+.navbar-inverse .navbar-toggle {
+    border-color: #295a3a;
+}
+
 .btn-primary {
     color: #fff;
     background-color: #518262!important;
@@ -70,6 +78,9 @@ body {
     }
     .showXs {
         display:normal;
+    }
+    .addBtn{
+        margin-left:0px!important;
     }
     /*.logo {
         width:50%;

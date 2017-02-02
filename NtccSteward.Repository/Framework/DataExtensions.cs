@@ -67,15 +67,7 @@ namespace NtccSteward.Repository.Framework
             SqlDateTime returnDate = SqlDateTime.Null;
 
             if (date.HasValue)
-            {
-                var minDate = new DateTime(SqlDateTime.MinValue.TimeTicks);
-                var maxDate = new DateTime(SqlDateTime.MaxValue.TimeTicks);
-
-                if (date > minDate && date < maxDate)
-                    returnDate = new SqlDateTime(date.Value);
-
-                return returnDate;
-            }
+                returnDate = new SqlDateTime(date.Value);
 
             return returnDate;
         }

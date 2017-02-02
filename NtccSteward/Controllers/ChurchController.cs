@@ -11,6 +11,8 @@ using System.Web.Mvc;
 using NtccSteward.ViewModels.Church;
 using cm = NtccSteward.Core.Models.Church;
 using NtccSteward.Core.Models.Common.Enums;
+using NtccSteward.Core.Models.Team;
+using NtccSteward.ViewModels;
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace NtccSteward.Controllers
@@ -93,6 +95,24 @@ namespace NtccSteward.Controllers
             var metaList = _apiProvider.DeserializeJson<List<AppEnum>>(metajson);
 
             cp.MetaDataList = metaList.ToList();
+
+            // temp data
+            var teammate = new Teammate();
+            teammate.Id = 1;
+            teammate.Name = "PA Kinson";
+            teammate.PersonId = 22;
+            teammate.TeamId = 1;
+            teammate.TeamPositionEnumId = 71;
+
+            var team = new TeamViewModel();
+            team.Id = 1;
+            team.ChurchId = 3;
+            team.Name = "Graham Pastoral Team";
+            team.TeamPositionEnumTypeId = 17;
+            team.TeamTypeEnumId = 16;
+            team.Teammates.Add(teammate);
+
+            cp.PastoralTeam = team;
 
             var churchModule = new ChurchModule(cp);
 

@@ -80,6 +80,7 @@
   <ItemGroup>
     <Compile Include="Factories\AddressInfoFactory.cs" />
     <Compile Include="Factories\MemberFactory.cs" />
+    <Compile Include="Factories\TeamFactory.cs" />
     <Compile Include="Framework\AppConfigProvider.cs" />
     <Compile Include="Framework\LogLevel.cs" />
     <Compile Include="Framework\MessageDirection.cs" />
@@ -134,6 +135,10 @@
     <Compile Include="Models\Message\Recipient.cs" />
     <Compile Include="Models\Message\RecipientGroup.cs" />
     <Compile Include="Models\Services\SmsSettings.cs" />
+    <Compile Include="Interfaces\Team\ITeam.cs" />
+    <Compile Include="Interfaces\Team\ITeammate.cs" />
+    <Compile Include="Models\Team\Team.cs" />
+    <Compile Include="Models\Team\Teammate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

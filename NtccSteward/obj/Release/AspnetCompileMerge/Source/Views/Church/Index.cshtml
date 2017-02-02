@@ -13,7 +13,7 @@
         <input type="search" id="churchSearch" class="form-control" style="padding:3px;width:300px;margin-bottom:4px;margin-left:0px;" placeholder="Church Name Search"
                oninput="FilterTable('churchTbl', this.value, 'Church Name')" />
 
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addChurch" style="margin-left:8px;margin-bottom:4px;">Add</button>
+        <button type="button" class="btn btn-primary addBtn" data-toggle="modal" data-target="#addChurch" style="margin-left:8px;margin-bottom:4px;">Add</button>
     </form>
 
     <table id="churchTbl" class="table table-sm table-hover table-bordered">
@@ -56,14 +56,14 @@
                 <td class="hideXs">
                     @m.StatusDesc
                 </td>
-                <td>
+                <td class="hideXs">
                     @m.Pastor 
                 </td>
                 <td class="text-center">
                     <span class="hidden-sm hidden-md hidden-lg">
                         @if (!string.IsNullOrWhiteSpace(m.Phone))
                         {
-                            <a href="tel://@(String.Format("{0:###-###-####}", double.Parse(m.Phone)))"><img class="icon32" src="~/Content/images/Calls-32.png" alt="call" /></a>
+                            <a href="tel:@(String.Format("{0:###-###-####}", double.Parse(m.Phone)))"><img class="icon32" src="~/Content/images/Calls-32.png" alt="call" /></a>
                         }
                         else
                         {
@@ -75,7 +75,7 @@
                 <td class="visible-xs text-center">
                     @if (!string.IsNullOrWhiteSpace(m.Phone))
                     {
-                        <a href="sms://@(String.Format("{0:###-###-####}", double.Parse(m.Phone)))"><img class="icon32" src="~/Content/images/Text-32.png" alt="call" /></a>
+                        <a href="sms:@(String.Format("{0:###-###-####}", double.Parse(m.Phone)))"><img class="icon32" src="~/Content/images/Text-32.png" alt="call" /></a>
                     }
                     else
                     {
@@ -86,7 +86,7 @@
                     <span class="hidden-sm hidden-md hidden-lg">
                         @if (!string.IsNullOrWhiteSpace(m.Email))
                         {
-                            <a href="mailto://@m.Email"><img class="icon32" src="~/Content/images/Mail-32.png" alt="email" /></a>
+                            <a href="mailto:@m.Email"><img class="icon32" src="~/Content/images/Mail-32.png" alt="email" /></a>
                         }
                         else
                         {

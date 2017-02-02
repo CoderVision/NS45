@@ -1,4 +1,6 @@
-﻿
+﻿/// <reference path="jquery-3.1.1.intellisense.js" />
+
+
 function SaveNewChurch() {
 
     var isvalid = $("#addChurchForm").valid();
@@ -126,4 +128,35 @@ function initializeNewChurch() {
             churchName: "Church name is required",
         }
     });
+}
+
+
+////AddTeammate('teamTbl')
+function AddTeammate(teamTblId)
+{
+    var table = document.getElementById(teamTblId);
+
+    var template = document.getElementById("teammateRowTemplate");
+    var newRow = template.cloneNode(true);
+
+    var newId = $('#' + teamTblId + 'tr').length * -1;
+    newRow.id += newId;
+
+    var cells = newRow.cells;
+    for (var i = 0; i < cells.length; i++) {
+        cells[i].style.padding = "8px";
+        cells[i].style.border = "1px solid #ddd";
+    }
+
+    $(newRow).removeClass("hidden");
+
+    newRow.setAttribute("data-changed", "true");
+   
+    table.appendChild(newRow);
+}
+
+////RemoveTeammate('teamTbl', 'teammateRow-@teammate.Id')
+function RemoveTeammate(element) {
+    var row = $(element).parent('td').parent('tr');
+    $(row).remove();
 }

@@ -43,12 +43,12 @@
                         <ul class="nav navbar-nav navbar-right">
 
                             @*<li class="hidden-xs"><a href=@Url.Action("Index", "Home")><img src="~/Content/images/placeholder.gif" class="navIcon navHome" alt="Home" title="Home" /></a></li>*@
-                            <li class="hidden-xs"><a href=@Url.Action("Index", "Member", new { statusId=49 })><img src="~/Content/images/placeholder.gif" class="navIcon navMembers" alt="Members" title="Members" /></a></li>
-                            <li class="hidden-xs"><a href=@Url.Action("Index", "Church")><img src="~/Content/images/placeholder.gif" class="navIcon navChurch" alt="Churches" title="Churches" /></a></li>
+                            <li class="hidden-xs"><a id="memberIcon" href=@Url.Action("Index", "Member", new { statusId = 49 })><img src="~/Content/images/placeholder.gif" class="navIcon navMembers" alt="Members" title="Members" /></a></li>
+                            <li class="hidden-xs"><a id="churchIcon" href=@Url.Action("Index", "Church")><img src="~/Content/images/placeholder.gif" class="navIcon navChurch" alt="Churches" title="Churches" /></a></li>
 
                             @*<li class="hidden-sm hidden-md hidden-lg">@Html.ActionLink("Home", "Index", "Home", new { @class = "hidden-sm-up" })</li>*@
-                            <li class="hidden-sm hidden-md hidden-lg">@Html.ActionLink("Member", "Index", "Member", new { statusIds = "49-50" })</li>
-                            <li class="hidden-sm hidden-md hidden-lg">@Html.ActionLink("Church", "Index", "Church")</li>
+                            <li class="hidden-sm hidden-md hidden-lg">@Html.ActionLink("Member", "Index", "Member", new { @id = "memberLink", @statusIds = "49-50", @page=1, @pageSize=1000 }, null)</li>
+                            <li class="hidden-sm hidden-md hidden-lg">@Html.ActionLink("Church", "Index", "Church", new { @id = "churchLink"}, null)</li>
 
                             @*<li><a href=@Url.Action("Index", "Home")><img src="~/Content/images/placeholder.gif" class="navIcon navHome"  alt="Home" title="Home" /></a></li>
                             <li><a href=@Url.Action("Index", "Member", new { statusId=49 })><img src="~/Content/images/placeholder.gif" class="navIcon navMembers" alt="Members" title="Members" /></a></li>*@

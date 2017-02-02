@@ -67,7 +67,6 @@ namespace NtccSteward.Controllers
                 {
                     Response.Cookies.Add(new HttpCookie("email", login.Email));
                     Response.Cookies.Add(new HttpCookie("churchId", login.ChurchId.ToString()));
-                    Response.Cookies.Add(new HttpCookie("password", login.Password));
                 }
 
                 var session = await _apiProvider.PostItemAsync<Login>("account/Login", new Login(login));
@@ -81,8 +80,8 @@ namespace NtccSteward.Controllers
                 {
                     HttpContext.Session["Session"] = session;
 
-                    return RedirectToAction("Index", "Member", new { churchId = login.ChurchId, statusIds = "49-50", page = 1, pageSize = 1000, showAll = false });
-                    //return RedirectToAction("Index", "Church");
+                    //return RedirectToAction("Index", "Member", new { statusIds = "49-50", page = 1, pageSize = 1000, showAll = false });
+                    return RedirectToAction("Index", "Church");
                 }
             }
             else

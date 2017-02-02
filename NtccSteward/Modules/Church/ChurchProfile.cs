@@ -2,6 +2,7 @@
 using NtccSteward.Core.Models.Common.Address;
 using NtccSteward.Core.Models.Common.CustomAttributes;
 using NtccSteward.Core.Models.Common.Enums;
+using NtccSteward.ViewModels;
 using NtccSteward.ViewModels.Common.Address;
 using System;
 using System.Collections.Generic;
@@ -49,5 +50,7 @@ namespace NtccSteward.Modules.Church
         public string Pastor { get; set; }
 
         public string Comment { get; set; }
+
+        public TeamViewModel PastoralTeam { get; set; }
     }
 }

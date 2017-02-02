@@ -14,7 +14,7 @@ function SaveMemberProfile() {
     {
         // status has changed, make sure reason has changed
         var statusChangeTypeId = $("#StatusChangeTypeId").val();
-        var reason = $("#reason").val();
+        var reason = $("#reasonId").val();
         if (statusChangeTypeId == reason)
         {
             $("#reason").closest('.form-group').addClass('has-error');
