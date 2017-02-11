@@ -21,6 +21,7 @@ using NtccSteward.Models;
 
 namespace NtccSteward.Controllers
 {
+    [Authorize]
     public class MemberController : Controller
     {
         private readonly IApiProvider _apiProvider;
@@ -35,19 +36,12 @@ namespace NtccSteward.Controllers
 
         }
 
-        private Session InitSession()
+        private void InitSession()
         {
             if (_session == null)
-            {
-                var sessionJson = (string)HttpContext.Session["Session"];
-                _session = _apiProvider.DeserializeJson<Session>(sessionJson);
-            }
-
-            return _session;
+                _session = ContextHelper.GetSession(HttpContext);
         }
 
-
-        [Authorize(Roles = RoleTypes.Admin)]
         //[VerifySessionAttribute]
         public async Task<ActionResult> Index(string statusIds, int page = 1, int pageSize = 1000)
         {
@@ -77,7 +71,6 @@ namespace NtccSteward.Controllers
         }
 
         // gets a member
-        [Authorize]
         //[VerifySessionAttribute]
         public async Task<ActionResult> Edit(int id)
         {
@@ -206,7 +199,6 @@ namespace NtccSteward.Controllers
         }
 
         //[ValidateAntiForgeryToken]
-        [Authorize]
         //[VerifySessionAttribute]
         public async Task<ActionResult> SaveProfile(MemberProfile memberProfile)
         {
@@ -267,7 +259,6 @@ namespace NtccSteward.Controllers
                 return Content("Error removing address");
         }
 
-        [Authorize]
         //[VerifySessionAttribute]
         [HttpPost]
         public async Task<ActionResult> CreateMember(cm.NewMember member)

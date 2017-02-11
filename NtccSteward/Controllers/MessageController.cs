@@ -23,15 +23,10 @@ namespace NtccSteward.Controllers
             _apiProvider = apiProvider;
         }
 
-        private Session InitSession()
+        private void InitSession()
         {
             if (_session == null)
-            {
-                var sessionJson = (string)HttpContext.Session["Session"];
-                _session = _apiProvider.DeserializeJson<Session>(sessionJson);
-            }
-
-            return _session;
+                _session = ContextHelper.GetSession(HttpContext);
         }
 
         private string SubmitRequest<T>(string path, T model)

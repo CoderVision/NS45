@@ -17,6 +17,7 @@ using NtccSteward.ViewModels;
 
 namespace NtccSteward.Controllers
 {
+    [Authorize]
     public class ChurchController : Controller
     {
         private readonly IApiProvider _apiProvider;
@@ -30,18 +31,12 @@ namespace NtccSteward.Controllers
             _uri = "church";
         }
 
-        private Session InitSession()
+        private void InitSession()
         {
             if (_session == null)
-            {
-                var sessionJson = (string)HttpContext.Session["Session"];
-                _session = _apiProvider.DeserializeJson<Session>(sessionJson);
-            }
-
-            return _session;
+                _session = ContextHelper.GetSession(HttpContext);
         }
 
-        [Authorize]
         //[VerifySessionAttribute]
         public async Task<ActionResult> Index()
         {
@@ -84,7 +79,6 @@ namespace NtccSteward.Controllers
         }
 
 
-        [Authorize]
         //[VerifySessionAttribute]
         public async Task<ActionResult> Edit(int id)
         {

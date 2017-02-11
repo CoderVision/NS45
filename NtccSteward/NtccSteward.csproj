@@ -202,6 +202,7 @@
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Framework\ApiProvider.cs" />
+    <Compile Include="Framework\ContextHelper.cs" />
     <Compile Include="Framework\HeaderParser.cs" />
     <Compile Include="Framework\HttpClientExtensions.cs" />
     <Compile Include="Framework\NsLogger.cs" />

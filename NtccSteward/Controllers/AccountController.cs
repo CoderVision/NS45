@@ -68,7 +68,7 @@ namespace NtccSteward.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginVm login)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && login.ChurchId > 0)
             {
                 if (login.Remember)
                 {
@@ -85,8 +85,6 @@ namespace NtccSteward.Controllers
                 }
                 else
                 {
-                    HttpContext.Session["Session"] = sessionJson;
-
                     CreateIdentity(sessionJson);
 
                     //return RedirectToAction("Index", "Member", new { statusIds = "49-50", page = 1, pageSize = 1000, showAll = false });
@@ -95,7 +93,14 @@ namespace NtccSteward.Controllers
             }
             else
             {
-                TempData["loginError"] = "Please enter a valid username and password.";
+                if (login.ChurchId <= 0)
+                {
+                    TempData["loginError"] = "Please select a church and try again.";
+                }
+                else
+                {
+                    TempData["loginError"] = "Please enter a valid username and password.";
+                }
             }
 
             return RedirectToAction("Index");
