@@ -3,6 +3,7 @@ using Microsoft.Practices.Unity;
 using Unity.Mvc5;
 using NtccSteward.Framework;
 using System.Configuration;
+using NtccSteward.Models;
 
 namespace NtccSteward
 {
@@ -20,6 +21,13 @@ namespace NtccSteward
             var webApiUri = ConfigurationManager.AppSettings["webApiUri"].ToString();
             container.RegisterInstance<IApiProvider>(new ApiProvider(webApiUri));
 
+            var userStore = new AppUserStore<AppUser>();
+            var userManager = new AppUserManager(userStore);
+            container.RegisterInstance<AppUserManager>(userManager);
+
+            var appRoleStore = new AppRoleStore();
+            var appRoleManager = new AppRoleManager(appRoleStore);
+            container.RegisterInstance<AppRoleManager>(appRoleManager);
 
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
             

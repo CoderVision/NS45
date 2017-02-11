@@ -1,6 +1,6 @@
 using Microsoft.Practices.Unity;
 using NtccSteward.Api.Controllers;
-using NtccSteward.Api.Repository;
+using NtccSteward.Repository;
 using System.Configuration;
 using System.Web.Http;
 using Unity.WebApi;

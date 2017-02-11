@@ -213,8 +213,15 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\AppRole.cs" />
+    <Compile Include="Models\AppRoleManager.cs" />
+    <Compile Include="Models\AppUserManager.cs" />
+    <Compile Include="Models\AppUser.cs" />
+    <Compile Include="Models\AppUserStore.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\AppRoleStore.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\RoleTypes.cs" />
     <Compile Include="Modules\Church\ChurchAttributes.cs" />
     <Compile Include="Modules\Church\ChurchCommunication.cs" />
     <Compile Include="Modules\Church\ChurchHistory.cs" />

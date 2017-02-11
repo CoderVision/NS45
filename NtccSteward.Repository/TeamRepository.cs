@@ -12,7 +12,7 @@ namespace NtccSteward.Repository
     public interface ITeamRepository
     {
         List<Team> GetList(int churchId, int? teamId = null);
-        List<Teammate> GetTeammates(int teamId)'
+        List<Teammate> GetTeammates(int teamId);
     }
 
     public class TeamRepository : NtccSteward.Repository.Repository, ITeamRepository

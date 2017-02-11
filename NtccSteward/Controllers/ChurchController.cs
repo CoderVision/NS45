@@ -41,7 +41,8 @@ namespace NtccSteward.Controllers
             return _session;
         }
 
-        [VerifySessionAttribute]
+        [Authorize]
+        //[VerifySessionAttribute]
         public async Task<ActionResult> Index()
         {
             InitSession();
@@ -83,7 +84,8 @@ namespace NtccSteward.Controllers
         }
 
 
-        [VerifySessionAttribute]
+        [Authorize]
+        //[VerifySessionAttribute]
         public async Task<ActionResult> Edit(int id)
         {
             InitSession();

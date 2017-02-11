@@ -9,6 +9,9 @@ using Newtonsoft.Json;
 using NtccSteward.ViewModels.Church;
 using System.Collections.Generic;
 using NtccSteward.Core.Models.Church;
+using NtccSteward.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.Owin.Security;
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace NtccSteward.Controllers
@@ -16,10 +19,14 @@ namespace NtccSteward.Controllers
     public class AccountController : Controller
     {
         private IApiProvider _apiProvider;
+        private AppUserManager _appUserManager;
+        private AppRoleManager _appRoleManager;
 
-        public AccountController(IApiProvider apiProvider) //, UserProvider securityManager, SignInManager<Login> loginManager
+        public AccountController(IApiProvider apiProvider, AppUserManager appUserManager, AppRoleManager appRoleManager)
         {
             _apiProvider = apiProvider;
+            _appUserManager = appUserManager;
+            _appRoleManager = appRoleManager;
         }
 
         public async Task<ActionResult> Index()
@@ -69,16 +76,18 @@ namespace NtccSteward.Controllers
                     Response.Cookies.Add(new HttpCookie("churchId", login.ChurchId.ToString()));
                 }
 
-                var session = await _apiProvider.PostItemAsync<Login>("account/Login", new Login(login));
+                var sessionJson = await _apiProvider.PostItemAsync<Login>("account/Login", new Login(login));
 
-                if (string.IsNullOrWhiteSpace(session) 
-                    || session.IndexOf("error", StringComparison.CurrentCultureIgnoreCase) > -1)
+                if (string.IsNullOrWhiteSpace(sessionJson)
+                    || sessionJson.IndexOf("error", StringComparison.CurrentCultureIgnoreCase) > -1)
                 {
                     TempData["loginError"] = "Login attempt failed, please try again.";
                 }
                 else
                 {
-                    HttpContext.Session["Session"] = session;
+                    HttpContext.Session["Session"] = sessionJson;
+
+                    CreateIdentity(sessionJson);
 
                     //return RedirectToAction("Index", "Member", new { statusIds = "49-50", page = 1, pageSize = 1000, showAll = false });
                     return RedirectToAction("Index", "Church");
@@ -90,6 +99,30 @@ namespace NtccSteward.Controllers
             }
 
             return RedirectToAction("Index");
+        }
+
+        private void CreateIdentity(string sessionJson)
+        {
+            var session = _apiProvider.DeserializeJson<Session>(sessionJson);
+            var appUser = new AppUser(session.UserId.ToString(), "User");
+            var task = _appUserManager.CreateIdentityAsync(appUser, DefaultAuthenticationTypes.ApplicationCookie);
+            task.Wait();
+            var claim = task.Result;
+
+            var authMgr = HttpContext.GetOwinContext().Authentication;
+            var authProperties = new AuthenticationProperties() { IsPersistent = false };
+            authProperties.Dictionary["Session"] = sessionJson;
+
+            foreach (var role in session.Roles)
+            {
+                var appRole = _appRoleManager.FindById(role.RoleID.ToString());
+                if (appRole != null)
+                {
+                   _appUserManager.AddToRoleAsync(appUser.Id.ToString(), appRole.Name);
+                }
+            }
+
+            authMgr.SignIn(authProperties, claim);
         }
 
 

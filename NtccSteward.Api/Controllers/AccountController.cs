@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NtccSteward.Core.Models;
-using NtccSteward.Api.Repository;
+using NtccSteward.Repository;
 using NtccSteward.Core.Framework;
 using System.Text;
 using NtccSteward.Api.Framework;

@@ -17,6 +17,7 @@ using System.Web.Mvc;
 using NtccSteward.Core.Models.Common.Enums;
 using NtccSteward.ViewModels.Member;
 using NtccSteward.Core.Models.Church;
+using NtccSteward.Models;
 
 namespace NtccSteward.Controllers
 {
@@ -46,7 +47,8 @@ namespace NtccSteward.Controllers
         }
 
 
-        [VerifySessionAttribute]
+        [Authorize(Roles = RoleTypes.Admin)]
+        //[VerifySessionAttribute]
         public async Task<ActionResult> Index(string statusIds, int page = 1, int pageSize = 1000)
         {
             try
@@ -75,7 +77,8 @@ namespace NtccSteward.Controllers
         }
 
         // gets a member
-        [VerifySessionAttribute]
+        [Authorize]
+        //[VerifySessionAttribute]
         public async Task<ActionResult> Edit(int id)
         {
             InitSession();
@@ -203,7 +206,8 @@ namespace NtccSteward.Controllers
         }
 
         //[ValidateAntiForgeryToken]
-        [VerifySessionAttribute]
+        [Authorize]
+        //[VerifySessionAttribute]
         public async Task<ActionResult> SaveProfile(MemberProfile memberProfile)
         {
             InitSession();
@@ -263,7 +267,8 @@ namespace NtccSteward.Controllers
                 return Content("Error removing address");
         }
 
-        [VerifySessionAttribute]
+        [Authorize]
+        //[VerifySessionAttribute]
         [HttpPost]
         public async Task<ActionResult> CreateMember(cm.NewMember member)
         {
