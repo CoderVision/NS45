@@ -15,16 +15,22 @@ namespace NtccSteward.Framework
         {
             var authMgr = context.GetOwinContext().Authentication;
             var task = authMgr.AuthenticateAsync(DefaultAuthenticationTypes.ApplicationCookie);
-            return task.Result.Properties;
+            task.Wait();
+            return task.Result?.Properties;
         }
 
         public static Session GetSession(HttpContextBase context)
         {
             var properties = GetProperties(context);
 
-            var sessionJson = (string)properties.Dictionary["Session"];
+            Session session = null;
+            if (properties != null)
+            {
+                var sessionJson = (string)properties.Dictionary["Session"];
 
-            return JsonConvert.DeserializeObject<Session>(sessionJson);
+                session = JsonConvert.DeserializeObject<Session>(sessionJson);
+            }
+            return session;
         }
     }
 }

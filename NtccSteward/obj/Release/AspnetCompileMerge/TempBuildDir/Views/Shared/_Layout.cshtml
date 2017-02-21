@@ -9,11 +9,12 @@
     @*<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">*@
 
     
-    @*@Styles.Render("~/Content/css")*@
+    @*<link href="~/Content/bootstrap.min.css" rel="stylesheet" />*@
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
 
-    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
     @*<link href="~/Content/bootstrap.css" rel="stylesheet" />*@
     <link href="~/Content/Site.css" rel="stylesheet" />
+
     @Scripts.Render("~/bundles/modernizr")
    
 </head>
@@ -70,16 +71,18 @@
         </div>
 
 
-    @*<script src="~/Scripts/jquery-1.12.4.min.js"></script>
-    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>*@
-    <script src="~/Scripts/jquery-3.1.1.min.js"></script>
-    @*<script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>*@
-    @*<script src="~/Scripts/jquery-1.12.1.min.js"></script>*@
-    @*<script src="~/Scripts/jquery-ui-1.11.4.min.js"></script>*@
 
-    <script src="~/Scripts/jquery.validate.min.js"></script>
-    @*<script src="~/Scripts/tether/tether.min.js"></script>*@
-    <script src="~/Scripts/bootstrap.min.js"></script>
+    @*<script src="~/Scripts/jquery-3.1.1.min.js"></script>*@
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+    @*<script src="~/Scripts/jquery.validate.min.js"></script>*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.11.1/jquery.validate.min.js"></script>
+
+    @*<script src="~/Scripts/bootstrap.min.js"></script>*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.1/knockout-min.js"></script>
+
     <script src="~/Scripts/site.js"></script>
 
     @RenderSection("scripts", required: false)

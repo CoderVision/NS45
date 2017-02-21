@@ -176,16 +176,22 @@ function keydown(e) {
 function wireEventHandlers(entityName) {
     var mp = document.getElementById(entityName);
     if (mp) {
+        var i;
         var inputs = mp.getElementsByTagName('input');
-        for (var i = 0; i < inputs.length; i++) {
+        for (i = 0; i < inputs.length; i++) {
             if (inputs[i].type == 'radio' || inputs[i].type == 'checkbox')
                 inputs[i].addEventListener("click", keydown, true);
             else
                 inputs[i].addEventListener("change", keydown, true);
         }
 
+        var areas = mp.getElementsByTagName('textarea');
+        for (i = 0; i < areas.length; i++) {
+            areas[i].addEventListener("change", keydown, true);
+        }
+
         var selects = mp.getElementsByTagName('select');
-        for (var i = 0; i < selects.length; i++) {
+        for (i = 0; i < selects.length; i++) {
             selects[i].addEventListener("change", keydown, true);
         }
     }

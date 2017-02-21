@@ -10,6 +10,7 @@ using NtccSteward.Core.Models.Common.Enums;
 using System.Data;
 using NtccSteward.Core.Models.Common.Address;
 using NtccSteward.Repository.Ordinals;
+using NtccSteward.Core.Interfaces.Common.Address;
 
 namespace NtccSteward.Repository
 {
@@ -18,8 +19,8 @@ namespace NtccSteward.Repository
         RepositoryActionResult<Church> Add(Church church);
         ChurchProfile Get(int id);
         List<Church> GetList(bool showAll);
+        RepositoryActionResult<ChurchProfile> SaveProfile(ChurchProfile profile);
         RepositoryActionResult<Church> Delete(int id, int entityType);
-
         List<AppEnum> GetProfileMetadata();
     }
 
@@ -134,10 +135,8 @@ namespace NtccSteward.Repository
 
                         // member info
                         church = new ChurchProfile();
-                        church.id = reader.ValueOrDefault<int>("ChurchId");
+                        church.Id = reader.ValueOrDefault<int>("ChurchId");
                         church.Name = reader.ValueOrDefault("ChurchName", string.Empty);
-                        church.PastorId = reader.ValueOrDefault<int>("PastorId", 0);
-                        church.Pastor = reader["Pastor"].ToString();
                         church.StatusId = reader.ValueOrDefault<int>("StatusId", 0);
                         church.StatusDesc = reader.ValueOrDefault("StatusDesc", string.Empty);
                         church.Comment = reader.ValueOrDefault("Comment", string.Empty);
@@ -238,6 +237,122 @@ namespace NtccSteward.Repository
             return list;
         }
 
+
+        public RepositoryActionResult<ChurchProfile> SaveProfile(ChurchProfile profile)
+        {
+            var paramz = new List<SqlParameter>();
+            paramz.Add(new SqlParameter("churchId", profile.Id));
+            paramz.Add(new SqlParameter("name", profile.Name.ToSqlString()));
+            paramz.Add(new SqlParameter("statusEnumId", profile.StatusId));
+            paramz.Add(new SqlParameter("comments", profile.Comment.ToSqlString()));
+
+            Func<SqlDataReader, int> readFx = (reader) =>
+            {
+                return (int)reader["ChurchId"];
+            };
+
+            var church = _executor.ExecuteSql<int>("SaveChurchProfile", CommandType.StoredProcedure, paramz, readFx);
+
+            profile.Id = church.FirstOrDefault();
+
+            Func<SqlDataReader, int> ciReadFx = (reader) =>
+            {
+                return (int)reader["ContactInfoID"];
+            };
+
+            foreach (var addy in profile.AddressList)
+            {
+                var ciParamz = CreateAddressInfoParams(addy);
+                ciParamz.Add(new SqlParameter("line1", addy.Line1.ToSqlString()));
+                ciParamz.Add(new SqlParameter("line2", addy.Line2.ToSqlString()));
+                ciParamz.Add(new SqlParameter("line3", addy.Line3.ToSqlString()));
+                ciParamz.Add(new SqlParameter("city", addy.City.ToSqlString()));
+                ciParamz.Add(new SqlParameter("state", addy.State.ToSqlString()));
+                ciParamz.Add(new SqlParameter("zip", addy.Zip.ToSqlString()));
+
+                var list = _executor.ExecuteSql<int>("SaveAddress", CommandType.StoredProcedure, ciParamz, ciReadFx);
+
+                addy.ContactInfoId = list.First();
+            }
+
+            foreach (var addy in profile.PhoneList)
+            {
+                var ciParamz = CreateAddressInfoParams(addy);
+                ciParamz.Add(new SqlParameter("@number", addy.PhoneNumber.ToSqlString()));
+                ciParamz.Add(new SqlParameter("@phoneType", addy.PhoneType));
+
+                var list = _executor.ExecuteSql<int>("SavePhone", CommandType.StoredProcedure, ciParamz, ciReadFx);
+
+                addy.ContactInfoId = list.First();
+            }
+
+            foreach (var addy in profile.EmailList)
+            {
+                var ciParamz = CreateAddressInfoParams(addy);
+                ciParamz.Add(new SqlParameter("@email", addy.EmailAddress.ToSqlString()));
+
+                var list = _executor.ExecuteSql<int>("SaveEmail", CommandType.StoredProcedure, ciParamz, ciReadFx);
+
+                addy.ContactInfoId = list.First();
+            }
+
+            if (profile.PastoralTeam != null)
+            {
+                // save team
+                paramz.Clear();
+                paramz.Add(new SqlParameter("id", profile.PastoralTeam.Id));
+                paramz.Add(new SqlParameter("name", profile.PastoralTeam.Name.ToSqlString()));
+                paramz.Add(new SqlParameter("churchId", profile.Id));
+                paramz.Add(new SqlParameter("teamTypeEnumId", profile.PastoralTeam.TeamTypeEnumId));
+                paramz.Add(new SqlParameter("teamPositionEnumTypeId", profile.PastoralTeam.TeamPositionEnumTypeId));
+
+                readFx = (reader) =>
+                {
+                    return (int)reader["Id"];
+                };
+
+                var teamIds = _executor.ExecuteSql<int>("SaveTeam", CommandType.StoredProcedure, paramz, readFx);
+
+                profile.PastoralTeam.Id = teamIds.FirstOrDefault();
+
+                // Save Teammates
+                foreach (var teamMate in profile.PastoralTeam.Teammates)
+                {
+                    teamMate.TeamId = profile.PastoralTeam.Id;
+
+                    paramz.Clear();
+                    paramz.Add(new SqlParameter("@teammateId", teamMate.Id));
+                    paramz.Add(new SqlParameter("@teamId", teamMate.TeamId));
+                    paramz.Add(new SqlParameter("@personId", teamMate.PersonId));
+                    paramz.Add(new SqlParameter("@teamPositionEnumId", teamMate.TeamPositionEnumId));
+
+                    var teammateIds = _executor.ExecuteSql<int>("SaveTeammate", CommandType.StoredProcedure, paramz, readFx);
+
+                    teamMate.Id = teammateIds.FirstOrDefault();
+                }
+            }
+
+            if (profile.Id != 0)
+                return new RepositoryActionResult<ChurchProfile>(profile, RepositoryActionStatus.Updated);
+            else
+                return new RepositoryActionResult<ChurchProfile>(null, RepositoryActionStatus.NotFound);
+        }
+
+
+        private List<SqlParameter> CreateAddressInfoParams(IAddressInfo info)
+        {
+            var paramz = new List<SqlParameter>();
+            paramz.Add(new SqlParameter("contactInfoId", info.ContactInfoId));
+            paramz.Add(new SqlParameter("identityId", info.IdentityId));
+            paramz.Add(new SqlParameter("modifiedByIdentityId", info.ModifiedByIdentityId));
+            paramz.Add(new SqlParameter("contactInfoLocationType", info.ContactInfoLocationType));
+            paramz.Add(new SqlParameter("preferred", info.Preferred));
+            paramz.Add(new SqlParameter("verified", info.Verified));
+            paramz.Add(new SqlParameter("archived", info.Archived));
+            paramz.Add(new SqlParameter("note", info.Note.ToSqlString()));
+
+            return paramz;
+        }
 
         /// <summary>
         /// Deletes a church or contact info

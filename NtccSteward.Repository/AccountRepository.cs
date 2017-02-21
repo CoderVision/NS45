@@ -205,6 +205,7 @@ namespace NtccSteward.Repository
                         session.UserId = (int)reader["PersonId"];
                         session.SessionId = reader["SessionID"].ToString();
                         session.ChurchId = (int)reader["ChurchId"];
+                        session.ChurchName = reader["ChurchName"].ToString();
 
                         reader.NextResult();
 

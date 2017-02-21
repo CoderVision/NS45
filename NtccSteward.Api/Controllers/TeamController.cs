@@ -1,4 +1,6 @@
-﻿using NtccSteward.Repository;
+﻿using NtccSteward.Api.Framework;
+using NtccSteward.Core.Models.Team;
+using NtccSteward.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,12 +21,13 @@ namespace NtccSteward.Repository.Controllers
             _logger = logger;
         }
 
+        [Route("church/{churchId}/team")]
         /// <summary>
         /// Gets a list of all Teams for the specified church.
         /// </summary>
         /// <param name="churchId"></param>
         /// <returns></returns>
-        public IHttpActionResult Get(int churchId)
+        public IHttpActionResult GetChurchTeamList(int churchId)
         {
             try
             {
@@ -37,6 +40,28 @@ namespace NtccSteward.Repository.Controllers
             }
             catch (Exception ex)
             {
+                ErrorHelper.ProcessError(_logger, ex, nameof(GetChurchTeamList));
+
+                return InternalServerError();
+            }
+        }
+
+
+        public IHttpActionResult Get(int id)
+        {
+            try
+            {
+                if (id <= 0)
+                    return BadRequest("Invalid teamId");
+
+                var team = _repository.GetTeam(id);
+
+                return Ok(team);
+            }
+            catch (Exception ex)
+            {
+                ErrorHelper.ProcessError(_logger, ex, nameof(Get));
+
                 return InternalServerError();
             }
         }
@@ -54,7 +79,7 @@ namespace NtccSteward.Repository.Controllers
             try
             {
                 if (teamId <= 0)
-                    return BadRequest("Invalid churchId");
+                    return BadRequest("Invalid teamId");
 
                 var team = _repository.GetTeammates(teamId);
 
@@ -62,6 +87,36 @@ namespace NtccSteward.Repository.Controllers
             }
             catch (Exception ex)
             {
+                ErrorHelper.ProcessError(_logger, ex, nameof(GetTeammates));
+
+                return InternalServerError();
+            }
+        }
+
+        [Route("team/{teamId}/teammates/{teammateId}")]
+        public IHttpActionResult DeleteTeammate(int teamId, int teammateId)
+        {
+            try
+            {
+                if (teamId <= 0)
+                    return BadRequest("Invalid teamId");
+
+                if (teammateId <= 0)
+                    return BadRequest("Invalid teammateId");
+
+                var team = _repository.DeleteTeammate(teamId, teammateId);
+
+                if (team.Status == Framework.RepositoryActionStatus.Deleted)
+                    return StatusCode(HttpStatusCode.NoContent);
+                else if (team.Status == Framework.RepositoryActionStatus.NotFound)
+                    return NotFound();
+                else
+                    return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                ErrorHelper.ProcessError(_logger, ex, nameof(DeleteTeammate));
+
                 return InternalServerError();
             }
         }

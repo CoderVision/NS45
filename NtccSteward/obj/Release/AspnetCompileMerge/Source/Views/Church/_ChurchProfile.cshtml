@@ -1,32 +1,135 @@
 ﻿@using NtccSteward.Framework
+@using NtccSteward.ViewModels.Common.Address;
 @model NtccSteward.Modules.Church.ChurchProfile
 
+@{
+    var teammateListTemplate = SelectListItemFactory.Create(Model.MetaDataList.Where(e => e.AppEnumTypeID == -1).OrderBy(e => e.Desc), -1, "Name", "-1");
+    var teamPositionListTemplate = SelectListItemFactory.Create(Model.MetaDataList.Where(e => e.AppEnumTypeID == 17).OrderBy(e => e.SortOrder), -1, "Position", "-1");
+    var statusList = SelectListItemFactory.Create(Model.MetaDataList.Where(e => e.AppEnumTypeID == 15).OrderBy(e => e.SortOrder), Model.StatusId, "Status", "-1");
+}
 
 <div class="row">
 
     <input type="hidden" name="identityId" id="identityId" value="@Model.Id" />
-    @using (Html.BeginForm("SaveProfile", "Members", FormMethod.Post, new { id = "_memberProfileForm", @class = "form", @role = "form" }))
+    @using (Html.BeginForm("SaveProfile", "Church", FormMethod.Post, new { id = "churchProfileForm", @class = "form", @role = "form" }))
     {
         @Html.AntiForgeryToken();
 
         <input type="hidden" name="identityId" id="identityId" value="@Model.Id" />
 
-        <fieldset class="col-sm-6">
+        <fieldset class="col-xs-12">
             <div class="form-group">
-                <label for="churchName" class="col-sm-2 control-label labelNormal">Name</label>
-                <div class="col-sm-10">
+                <label for="churchName" class="control-label labelNormal">Name</label>
+                <div>
                     @Html.TextBoxFor(m => m.Name, new { @class = "form-control", @id = "churchName", @placeholder = "Enter church name" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="status" class="control-label labelNormal">Status</label>
+                <div>
+                    @Html.HiddenFor(m => m.StatusId, new { @id = "StatusId" })
+                    @Html.DropDownListFor(m => m.StatusId, statusList, new { @class = "form-control", @id = "status", @placeholder = "Status" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="comments" class="control-label labelNormal">Comments</label>
+                <div>
+                    @Html.TextAreaFor(m => m.Comment, new { @class = "form-control", @id = "Comment", @placeholder = "Enter comments", @rows = "6" })
                 </div>
             </div>
         </fieldset>
     }
 </div>
 
-<p>&nbsp;</p>
+@*<p>&nbsp;</p>
 <p><h2 class="text-danger text-center">This page is in development</h2></p>
-<p>&nbsp;</p>
+<p>&nbsp;</p>*@
 
-<div class="row" style="margin-top:10px;">
+
+<div class="row rowPad" >
+    Pastoral Team
+    <label style="margin-left:10px;" onclick="AddTeammate('teamTbl')">
+        <span class="glyphicon glyphicon-plus"></span>
+    </label>
+
+    <input type="hidden" id="teamId" value="@Model.PastoralTeam.Id" />
+    <input type="hidden" id="teamTypeEnumId" value="@Model.PastoralTeam.TeamTypeEnumId" />
+    <input type="hidden" id="teamPositionEnumTypeId" value="@Model.PastoralTeam.TeamPositionEnumTypeId" />
+    <input type="hidden" id="teamname" value="@Model.PastoralTeam.Name" />
+
+    <table id="teamTbl" class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>
+                    Name                    
+                </th>
+                <th>
+                    Position
+                </th>
+                <th>
+                    &nbsp;
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- this is used for creating new rows in JavaScript-->
+            <tr class="hidden" id="teammateRowTemplate">
+                <td class="hidden">
+                    <input type="hidden" id="id" value="" />
+                </td>
+                <td style="vertical-align:middle;">
+                    @Html.DropDownList("PersonId", teammateListTemplate, new { @id = "teammatePesonId", @class = "form-control" })
+                </td>
+                <td>
+                    @Html.DropDownList("TeamPositionEnumId", teamPositionListTemplate, new { @id = "positionId", @class = "form-control" })
+                </td>
+                <td style="vertical-align:middle;">
+                    <Label style="margin:0px;" title="remove" onclick="RemoveTeammate(this)">
+                        <span class="glyphicon glyphicon-remove glyphicon-remove-grid"></span>
+                    </Label>
+                </td>
+            </tr>
+
+
+            @foreach (var teammate in Model.PastoralTeam.Teammates)
+            {
+                <tr id="teammateRow-@teammate.Id">
+                    <td class="hidden">
+                        <input type="hidden" id="id" value="@teammate.Id" />
+                    </td>
+                    <td style="vertical-align:middle;">
+                        @{
+                            var teammateList = SelectListItemFactory.Create(Model.MetaDataList.Where(e => e.AppEnumTypeID == -1).OrderBy(e => e.Desc), teammate.PersonId, "Name", "-1");
+                        }
+
+                        @Html.DropDownList("PersonId", teammateList, new { @id = "teammatePesonId", @class = "form-control" })
+                    </td>
+                    <td>
+                        @{
+                            var teamPositionList = SelectListItemFactory.Create(Model.MetaDataList.Where(e => e.AppEnumTypeID == 17).OrderBy(e => e.SortOrder), teammate.TeamPositionEnumId, "Position", "-1");
+                        }
+
+                        @Html.DropDownList("TeamPositionEnumId", teamPositionList, new { @id= "positionId", @class = "form-control" })
+                    </td>
+                    <td style="vertical-align:middle;">
+                        <Label style="margin:0px;" title="remove" onclick="RemoveTeammate('teamTbl', 'teammateRow-@teammate.Id')">
+                            <span class="glyphicon glyphicon-remove glyphicon-remove-grid"></span>
+                        </Label>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+
+<!-- Contact info below-->
+
+<div class="row rowPad">
     <div id="addressList">
         <div class="sectionBand">
             <span class="sectionTitle">Address</span>
@@ -35,16 +138,18 @@
         <div id="addressList_@Model.Id">
             @for (var i = 0; i < Model.AddressList.Count; i++)
             {
-                Html.RenderPartial("~/Views/Shared/AddressInfo/_Address.cshtml", Model.AddressList[i]);
+                Html.RenderPartial("~/Views/Shared/AddressInfo/_Address.cshtml", new AddressVm(Model.AddressList[i]));
             }
         </div>
         <div class="sectionBand">
-            <label style="cursor:pointer;" onclick="AddAddress(@Model.Id, 'address', 'addressList_@Model.Id' )"><img id="addAddy" src="~/content/images/add.png" style="width:20px;height:20px;vertical-align:middle;margin-bottom:4px;" />  Add address</label>
+            <label onclick="AddAddress(@Model.Id, 'address', 'addressList_@Model.Id' )">
+                <span class="glyphicon glyphicon-plus"></span>  Add address
+            </label>
         </div>
     </div>
 </div>
 
-<div class="row" style="margin-top:10px;">
+<div class="row rowPad">
     <div id="phoneList">
         <div class="sectionBand">
             <span class="sectionTitle">Phone</span>
@@ -53,16 +158,18 @@
         <div id="phoneList_@Model.Id">
             @for (var i = 0; i < Model.PhoneList.Count; i++)
             {
-                Html.RenderPartial("~/Views/Shared/AddressInfo/_Phone.cshtml", Model.PhoneList[i]);
+                Html.RenderPartial("~/Views/Shared/AddressInfo/_Phone.cshtml", new PhoneVm(Model.PhoneList[i]));
             }
         </div>
         <div class="sectionBand">
-            <label style="cursor:pointer;" onclick="AddAddress(@Model.Id, 'phone', 'phoneList_@Model.Id')"><img id="addAddy" src="~/content/images/add.png" style="width:20px;height:20px;vertical-align:middle;margin-bottom:4px;" />  Add phone</label>
+            <label style="cursor:pointer;" onclick="AddAddress(@Model.Id, 'phone', 'phoneList_@Model.Id')">
+                <span class="glyphicon glyphicon-plus"></span>  Add phone
+            </label>
         </div>
     </div>
 </div>
 
-<div class="row" style="margin-top:10px;">
+<div class="row rowPad">
     <div id="emailList">
         <div class="sectionBand">
             <span class="sectionTitle">Email</span>
@@ -71,11 +178,13 @@
         <div id="emailList_@Model.Id">
             @for (var i = 0; i < Model.EmailList.Count; i++)
             {
-                Html.RenderPartial("~/Views/Shared/AddressInfo/_Email.cshtml", Model.EmailList[i]);
+                Html.RenderPartial("~/Views/Shared/AddressInfo/_Email.cshtml", new EmailVm(Model.EmailList[i]));
             }
         </div>
         <div class="sectionBand">
-            <label style="cursor:pointer;" onclick="AddAddress(@Model.Id, 'email', 'emailList_@Model.Id' )"><img id="addEmail" src="~/Content/images/add.png" style="width:20px;height:20px;vertical-align:middle;margin-bottom:4px;" />  Add email</label>
+            <label style="cursor:pointer;" onclick="AddAddress(@Model.Id, 'email', 'emailList_@Model.Id' )">
+                <span class="glyphicon glyphicon-plus"></span>  Add email
+            </label>
         </div>
     </div>
 </div>

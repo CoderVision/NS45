@@ -13,7 +13,7 @@ using cm = NtccSteward.Core.Models.Church;
 using NtccSteward.Core.Models.Common.Enums;
 using NtccSteward.Core.Models.Team;
 using NtccSteward.ViewModels;
-// For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+
 
 namespace NtccSteward.Controllers
 {
@@ -42,7 +42,7 @@ namespace NtccSteward.Controllers
         {
             InitSession();
 
-            var result = await _apiProvider.GetItemAsync(_uri, "");
+            var result = await _apiProvider.GetItemAsync(_uri, "page=1&pageSize=100");
             var list = _apiProvider.DeserializeJson<List<cm.Church>>(result);
 
             var metajson = await _apiProvider.GetItemAsync($"{_uri}/metadata");
@@ -89,22 +89,30 @@ namespace NtccSteward.Controllers
             var cp = _apiProvider.DeserializeJson<ChurchProfile>(mpjson);
 
             // Get Metadata
-            var metajson = await _apiProvider.GetItemAsync($"{_uri}/metadata", $"churchId={_session.ChurchId}");
+            var metajson = await _apiProvider.GetItemAsync($"{_uri}/metadata", $"churchId={id}");
             var metaList = _apiProvider.DeserializeJson<List<AppEnum>>(metajson);
 
             cp.MetaDataList = metaList.ToList();
 
-            // Get Pastoral Team
-            var teamsjson = await _apiProvider.GetItemAsync("team/" + _session.ChurchId);
-            var teamList = _apiProvider.DeserializeJson<List<TeamViewModel>>(teamsjson);
-            var pastoralTeam = teamList.FirstOrDefault(t => t.TeamTypeEnumId == 17); // pastoral team
+            // A church may have many teams, so we have to find the pastoral team
+            var teamsjson = await _apiProvider.GetItemAsync($"church/{id}/team");
+            var teamList = _apiProvider.DeserializeJson<List<Team>>(teamsjson);
+            var pastoralTeam = teamList.FirstOrDefault(t => t.TeamTypeEnumId == 68); // pastoral team
             if (pastoralTeam != null)
             {
-                var teammatejson = await _apiProvider.GetItemAsync($"team/{pastoralTeam.Id}/teammates");
-                var teammateList = _apiProvider.DeserializeJson<List<Teammate>>(teammatejson);
-                pastoralTeam.Teammates = teammateList;
+                var teamjson = await _apiProvider.GetItemAsync($"team/{pastoralTeam.Id}");
+                var team = _apiProvider.DeserializeJson<Team>(teamjson);
+                cp.PastoralTeam = team;
+            }
+            else
+            {
+                var pt = new Team();
+                pt.ChurchId = id;
+                pt.Name = cp.Name + " pastoral team";
+                pt.TeamTypeEnumId = 68; // pastoral team
+                pt.TeamPositionEnumTypeId = 17; // position types: pastor, minister, etc.
 
-                cp.PastoralTeam = pastoralTeam;
+                cp.PastoralTeam = pt;
             }
 
             var churchModule = new ChurchModule(cp);
@@ -192,12 +200,28 @@ namespace NtccSteward.Controllers
 
 
         //[ValidateAntiForgeryToken]
-        public ActionResult SaveProfile(ChurchProfile churchProfile)
+        public async Task<ActionResult> SaveProfile(ChurchProfile churchProfile)
         {
-            //if (ModelState.IsValid)
-            //{
-            ViewBag.Msg = "Saved";
-            //}
+            try
+            {
+                var json = await _apiProvider.PutItemAsync<ChurchProfile>($"{_uri}/{ churchProfile.Id}", churchProfile);
+
+                var m = _apiProvider.DeserializeJson<ChurchProfile>(json);
+                if (m != null)
+                {
+                    // reload page, so that any new id's can be loaded.
+                    return RedirectToAction("Edit", new { id = churchProfile.Id });
+                }
+                else
+                    return Content("Error saving profile");
+            }
+            catch (Exception ex)
+            {
+                return Content("Error saving profile: " + ex.Message);
+            }
+            // var mpjson = await _apiProvider.PutItemAsync(_uri, $"id={id}");
+            //var cp = _apiProvider.DeserializeJson<ChurchProfile>(mpjson);
+
             return new ContentResult() { Content="Saved" }; // this prevents navigation to another page.
         }
 
@@ -220,6 +244,23 @@ namespace NtccSteward.Controllers
                     return RedirectToAction("Index");
                 else
                     return Content("Error deleting church");
+            }
+            catch (Exception ex)
+            {
+                return Content("Error deleting church: " + ex.Message);
+            }
+        }
+
+        public async Task<ActionResult> DeletePastoralTeammate(int teamId, int teammateId)
+        {
+            try
+            {
+                var result = await _apiProvider.DeleteItemAsync($"team/{teamId}/teammates/{teammateId}");
+
+                if (!string.IsNullOrWhiteSpace(result))
+                    return Content("Error deleting pastoral teammate");
+                else
+                    return Content("");
             }
             catch (Exception ex)
             {

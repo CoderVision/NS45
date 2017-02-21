@@ -8,6 +8,10 @@ namespace NtccSteward.Core.Models.Team
 {
     public class Team : ITeam
     {
+        public Team()
+        {
+            Teammates = new List<Teammate>();
+        }
         public int Id { get; set; }
 
         public string Name { get; set; }
@@ -23,5 +27,7 @@ namespace NtccSteward.Core.Models.Team
         /// Pastor, Assoc., Minister, Helper, etc.
         /// </summary>
         public int TeamPositionEnumTypeId { get; set; }
+
+        public List<Teammate> Teammates { get; set; }
     }
 }

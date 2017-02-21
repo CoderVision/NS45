@@ -28,6 +28,7 @@ namespace NtccSteward.Api
             var pepper = ConfigurationManager.AppSettings["Pepper"].ToString();
 
             // register repositories
+            container.RegisterInstance<ITeamRepository>(new TeamRepository(loginConnectionString));
             container.RegisterInstance<IAccountRepository>(new AccountRepository(loginConnectionString, pepper));
             container.RegisterInstance<IChurchRepository>(new ChurchRepository(defaultConnectionString));
             container.RegisterInstance<ILogger>(new LoggerRepository(defaultConnectionString));

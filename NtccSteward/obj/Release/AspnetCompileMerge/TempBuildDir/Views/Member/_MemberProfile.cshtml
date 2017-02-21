@@ -173,7 +173,7 @@
     </div>
 
 
-<div class="row" style="margin-top:10px;">
+<div class="row rowPad">
     <div id="addressList">
         <div class="sectionBand">
             <span class="sectionTitle">Address</span>
@@ -186,12 +186,15 @@
             }
         </div>
         <div class="sectionBand">
-            <label style="cursor:pointer;" onclick="AddAddress(@Model.Id, 'address', 'addressList_@Model.Id' )"><img id="addAddy" src="~/content/images/add.png" style="width:20px;height:20px;vertical-align:middle;margin-bottom:4px;" />  Add address</label>
+            <label onclick="AddAddress(@Model.Id, 'address', 'addressList_@Model.Id' )">
+                @*<img id="addAddy" src="~/content/images/add.png" style="width:20px;height:20px;vertical-align:middle;margin-bottom:4px;" />*@  
+                <span class="glyphicon glyphicon-plus"></span>  Add address
+            </label>
         </div>
     </div>
 </div>
 
-<div class="row" style="margin-top:10px;">
+<div class="row rowPad">
     <div id="phoneList">
         <div class="sectionBand">
             <span class="sectionTitle">Phone</span>
@@ -204,12 +207,15 @@
             }
         </div>
         <div class="sectionBand">
-            <label style="cursor:pointer;" onclick="AddAddress(@Model.Id, 'phone', 'phoneList_@Model.Id')"><img id="addAddy" src="~/content/images/add.png" style="width:20px;height:20px;vertical-align:middle;margin-bottom:4px;" />  Add phone</label>
+            <label style="cursor:pointer;" onclick="AddAddress(@Model.Id, 'phone', 'phoneList_@Model.Id')">
+                @*<img id="addAddy" src="~/content/images/add.png" style="width:20px;height:20px;vertical-align:middle;margin-bottom:4px;" />  Add phone*@
+                <span class="glyphicon glyphicon-plus"></span>  Add phone
+            </label>
         </div>
     </div>
 </div>
 
-<div class="row" style="margin-top:10px;">
+<div class="row rowPad">
     <div id="emailList">
         <div class="sectionBand">
             <span class="sectionTitle">Email</span>
@@ -222,7 +228,10 @@
             }
         </div>
         <div class="sectionBand">
-            <label style="cursor:pointer;" onclick="AddAddress(@Model.Id, 'email', 'emailList_@Model.Id' )"><img id="addEmail" src="~/Content/images/add.png" style="width:20px;height:20px;vertical-align:middle;margin-bottom:4px;" />  Add email</label>
+            <label style="cursor:pointer;" onclick="AddAddress(@Model.Id, 'email', 'emailList_@Model.Id' )">
+                @*<img id="addEmail" src="~/Content/images/add.png" style="width:20px;height:20px;vertical-align:middle;margin-bottom:4px;" />  Add email*@
+                <span class="glyphicon glyphicon-plus"></span>  Add email
+            </label>
         </div>
     </div>
 </div>

@@ -97,7 +97,7 @@ namespace NtccSteward.Api.Controllers
             }
             catch (Exception ex)
             {
-                new ErrorHelper().ProcessError(_logger, ex, nameof(Get));
+                ErrorHelper.ProcessError(_logger, ex, nameof(Get));
 
                 return InternalServerError();
             }
@@ -137,7 +137,7 @@ namespace NtccSteward.Api.Controllers
             }
             catch (Exception ex)
             {
-                new ErrorHelper().ProcessError(_logger, ex, nameof(Get));
+                ErrorHelper.ProcessError(_logger, ex, nameof(Get));
 
                 return InternalServerError();
             }
@@ -213,7 +213,7 @@ namespace NtccSteward.Api.Controllers
             }
             catch (Exception ex)
             {
-                new ErrorHelper().ProcessError(_logger, ex, nameof(Post));
+                ErrorHelper.ProcessError(_logger, ex, nameof(Post));
 
                 return InternalServerError();
             }
@@ -242,7 +242,7 @@ namespace NtccSteward.Api.Controllers
             }
             catch (Exception ex)
             {
-                new ErrorHelper().ProcessError(_logger, ex, nameof(Put));
+                ErrorHelper.ProcessError(_logger, ex, nameof(Put));
 
                 return InternalServerError();
             }
@@ -274,7 +274,7 @@ namespace NtccSteward.Api.Controllers
             }
             catch (Exception ex)
             {
-                new ErrorHelper().ProcessError(_logger, ex, nameof(Delete));
+                ErrorHelper.ProcessError(_logger, ex, nameof(Delete));
 
                 return InternalServerError();
             }

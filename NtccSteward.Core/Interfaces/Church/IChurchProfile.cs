@@ -2,6 +2,8 @@
 using NtccSteward.Core.Models.Common.Address;
 using NtccSteward.Core.Models.Common.CustomAttributes;
 using NtccSteward.Core.Models.Common.Enums;
+using NtccSteward.Core.Interfaces.Team;
+using ct = NtccSteward.Core.Models.Team;
 
 namespace NtccSteward.Core.Interfaces.Church
 {
@@ -17,7 +19,7 @@ namespace NtccSteward.Core.Interfaces.Church
 
         List<AppEnum> MetaDataList { get; set; }
 
-        int id { get; set; } // specific name convention necessray for SlickGrid
+        int Id { get; set; } 
 
         string Name { get; set; }
 
@@ -25,10 +27,8 @@ namespace NtccSteward.Core.Interfaces.Church
 
         string StatusDesc { get; set; }
 
-        int PastorId { get; set; }
-
-        string Pastor { get; set; }
-
         string Comment { get; set; }
+
+        ct.Team PastoralTeam { get; set; }
     }
 }

@@ -58,6 +58,7 @@ namespace NtccSteward.Controllers
                     ModelState.AddModelError("loginError", TempData["loginError"].ToString());
 
                 return View("/Views/Account/Login.cshtml", loginVm);
+
             }catch (Exception ex)
             {
                 return Content("The following error occurred while trying to load the login page:  " + ex.Message);
@@ -87,8 +88,8 @@ namespace NtccSteward.Controllers
                 {
                     CreateIdentity(sessionJson);
 
-                    //return RedirectToAction("Index", "Member", new { statusIds = "49-50", page = 1, pageSize = 1000, showAll = false });
-                    return RedirectToAction("Index", "Church");
+                    return RedirectToAction("Index", "Member", new { statusIds = "49-50", page = 1, pageSize = 1000, showAll = false });
+                    //return RedirectToAction("Index", "Church");
                 }
             }
             else

@@ -367,13 +367,16 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\knockout-3.4.1.debug.js" />
+    <Content Include="Scripts\knockout-3.4.1.js" />
+    <Content Include="Scripts\knockout.mapping-latest.debug.js" />
+    <Content Include="Scripts\knockout.mapping-latest.js" />
     <Content Include="Scripts\Member.js" />
     <Content Include="Scripts\Message.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\site.js" />
-    <Content Include="Scripts\site.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Views\Member\TestHtmlPage.html" />
     <Content Include="Web.config" />
