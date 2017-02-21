@@ -1,5 +1,6 @@
-﻿using NtccSteward.Api.Repository;
+﻿using NtccSteward.Repository;
 using NtccSteward.Core.Framework;
+using NtccSteward.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,12 +8,9 @@ using System.Web;
 
 namespace NtccSteward.Api.Framework
 {
-    public class ErrorHelper
+    public static class ErrorHelper
     {
-        public ErrorHelper()
-        { }
-
-        public void ProcessError(ILogger _logger, Exception ex, string methodName)
+        public static void ProcessError(ILogger _logger, Exception ex, string methodName)
         {
             var errorMsg = $"An error occurred in {methodName}";
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NtccSteward.Core.Models;
-using NtccSteward.Api.Repository;
+using NtccSteward.Repository;
 using NtccSteward.Core.Framework;
 using System.Text;
 using NtccSteward.Api.Framework;
@@ -53,7 +53,7 @@ namespace NtccSteward.Api.Controllers
             }
             catch (Exception ex)
             {
-                new ErrorHelper().ProcessError(_logger, ex, nameof(CreateAccountRequest));
+                ErrorHelper.ProcessError(_logger, ex, nameof(CreateAccountRequest));
 
                 return InternalServerError();
             }
@@ -75,7 +75,7 @@ namespace NtccSteward.Api.Controllers
             }
             catch (Exception ex)
             {
-                new ErrorHelper().ProcessError(_logger, ex, nameof(CreateAccountRequest));
+                ErrorHelper.ProcessError(_logger, ex, nameof(CreateAccountRequest));
 
                 return InternalServerError();
             }
@@ -98,7 +98,7 @@ namespace NtccSteward.Api.Controllers
             }
             catch (Exception ex)
             {
-                new ErrorHelper().ProcessError(_logger, ex, nameof(Login));
+                ErrorHelper.ProcessError(_logger, ex, nameof(Login));
 
                 return InternalServerError();
             }

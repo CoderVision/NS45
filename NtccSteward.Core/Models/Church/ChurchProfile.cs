@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using NtccSteward.Core.Models.Team;
 
 namespace NtccSteward.Core.Models.Church
 {
@@ -29,7 +30,7 @@ namespace NtccSteward.Core.Models.Church
 
         public List<AppEnum> MetaDataList { get; set; }
 
-        public int id { get; set; } // specific name convention necessray for SlickGrid
+        public int Id { get; set; } 
 
         public string Name { get; set; }
 
@@ -37,10 +38,8 @@ namespace NtccSteward.Core.Models.Church
 
         public string StatusDesc { get; set; }
 
-        public int PastorId { get; set; }
-
-        public string Pastor { get; set; }
-
         public string Comment { get; set; }
+
+        public Team.Team PastoralTeam { get; set; }
     }
 }

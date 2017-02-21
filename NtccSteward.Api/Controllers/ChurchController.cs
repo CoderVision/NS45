@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NtccSteward.Core.Framework;
-using NtccSteward.Api.Repository;
+using NtccSteward.Repository;
 using System.Net.Http;
 using System.Web.Http;
 using System.Net;
@@ -32,10 +32,16 @@ namespace NtccSteward.Api.Controllers
 
         // Get list of churches
         [HttpGet]
-        public IHttpActionResult Get(int page = 1, int pageSize = 10000, bool showAll = false)
+        public IHttpActionResult Get(int page, int pageSize, bool showAll = false)
         {
             try
             {
+                if (page == 0)
+                    page = 1;
+
+                if (pageSize == 0)
+                    pageSize = 1000;
+
                 var list = _repository.GetList(showAll);
 
                 var totalCount = list.Count();
@@ -76,11 +82,12 @@ namespace NtccSteward.Api.Controllers
             }
             catch (Exception ex)
             {
-                new ErrorHelper().ProcessError(_logger, ex, nameof(Get));
+                ErrorHelper.ProcessError(_logger, ex, nameof(Get));
 
                 return InternalServerError();
             }
         }
+
 
         [Route("church/metadata")]
         [HttpGet]
@@ -90,7 +97,7 @@ namespace NtccSteward.Api.Controllers
         }
 
         [HttpGet]
-        public IHttpActionResult Edit(int id)
+        public IHttpActionResult Get(int id)
         {
             try
             {
@@ -107,7 +114,34 @@ namespace NtccSteward.Api.Controllers
             }
             catch (Exception ex)
             {
-                new ErrorHelper().ProcessError(_logger, ex, nameof(Get));
+                ErrorHelper.ProcessError(_logger, ex, nameof(Get));
+
+                return InternalServerError();
+            }
+        }
+
+        public IHttpActionResult Put(int id, ChurchProfile church)
+        {
+            try
+            {
+                if (church == null)
+                    return BadRequest("church required");
+
+                if (id != church.Id)
+                    return BadRequest("id and church.id must match");
+
+                var result = _repository.SaveProfile(church);
+
+                if (result.Status == RepositoryActionStatus.Updated)
+                    return Ok(church);
+                else if (result.Status == RepositoryActionStatus.NotFound)
+                    return NotFound();
+                else
+                    return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                ErrorHelper.ProcessError(_logger, ex, nameof(Delete));
 
                 return InternalServerError();
             }
@@ -131,7 +165,7 @@ namespace NtccSteward.Api.Controllers
             }
             catch (Exception ex)
             {
-                new ErrorHelper().ProcessError(_logger, ex, nameof(Delete));
+                ErrorHelper.ProcessError(_logger, ex, nameof(Delete));
 
                 return InternalServerError();
             }
@@ -163,7 +197,7 @@ namespace NtccSteward.Api.Controllers
             }
             catch (Exception ex)
             {
-                new ErrorHelper().ProcessError(_logger, ex, nameof(Delete));
+                ErrorHelper.ProcessError(_logger, ex, nameof(Delete));
 
                 return InternalServerError();
             }

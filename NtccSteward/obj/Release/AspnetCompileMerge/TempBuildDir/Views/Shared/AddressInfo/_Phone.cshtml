@@ -18,7 +18,10 @@
                     <label class="checkbox-inline addyVerified">@Html.CheckBoxFor(m => m.Verified, new { @id = "verified", @class = "nscheckbox", type = "checkbox" })  Verified</label>
                     <label class="checkbox-inline addyPreferred">@Html.CheckBoxFor(m => m.Preferred, new { @id = "preferred", @class = "nscheckbox", type = "checkbox" })  Preferred</label>
                     <img class="img-responsive inline-block center icon addyActionImg" onclick="OpenText('@Model.Id')" src="~/content/images/Text-32.png" alt="Open Text" />
-                    <img class="icon addyRemoveImg" onclick="RemoveAddress(@Model.Id, 'address')" src="~/content/images/remove-32.png" alt="Remove Address" style="height:12px;vertical-align:middle;" />
+                    @*<img class="icon addyRemoveImg" onclick="RemoveAddress(@Model.Id, 'address')" src="~/content/images/remove-32.png" alt="Remove Address" style="height:12px;vertical-align:middle;" />*@
+                    <label class="addyRemoveLabel" onclick="RemoveAddress(@Model.Id, 'address')" title="remove">
+                        <span class="glyphicon glyphicon-remove addyRemoveGlyph"></span>
+                    </label>
                 </div>
             </div>
 

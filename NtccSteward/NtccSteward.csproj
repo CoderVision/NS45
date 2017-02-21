@@ -202,6 +202,7 @@
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Framework\ApiProvider.cs" />
+    <Compile Include="Framework\ContextHelper.cs" />
     <Compile Include="Framework\HeaderParser.cs" />
     <Compile Include="Framework\HttpClientExtensions.cs" />
     <Compile Include="Framework\NsLogger.cs" />
@@ -213,8 +214,15 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\AppRole.cs" />
+    <Compile Include="Models\AppRoleManager.cs" />
+    <Compile Include="Models\AppUserManager.cs" />
+    <Compile Include="Models\AppUser.cs" />
+    <Compile Include="Models\AppUserStore.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\AppRoleStore.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\RoleTypes.cs" />
     <Compile Include="Modules\Church\ChurchAttributes.cs" />
     <Compile Include="Modules\Church\ChurchCommunication.cs" />
     <Compile Include="Modules\Church\ChurchHistory.cs" />
@@ -266,6 +274,7 @@
     <Compile Include="ViewModels\Message\CorrespondenceVm.cs" />
     <Compile Include="ViewModels\Message\GroupVm.cs" />
     <Compile Include="ViewModels\Message\MessageVm.cs" />
+    <Compile Include="ViewModels\TeamViewModel.cs" />
     <Compile Include="Views\Shared\RazorTagHelper.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -273,21 +282,10 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Content\images\accept.png" />
-    <Content Include="Content\images\add-blue.png" />
-    <Content Include="Content\images\add.png" />
     <Content Include="Content\images\ajax-spinner.gif" />
-    <Content Include="Content\images\blue_accept.png" />
-    <Content Include="Content\images\blue_add.png" />
     <Content Include="Content\images\Calls-32.png" />
-    <Content Include="Content\images\Cancel.png" />
-    <Content Include="Content\images\Church-32.png" />
-    <Content Include="Content\images\church-48.png" />
-    <Content Include="Content\images\copy.png" />
     <Content Include="Content\images\cross-crop.png" />
     <Content Include="Content\images\cross-t.png" />
-    <Content Include="Content\images\delete.png" />
-    <Content Include="Content\images\filter.png" />
     <Content Include="Content\images\Help-48.png" />
     <Content Include="Content\images\Home-48.png" />
     <Content Include="Content\images\Mail-32.png" />
@@ -298,18 +296,10 @@
     <Content Include="Content\images\ntcclogo.png" />
     <Content Include="Content\images\ntcclogo4-sml.png" />
     <Content Include="Content\images\ntccShield-48.png" />
-    <Content Include="Content\images\paste.png" />
     <Content Include="Content\images\placeholder.gif" />
-    <Content Include="Content\images\print.png" />
-    <Content Include="Content\images\remove-32.png" />
-    <Content Include="Content\images\remove.png" />
     <Content Include="Content\images\report-48.png" />
-    <Content Include="Content\images\save-32-gray.png" />
-    <Content Include="Content\images\save-32.png" />
-    <Content Include="Content\images\search.png" />
     <Content Include="Content\images\Settings-48.png" />
     <Content Include="Content\images\Text-32.png" />
-    <Content Include="Content\images\warning_blue.png" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
     <Content Include="Content\themes\base\autocomplete.css" />
@@ -377,13 +367,16 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\knockout-3.4.1.debug.js" />
+    <Content Include="Scripts\knockout-3.4.1.js" />
+    <Content Include="Scripts\knockout.mapping-latest.debug.js" />
+    <Content Include="Scripts\knockout.mapping-latest.js" />
     <Content Include="Scripts\Member.js" />
     <Content Include="Scripts\Message.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\site.js" />
-    <Content Include="Scripts\site.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Views\Member\TestHtmlPage.html" />
     <Content Include="Web.config" />

@@ -92,6 +92,7 @@
     <Compile Include="Ordinals\MemberListOrdinals.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository.cs" />
+    <Compile Include="TeamRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NtccSteward.Core\NtccSteward.Core.csproj">

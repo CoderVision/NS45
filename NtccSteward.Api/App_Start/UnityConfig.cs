@@ -1,6 +1,6 @@
 using Microsoft.Practices.Unity;
 using NtccSteward.Api.Controllers;
-using NtccSteward.Api.Repository;
+using NtccSteward.Repository;
 using System.Configuration;
 using System.Web.Http;
 using Unity.WebApi;
@@ -28,6 +28,7 @@ namespace NtccSteward.Api
             var pepper = ConfigurationManager.AppSettings["Pepper"].ToString();
 
             // register repositories
+            container.RegisterInstance<ITeamRepository>(new TeamRepository(loginConnectionString));
             container.RegisterInstance<IAccountRepository>(new AccountRepository(loginConnectionString, pepper));
             container.RegisterInstance<IChurchRepository>(new ChurchRepository(defaultConnectionString));
             container.RegisterInstance<ILogger>(new LoggerRepository(defaultConnectionString));

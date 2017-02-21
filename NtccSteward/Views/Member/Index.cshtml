@@ -12,7 +12,9 @@
         <input type="search" id="memberSearch" class="form-control" style="padding:3px;width:300px;margin-bottom:4px;margin-left:0px;" placeholder="Full Name Search"
                oninput="FilterTable('memberTbl', this.value, 'Full Name')" />
 
-        <button type="button" class="btn btn-primary addBtn" data-toggle="modal" data-target="#newMember" style="margin-left:8px;margin-bottom:4px;">Add</button>
+        <button type="button" class="btn btn-primary addBtn" data-toggle="modal" data-target="#newMember" style="margin-left:8px;margin-bottom:4px;padding-bottom:2px;">
+            <span class="glyphicon glyphicon-plus glyphicon-btn"></span> Add
+        </button>
     </form>
 
     <table id="memberTbl" class="table table-sm table-hover table-bordered">
@@ -68,7 +70,7 @@
                     <span class="hidden-sm hidden-md hidden-lg">
                         @if (!string.IsNullOrWhiteSpace(m.Phone))
                         {
-                            <a href="tel://@(String.Format("{0:###-###-####}", double.Parse(m.Phone)))"><img class="icon32" src="~/Content/images/Calls-32.png" alt="call" /></a>
+                            <a href="tel:@(String.Format("{0:###-###-####}", double.Parse(m.Phone)))"><img class="icon32" src="~/Content/images/Calls-32.png" alt="call" /></a>
                         }
                         else
                         {
@@ -80,7 +82,7 @@
                 <td class="visible-xs text-center">
                     @if (!string.IsNullOrWhiteSpace(m.Phone))
                     {
-                        <a href="sms://@(String.Format("{0:###-###-####}", double.Parse(m.Phone)))"><img class="icon32" src="~/Content/images/Text-32.png" alt="call" /></a>
+                        <a href="sms:@(String.Format("{0:###-###-####}", double.Parse(m.Phone)))"><img class="icon32" src="~/Content/images/Text-32.png" alt="call" /></a>
                     }
                     else
                     {
@@ -91,7 +93,7 @@
                     <span class="hidden-sm hidden-md hidden-lg">
                         @if (!string.IsNullOrWhiteSpace(m.Email))
                         {
-                            <a href="mailto://@m.Email"><img class="icon32" src="~/Content/images/Mail-32.png" alt="email" /></a>
+                            <a href="mailto:@m.Email"><img class="icon32" src="~/Content/images/Mail-32.png" alt="email" /></a>
                         }
                         else
                         {
@@ -110,8 +112,12 @@
                         <span>&nbsp;</span>
                     }
                 </td>
-                <td class="text-center hideXs">
-                    @Html.ActionLink("Delete", "DeleteMember", "Member", new { @id=m.id }, null)
+                <td class="text-center hideXs" style="vertical-align:middle;">
+                    @*@Html.ActionLink("Delete", "DeleteMember", "Member", new { @id=m.id }, null)*@
+
+                    <a href="@Url.Action("DeleteMember", "Member", new { @id=m.id })" title="remove">
+                        <span class="glyphicon glyphicon-remove glyphicon-remove-grid"></span>
+                    </a>
                 </td> 
             </tr>
         }

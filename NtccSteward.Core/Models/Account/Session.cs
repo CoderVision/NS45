@@ -18,6 +18,8 @@ namespace NtccSteward.Core.Models.Account
 
         public int ChurchId { get; set; }
 
+        public string ChurchName { get; set; }
+
         public string SessionId { get; set; }
 
         public List<Role> Roles { get; set; }

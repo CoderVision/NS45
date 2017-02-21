@@ -1,9 +1,13 @@
 ﻿@using NtccSteward.ViewModels.Church
+@using NtccSteward.Core.Models.Common.Enums;
 @model NtccSteward.ViewModels.Account.LoginVm
 
+@using NtccSteward.Framework
 
 @{
     ViewBag.Title = "Log In";
+
+    var churchList = SelectListItemFactory.Create(Model.ChurchList.Select<ChurchVm, AppEnum>(c => new AppEnum() { ID=c.id, Desc=c.Name }).OrderBy(c => c.Desc), Model.ChurchId, "Church", "-1");
 }
 
 
@@ -28,7 +32,7 @@
 
                 <div class="form-group">
                     <label for="church" class="labelNormal">Church</label>
-                    @Html.DropDownListFor(m => m.ChurchId, new SelectList(Model.ChurchList, "Id", "Name"), new { @class = "form-control", @id = "church", @placeholder = "Church" })
+                    @Html.DropDownListFor(m => m.ChurchId, churchList, new { @class = "form-control", @id = "church", @placeholder = "Church" })
                 </div>
 
                 <label class="labelNormal">Forgot your <a href="">password</a>?</label>

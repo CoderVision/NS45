@@ -20,18 +20,15 @@ namespace NtccSteward.Controllers
             _apiProvider = apiProvider;
         }
 
-        private void Initialize()
+        private void InitSession()
         {
             if (_session == null)
-            {
-                var sessionJson = (string)HttpContext.Session["Session"];
-                _session = _apiProvider.DeserializeJson<Session>(sessionJson);
-            }
+                _session = ContextHelper.GetSession(HttpContext);
         }
 
         public ActionResult Index()
         {
-            Initialize();
+            InitSession();
 
             if (string.IsNullOrWhiteSpace(_session?.SessionId))
             {

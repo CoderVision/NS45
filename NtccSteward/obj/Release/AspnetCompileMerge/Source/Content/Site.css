@@ -22,6 +22,32 @@ html, body {
     padding: 0px;
 }
 
+/* glyphicon  */
+.glyphicon-remove{
+    color:red!important;
+}
+
+.glyphicon-remove-grid{
+    font-size:18px!important;
+}
+
+.glyphicon{
+    color:#518262;
+    cursor:pointer;
+}
+
+.glyphicon-btn{
+    color:white!important;
+}
+
+.navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:hover {
+    background-color: #295a3a;
+}
+
+.navbar-inverse .navbar-toggle {
+    border-color: #295a3a;
+}
+
 .btn-primary {
     color: #fff;
     background-color: #518262!important;
@@ -71,6 +97,9 @@ body {
     .showXs {
         display:normal;
     }
+    .addBtn{
+        margin-left:0px!important;
+    }
     /*.logo {
         width:50%;
         height:50%;
@@ -99,6 +128,10 @@ body {
         width: 145px;
     }
 
+}
+
+.rowPad{
+    margin-left:4px;margin-right:4px;margin-top:10px;
 }
 
 /*body,header,div {
@@ -581,10 +614,15 @@ input.btn {
     margin-top:4px;
 }
 
-.addyRemoveImg{
+.addyRemoveLabel{
     vertical-align:middle;
     display:inline;
     margin-left:30px;
+}
+
+.addyRemoveGlyph{
+    vertical-align:middle;
+    font-size:26px!important;
 }
 
 .addyActionImg{

@@ -1,6 +1,6 @@
 ﻿using System.Data.SqlClient;
 
-namespace NtccSteward.Api.Repository.Ordinals
+namespace NtccSteward.Repository.Ordinals
 {
     public class MemberListOrdinals
     {

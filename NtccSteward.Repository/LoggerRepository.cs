@@ -6,7 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NtccSteward.Api.Repository
+namespace NtccSteward.Repository
 {
     public interface ILogger
     {
@@ -14,7 +14,7 @@ namespace NtccSteward.Api.Repository
     }
 
 
-    public class LoggerRepository : Repository, ILogger
+    public class LoggerRepository : NtccSteward.Repository.Repository, ILogger
     {
         public LoggerRepository(string connectionString)
         {

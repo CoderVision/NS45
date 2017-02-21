@@ -13,7 +13,9 @@
         <input type="search" id="churchSearch" class="form-control" style="padding:3px;width:300px;margin-bottom:4px;margin-left:0px;" placeholder="Church Name Search"
                oninput="FilterTable('churchTbl', this.value, 'Church Name')" />
 
-        <button type="button" class="btn btn-primary addBtn" data-toggle="modal" data-target="#addChurch" style="margin-left:8px;margin-bottom:4px;">Add</button>
+        <button type="button" class="btn btn-primary addBtn" data-toggle="modal" data-target="#addChurch" style="margin-left:8px;margin-bottom:4px;padding-bottom:2px;">
+            <span class="glyphicon glyphicon-plus glyphicon-btn"></span> Add
+        </button>
     </form>
 
     <table id="churchTbl" class="table table-sm table-hover table-bordered">
@@ -106,7 +108,9 @@
                     }
                 </td>
                 <td class="text-center hideXs">
-                    @Html.ActionLink("Delete", "DeleteChurch", "Church", new { @id = m.id }, null)
+                    <a href="@Url.Action("DeleteChurch", "Church", new { @id=m.id })" title="remove">
+                        <span class="glyphicon glyphicon-remove glyphicon-remove-grid"></span>
+                    </a>
                 </td>
             </tr>
         }

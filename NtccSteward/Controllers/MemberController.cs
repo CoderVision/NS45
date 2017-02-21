@@ -17,9 +17,11 @@ using System.Web.Mvc;
 using NtccSteward.Core.Models.Common.Enums;
 using NtccSteward.ViewModels.Member;
 using NtccSteward.Core.Models.Church;
+using NtccSteward.Models;
 
 namespace NtccSteward.Controllers
 {
+    [Authorize]
     public class MemberController : Controller
     {
         private readonly IApiProvider _apiProvider;
@@ -34,19 +36,13 @@ namespace NtccSteward.Controllers
 
         }
 
-        private Session InitSession()
+        private void InitSession()
         {
             if (_session == null)
-            {
-                var sessionJson = (string)HttpContext.Session["Session"];
-                _session = _apiProvider.DeserializeJson<Session>(sessionJson);
-            }
-
-            return _session;
+                _session = ContextHelper.GetSession(HttpContext);
         }
 
-
-        [VerifySessionAttribute]
+        //[VerifySessionAttribute]
         public async Task<ActionResult> Index(string statusIds, int page = 1, int pageSize = 1000)
         {
             try
@@ -75,7 +71,7 @@ namespace NtccSteward.Controllers
         }
 
         // gets a member
-        [VerifySessionAttribute]
+        //[VerifySessionAttribute]
         public async Task<ActionResult> Edit(int id)
         {
             InitSession();
@@ -203,7 +199,7 @@ namespace NtccSteward.Controllers
         }
 
         //[ValidateAntiForgeryToken]
-        [VerifySessionAttribute]
+        //[VerifySessionAttribute]
         public async Task<ActionResult> SaveProfile(MemberProfile memberProfile)
         {
             InitSession();
@@ -263,7 +259,7 @@ namespace NtccSteward.Controllers
                 return Content("Error removing address");
         }
 
-        [VerifySessionAttribute]
+        //[VerifySessionAttribute]
         [HttpPost]
         public async Task<ActionResult> CreateMember(cm.NewMember member)
         {
