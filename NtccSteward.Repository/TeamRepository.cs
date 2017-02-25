@@ -11,7 +11,7 @@ namespace NtccSteward.Repository
 {
     public interface ITeamRepository
     {
-        List<Team> GetList(int churchId, int? teamId = null);
+        List<Team> GetList(int churchId);
         Team GetTeam(int teamId);
         List<Teammate> GetTeammates(int teamId);
         RepositoryActionResult<Teammate> DeleteTeammate(int teamId, int teammateId);
@@ -28,7 +28,7 @@ namespace NtccSteward.Repository
             _executor = new SqlCmdExecutor(connectionString);
         }
 
-        public List<Team> GetList(int churchId, int? teamId = null)
+        public List<Team> GetList(int churchId)
         {
             var list = new List<Team>();
 
@@ -48,8 +48,10 @@ namespace NtccSteward.Repository
                         var team = new Team();
                         team.Id = (int)reader["TeamId"];
                         team.Name = reader.ValueOrDefault<string>("Name", string.Empty);
+                        team.Desc = reader.ValueOrDefault<string>("Desc", string.Empty);
                         team.ChurchId = (int)reader["ChurchId"];
                         team.TeamTypeEnumId = (int)reader["TeamTypeEnumId"];
+                        team.TeamTypeEnumDesc = reader["TeamTypeEnumDesc"].ToString();
                         team.TeamPositionEnumTypeId = (int)reader["TeamPositionEnumTypeId"];
                         list.Add(team);
                     }

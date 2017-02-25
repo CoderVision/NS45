@@ -1,0 +1,103 @@
+﻿@model NtccSteward.ViewModels.Team.TeamIndexViewModel
+
+<div id="teamRoot" ng-app="App" ng-controller="TeamController" ng-init="init('@Model.ChurchId', '@Model.Title','@Model.Api')">
+
+    @{
+        ViewBag.Title = @Model.Title;
+    }
+
+    <span class="sectionTitle">{{title}}</span>
+
+    filter by team type:  soulwinning, pastoral, etc.
+
+    <form class="form-inline">
+        <input type="search" id="teamSearch" class="form-control" style="padding:3px;width:300px;margin-bottom:4px;margin-left:0px;" placeholder="Team Name Search"
+                oninput="FilterTable('teamTbl', this.value, 'Team Name')" />
+        <button type="button" class="btn btn-primary addBtn" data-toggle="modal" data-target="#newMember" style="margin-left:8px;margin-bottom:4px;padding-bottom:2px;">
+            <span class="glyphicon glyphicon-plus glyphicon-btn"></span> Add
+        </button>
+    </form>
+
+    <table id="teamTbl" class="table table-sm table-hover table-bordered">
+        <thead class="thead-default">
+            <tr>
+                <th class="text-center">
+                    Team Name
+                </th>
+                <th class="text-center">
+                    Team Leader
+                </th>
+                <th class="hideXs text-center">
+                    Description
+                </th>
+                <th class="hideXs text-center">
+                    Type
+                </th>
+            </tr>
+        </thead>
+        <tbody id="teamTblBody" ng-repeat="team in teamList">
+            <tr>
+                <td>
+                    <a href="~/Team/Edit/{{team.id}}">{{team.name}}</a>
+                </td>
+                <td>
+                    team leader
+                </td>
+                <td class="hideXs text-center">
+                    {{team.desc}}
+                </td>
+                <td class="hideXs text-center">
+                    {{team.teamTypeEnumDesc}}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+
+@section scripts{
+
+    <script type="text/javascript">
+
+        var appModule = angular.module('App', []);
+
+        appModule.controller('TeamController', ['$scope', '$http', function ($scope, $http) {
+
+            $scope.init = function (churchId, title, apiUrl) {
+                $scope.churchId = churchId;
+                $scope.title = title;
+                $scope.apiUrl = apiUrl;
+
+                // automatically load list
+                $scope.loadList();
+            }
+
+            $scope.churchId;
+
+            $scope.title = "Teams";
+
+            $scope.apiUrl;
+
+            $scope.teamList = [];
+
+            $scope.loadList = function()
+            {
+                //http://localhost:62428/church/3/team
+                var uri = $scope.apiUrl + "church/" + $scope.churchId + "/team";
+                $http.get(uri)
+                    .then(
+                        function (response) {
+                            //var mappedAssets = $.map(data.data, function (item) { return new $scope.AssetViewModel(item) })
+                            $scope.teamList = response.data;
+
+                            $("#teamTblBody").show();
+                        }
+                        , function (error) {
+                            console.log("loadList error: " + error);
+                        }
+                );
+            }
+        }]);
+
+    </script>
+}
