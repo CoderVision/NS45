@@ -13,6 +13,10 @@ namespace NtccSteward.Repository
     {
         List<Team> GetList(int churchId);
         Team GetTeam(int teamId);
+        RepositoryActionResult<TeamInfo> CreateTeam(TeamInfo Team);
+
+        RepositoryActionResult<Team> DeleteTeam(int id);
+
         List<Teammate> GetTeammates(int teamId);
         RepositoryActionResult<Teammate> DeleteTeammate(int teamId, int teammateId);
     }
@@ -61,6 +65,35 @@ namespace NtccSteward.Repository
             return list;
         }
 
+        public RepositoryActionResult<TeamInfo> CreateTeam(TeamInfo team)
+        {
+            var proc = "CreateTeam";
+
+            var paramz = new List<SqlParameter>();
+            paramz.Add(new SqlParameter("name", team.Name));
+            paramz.Add(new SqlParameter("desc", team.Desc));
+            paramz.Add(new SqlParameter("churchId", team.ChurchId));
+            paramz.Add(new SqlParameter("teamTypeEnumId", team.TeamTypeEnumId));
+            paramz.Add(new SqlParameter("teamPositionEnumTypeId", team.TeamPositionEnumTypeId));
+
+            Func<SqlDataReader, int> readFx = (reader) =>
+            {
+                return (int)reader["Id"];
+            };
+
+            var list = _executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, readFx);
+
+            var id = list.FirstOrDefault();
+            if (id > 0)
+            {
+                team.Id = id;
+                return new RepositoryActionResult<TeamInfo>(team, RepositoryActionStatus.Created);
+            }
+            else
+            {
+                return new RepositoryActionResult<TeamInfo>(null, RepositoryActionStatus.Error);
+            }
+        }
 
         public Team GetTeam(int teamId)
         {
@@ -71,7 +104,7 @@ namespace NtccSteward.Repository
             using (var cmd = new SqlCommand(proc, cn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add(new SqlParameter("teamId", @teamId));
+                cmd.Parameters.Add(new SqlParameter("teamId", teamId));
 
                 cn.Open();
 
@@ -111,6 +144,30 @@ namespace NtccSteward.Repository
             return team;
         }
 
+        public RepositoryActionResult<Team> DeleteTeam(int teamId)
+        {
+            var proc = "DeleteTeam";
+
+            var paramz = new List<SqlParameter>();
+            paramz.Add(new SqlParameter("teamId", @teamId));
+
+            Func<SqlDataReader, int> readFx = (reader) =>
+            {
+                return (int)reader["Id"];
+            };
+
+            var list = _executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, readFx);
+
+            var id = list.FirstOrDefault();
+            if (id > 0)
+            {
+                return new RepositoryActionResult<Team>(null, RepositoryActionStatus.Deleted);
+            }
+            else
+            {
+                return new RepositoryActionResult<Team>(null, RepositoryActionStatus.NotFound);
+            }
+        }
 
         public List<Teammate> GetTeammates(int teamId)
         {
@@ -172,5 +229,7 @@ namespace NtccSteward.Repository
                 return new RepositoryActionResult<Teammate>(null, RepositoryActionStatus.Error, ex);
             }
         }
+
+
     }
 }

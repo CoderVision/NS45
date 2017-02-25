@@ -52,7 +52,7 @@ namespace NtccSteward.Repository.Controllers
             try
             {
                 if (id <= 0)
-                    return BadRequest("Invalid teamId");
+                    return BadRequest("Invalid id");
 
                 var team = _repository.GetTeam(id);
 
@@ -66,6 +66,54 @@ namespace NtccSteward.Repository.Controllers
             }
         }
 
+        public IHttpActionResult Delete(int id)
+        {
+            try
+            {
+                if (id <= 0)
+                    return BadRequest("Invalid id");
+
+                var response = _repository.DeleteTeam(id);
+
+                if (response.Status == Framework.RepositoryActionStatus.Deleted)
+                    return StatusCode(HttpStatusCode.NoContent);
+                else if (response.Status == Framework.RepositoryActionStatus.NotFound)
+                    return NotFound();
+                else
+                    return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                ErrorHelper.ProcessError(_logger, ex, nameof(Get));
+
+                return InternalServerError();
+            }
+        }
+
+
+        // add new
+        public IHttpActionResult Post(TeamInfo team)
+        {
+            try
+            {
+                var result = _repository.CreateTeam(team);
+
+                if (result.Status == Framework.RepositoryActionStatus.Created)
+                {
+
+                    return Created(Request.RequestUri + "/" + result.Entity.Id, result.Entity);
+                }
+                else
+                    return BadRequest();
+
+            }
+            catch (Exception ex)
+            {
+                ErrorHelper.ProcessError(_logger, ex, nameof(Get));
+
+                return InternalServerError();
+            }
+        }
 
         /// <summary>
         /// Gets teammates for a specific a specific team
@@ -92,6 +140,7 @@ namespace NtccSteward.Repository.Controllers
                 return InternalServerError();
             }
         }
+
 
         [Route("team/{teamId}/teammates/{teammateId}")]
         public IHttpActionResult DeleteTeammate(int teamId, int teammateId)
