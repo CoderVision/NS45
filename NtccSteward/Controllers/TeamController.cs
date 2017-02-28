@@ -59,7 +59,8 @@ namespace NtccSteward.Controllers
         // GET: Test/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            ViewBag.id = id;
+            return View("TeamProfile");
         }
 
         // POST: Test/Edit/5
