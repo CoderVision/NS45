@@ -1,8 +1,141 @@
 ﻿
-@{
-    ViewBag.Title = "TeamProfile";
+<div ng-controller="teamProfileController" ng-init="init()" ng-cloak>
+    @{
+        ViewBag.Title = "TeamProfile";
+    }
+
+
+    <div class="row">
+        <div class="col-xs-6">
+            <span class="sectionTitle">@Model.DisplayText</span>
+        </div>
+        <div class="col-xs-6">
+            <button id="SaveBtn" class="btn btn-primary" style="float:right;clear:both;" type="button" onclick="Save()" disabled>
+                <span class="glyphicon glyphicon-save glyphicon-btn"></span> Save
+            </button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group">
+            <label for="name" class="col-sm-2 control-label labelNormal">Name</label>
+            <div class="col-sm-10">
+                <input id="name" name="name" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="desc" class="col-sm-2 control-label labelNormal">Description</label>
+            <div class="col-sm-10">
+                <input id="desc" name="desc" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="type" class="col-sm-2 control-label labelNormal">Type</label>
+            <div class="col-sm-10">
+                <select id="type" name="type" class="form-control" ng-model="">
+
+                    @*exclude pastoral team*@
+                    <option ng-repeat="e in EnumList | filter: 'function(value, index, array){ return value.enumID != 68  }'" value="{{e.enumID}}" selected>{{e.enumDesc}}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <label for="members" class="control-label">Members</label>
+        <table id="members" class="table table-sm  table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Position
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @* sort by type:  allows for Teams to be at top/bottom, and members to follow/succeed *@
+                <tr ng-repeat="tm in $scope.teammates | orderBy:['typeSortOrder','name']">
+                    <td>
+                        {{tm.name}}
+                    </td>
+                    <td>
+                        {{tm.position}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/App/controller/teamProfileController.js"></script>
+
+    <script type="text/javascript">
+
+        angular.module('App').controller('teamProfileController', ['$scope', '$http', 'appService', 'teamService', function ($scope, $http, appService, teamService) {
+
+            var self = this;
+            self.teamId;
+            self.churchId
+            $scope.name = "";  // team name
+            $scope.desc = "";
+            $scope.teamTypeEnumId = "";
+            $scope.teamPositionEnumTypeId = "";
+
+            $scope.init = function (teamId) {
+
+                self.teamId = teamId;
+
+                // automatically load list
+                //$scope.loadList();
+                
+                return;
+            }
+
+            $scope.EditTeammate;
+
+            $scope.teammates = []; // these can be members or other teams
+
+            $scope.EnumList = [];
+
+            $scope.loadList = function () {
+
+                $scope.teammates = []; // clear
+
+                var list = teamService.getTeamProfile().then(function (success) {
+
+                    // verify success.data is correct
+                    var profile = $.map(success.data, function(teamProfile) { return teamService.createProfile(teamProfile); })
+
+                    self.loadProfile(profile);
+
+                    // get metadata (gets cached - loads enums that are valid for all teams)
+                    teamService.getTeamProfileMetadata(success.data.id).then(function (success) {
+                        $scope.EnumList = $.map(success.data, function (enm) { return appService.createEnum(enm); })
+                    });
+                    
+                }, function (failure) { });
+            };
+
+            self.loadProfile(profile)
+            {
+                if (profile != undefined)
+                {
+                    self.teamId = profile.teamId;
+                    self.churchId = profile.churchId;
+
+                    $scope.name = profile.name;
+                    $scope.desc = profile.desc;
+                    $scope.teamTypeEnumId = profile.teamTypeEnumId;
+                    $scope.teamPositionEnumTypeId = profile.teamPositionEnumTypeId;
+
+                    $scope.teammates = profile.teammates;
+                }
+            }
+        }]);
+
+    </script>
+
 }
-
-<h2>TeamProfile</h2>
-
-<h2>@ViewBag.id</h2>

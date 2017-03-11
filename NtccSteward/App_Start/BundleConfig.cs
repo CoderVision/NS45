@@ -25,7 +25,9 @@ namespace NtccSteward
                       "~/Scripts/respond.min.js"));
 
            bundles.Add(new ScriptBundle("~/bundles/site").Include(
-                      "~/Scripts/site.js"));
+                      "~/Scripts/site.js",
+                      "~/App/appModule.js",
+                      "~/App/service/appService.js"));
 
             //bundles.Add(new StyleBundle("~/Content/css").Include(
             //          "~/Content/css/bootstrap.css",

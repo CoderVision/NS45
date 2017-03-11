@@ -17,12 +17,22 @@
     @*<link href="~/Content/bootstrap.css" rel="stylesheet" />*@
     <link href="~/Content/Site.css" rel="stylesheet" />
 
+    @*<script src="~/Scripts/angular.min.js"></script>*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.2/angular.min.js" />
+
     @Scripts.Render("~/bundles/modernizr")
    
 </head>
 
 @* Added the padding-top, but this will mess things up...  It needs to compensate for the top-fixed navbar, may need to be smaller than 80px *@
-<body>
+<body ng-app="App">
+
+@{
+    var rootUrl = Html.Action("GetApiUrl", "Account");
+ }
+    @*initialize appService*@
+    <div ng-controller="appController" ng-init="init('@rootUrl')"></div>
+
         <header style="margin-top:0px;">
             @*banner style="margin-top:0px;"*@
             <nav class="navbar navbar-inverse navbar-fixed-top banner" role="navigation" >
@@ -85,16 +95,8 @@
     @*<script src="~/Scripts/material.min.js"></script>
     <script src="~/Scripts/ripples.min.js"></script>*@
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.1/knockout-min.js"></script>
 
-    <script src="~/Scripts/angular.min.js"></script>
-
-    <script src="~/Scripts/site.js"></script>
-    <script src="~/Scripts/app/appModule.js"></script>
-
-    <script type="text/javascript">
-        //$.material.init();
-    </script>
+    @Scripts.Render("~/bundles/site")
 
     @RenderSection("scripts", required: false)
 

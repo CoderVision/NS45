@@ -47,7 +47,8 @@ namespace NtccSteward.Repository.Controllers
         }
 
 
-        public IHttpActionResult Get(int id)
+        [Route("team/{id}/profile")]
+        public IHttpActionResult GetProfile(int id)
         {
             try
             {
@@ -60,7 +61,28 @@ namespace NtccSteward.Repository.Controllers
             }
             catch (Exception ex)
             {
-                ErrorHelper.ProcessError(_logger, ex, nameof(Get));
+                ErrorHelper.ProcessError(_logger, ex, nameof(GetProfile));
+
+                return InternalServerError();
+            }
+        }
+
+        [Route("team/{id}/profileMetadata")]
+        public IHttpActionResult GetProfileMetadata(int id)
+        {
+            try
+            {
+                if (id <= 0)
+                    return BadRequest("Invalid id");
+
+                // use the id to get the churchId
+                var team = _repository.GetTeam(id);
+
+                return Ok(team);
+            }
+            catch (Exception ex)
+            {
+                ErrorHelper.ProcessError(_logger, ex, nameof(GetProfile));
 
                 return InternalServerError();
             }
@@ -84,7 +106,7 @@ namespace NtccSteward.Repository.Controllers
             }
             catch (Exception ex)
             {
-                ErrorHelper.ProcessError(_logger, ex, nameof(Get));
+                ErrorHelper.ProcessError(_logger, ex, nameof(Delete));
 
                 return InternalServerError();
             }
@@ -109,7 +131,7 @@ namespace NtccSteward.Repository.Controllers
             }
             catch (Exception ex)
             {
-                ErrorHelper.ProcessError(_logger, ex, nameof(Get));
+                ErrorHelper.ProcessError(_logger, ex, nameof(Post));
 
                 return InternalServerError();
             }

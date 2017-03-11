@@ -279,6 +279,9 @@
     <Compile Include="Views\Shared\RazorTagHelper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App\controller\appController.js" />
+    <Content Include="App\service\appService.js" />
+    <Content Include="App\service\teamService.js" />
     <Content Include="Content\bootstrap-material-design.css" />
     <Content Include="Content\bootstrap-material-design.min.css" />
     <Content Include="Content\bootstrap-theme.css" />
@@ -369,9 +372,9 @@
     <Content Include="Scripts\angular-touch.min.js" />
     <Content Include="Scripts\angular.js" />
     <Content Include="Scripts\angular.min.js" />
-    <Content Include="Scripts\app\appModule.js" />
-    <Content Include="Scripts\app\controller\teamController.js" />
-    <Content Include="Scripts\app\controller\teamProfileController.js" />
+    <Content Include="App\appModule.js" />
+    <Content Include="App\controller\teamController.js" />
+    <Content Include="App\controller\teamProfileController.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\Church.js" />

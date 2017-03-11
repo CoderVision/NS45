@@ -1,9 +1,8 @@
-﻿angular.module('App').controller('teamController', ['$scope', '$http', function ($scope, $http) {
+﻿angular.module('App').controller('teamController', ['$scope', '$http','appService', function ($scope, $http,appService) {
 
     $scope.init = function (churchId, title, apiUrl) {
         $scope.churchId = churchId;
         $scope.title = title;
-        $scope.apiUrl = apiUrl;
         $scope.EditTeam = new $scope.Team("", "", "", "", "", "");
 
         // automatically load list
@@ -13,8 +12,6 @@
     $scope.churchId;
 
     $scope.title = "Teams";
-
-    $scope.apiUrl;
 
     $scope.teamList = [];
 
