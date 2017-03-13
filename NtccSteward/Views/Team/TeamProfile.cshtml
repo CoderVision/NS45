@@ -4,13 +4,12 @@
         ViewBag.Title = "TeamProfile";
     }
 
-
     <div class="row">
         <div class="col-xs-6">
             <span class="sectionTitle">@Model.DisplayText</span>
         </div>
         <div class="col-xs-6">
-            <button id="SaveBtn" class="btn btn-primary" style="float:right;clear:both;" type="button" onclick="Save()" disabled>
+            <button id="SaveBtn" class="btn btn-primary" style="float:right;clear:both;" type="button" ng-click="Save()" ng-disabled="isClean" disabled>
                 <span class="glyphicon glyphicon-save glyphicon-btn"></span> Save
             </button>
         </div>
@@ -20,19 +19,19 @@
         <div class="form-group">
             <label for="name" class="col-sm-2 control-label labelNormal">Name</label>
             <div class="col-sm-10">
-                <input id="name" name="name" />
+                <input id="name" name="name" ng-keyup="onChange()" />
             </div>
         </div>
         <div class="form-group">
             <label for="desc" class="col-sm-2 control-label labelNormal">Description</label>
             <div class="col-sm-10">
-                <input id="desc" name="desc" />
+                <input id="desc" name="desc" ng-keyup="onChange()" />
             </div>
         </div>
         <div class="form-group">
             <label for="type" class="col-sm-2 control-label labelNormal">Type</label>
             <div class="col-sm-10">
-                <select id="type" name="type" class="form-control" ng-model="">
+                <select id="type" name="type" class="form-control" ng-model="" ng-change="onChange()">
 
                     @*exclude pastoral team*@
                     <option ng-repeat="e in EnumList | filter: 'function(value, index, array){ return value.enumID != 68  }'" value="{{e.enumID}}" selected>{{e.enumDesc}}</option>
@@ -42,8 +41,11 @@
     </div>
 
     <div class="row">
-        <label for="members" class="control-label">Members</label>
-        <table id="members" class="table table-sm  table-hover table-bordered">
+        @*<label for="members" class="control-label">Members</label>*@
+        <label style="margin-left:10px;" onclick="AddTeammate('teamTbl')">
+            <span class="glyphicon glyphicon-plus"></span>
+        </label>
+        <table id="members" class="table table-hover table-bordered">
             <thead>
                 <tr>
                     <th>
@@ -67,6 +69,28 @@
             </tbody>
         </table>
     </div>
+
+    <div class="modal fade" id="newTeamMember" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 id="addMbrTitle" class="modal-title ">Add Team Member</h4>
+                </div>
+
+                <div class="modal-body">
+
+                        Have search list or table here
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Save/button>
+                    <button type="button" class="btn btn-default">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 @section scripts {
@@ -83,6 +107,7 @@
             $scope.desc = "";
             $scope.teamTypeEnumId = "";
             $scope.teamPositionEnumTypeId = "";
+            $scope.isClean = true;
 
             $scope.init = function (teamId) {
 
@@ -133,6 +158,20 @@
 
                     $scope.teammates = profile.teammates;
                 }
+            }
+
+            $scope.Save = function()
+            {
+                $scope.isClean = true;
+
+                alert('program save');
+
+                return;
+            }
+
+            $scope.onChange = function () {
+
+                $scope.isClean = false;
             }
         }]);
 
