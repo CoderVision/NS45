@@ -16,12 +16,12 @@ using Newtonsoft.Json;
 using System.Web.Http.Cors;
 using NtccSteward.Repository.Framework;
 using NtccSteward.Repository;
+using Marvin.JsonPatch;
 
 namespace NtccSteward.Api.Controllers
 {
     // this can be added to the WebApiConfig, or to a class specifically.
     //  you can enter specific domains separated by a comma, or a * for all
-    [EnableCors("*", "*", "*")]
     //[RoutePrefix("api")]
     public class MembersController : ApiController
     {
@@ -275,6 +275,33 @@ namespace NtccSteward.Api.Controllers
             catch (Exception ex)
             {
                 ErrorHelper.ProcessError(_logger, ex, nameof(Delete));
+
+                return InternalServerError();
+            }
+        }
+
+        [HttpPatch]
+        public IHttpActionResult Patch(int id, [FromBody]JsonPatchDocument<MemberProfile> doc)
+        {
+            if (doc == null)
+                return BadRequest();
+
+            try
+            {
+                var profile = _repository.Get(id);
+
+                if (profile == null)
+                    return NotFound();
+
+                doc.ApplyTo(profile);
+
+                _repository.SaveProfile(profile);
+
+                return Ok(profile);
+            }
+            catch(Exception ex)
+            {
+                ErrorHelper.ProcessError(_logger, ex, nameof(Patch));
 
                 return InternalServerError();
             }

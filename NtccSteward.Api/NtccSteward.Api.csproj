@@ -53,8 +53,8 @@
       <HintPath>..\packages\CacheCow.Server.1.2.0\lib\net40\CacheCow.Server.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Marvin.JsonPatch, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Marvin.JsonPatch.1.0.0\lib\portable40-net40+win8+wpa81\Marvin.JsonPatch.dll</HintPath>
+    <Reference Include="Marvin.JsonPatch, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Marvin.JsonPatch.1.1.0\lib\portable40-net40+win8\Marvin.JsonPatch.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
