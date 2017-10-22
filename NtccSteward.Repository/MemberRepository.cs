@@ -21,7 +21,7 @@ namespace NtccSteward.Repository
         List<Member> GetList(int churchId, IEnumerable<int> statusEnumId);
         List<AppEnum> GetProfileMetadata(int churchId);
 
-        MemberProfile Get(int id);
+        MemberProfile Get(int id, int churchId);
 
         RepositoryActionResult<MemberProfile> SaveProfile(MemberProfile memberProfile);
 
@@ -128,7 +128,7 @@ namespace NtccSteward.Repository
 
 
 
-        public MemberProfile Get(int id)
+        public MemberProfile Get(int id, int churchId)
         {
             MemberProfile member = null;
 
@@ -139,6 +139,7 @@ namespace NtccSteward.Repository
             {
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("memberId", id);
+                cmd.Parameters.AddWithValue("churchId", churchId);
 
                 cn.Open();
 

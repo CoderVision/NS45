@@ -3,8 +3,6 @@ angular.module('App').factory('appService', ['$http', function ($http) {
 
     var svc = {};
 
-    svc.apiRoot = "";
-
     svc.createEnum = function (e) {
 
         var enm = {};

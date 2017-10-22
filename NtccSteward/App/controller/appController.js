@@ -1,9 +1,8 @@
 ﻿
 angular.module('App').controller('appController', ['appService', function (appService) {
 
-    $scope.init = function (apiUrl) {
+    $scope.init = function () {
 
-        appService.apiRoot = apiUrl;
 
     }
 }]);

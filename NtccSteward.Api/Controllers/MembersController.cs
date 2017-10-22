@@ -116,7 +116,7 @@ namespace NtccSteward.Api.Controllers
         //[Route("members/{id}/profile")]
         //could also have:  [Route("members/{id}/history")] for history, etc.
         [HttpGet]
-        public IHttpActionResult Get(int id)
+        public IHttpActionResult Get(int id, int churchId)
         //public IHttpActionResult GetProfile([FromBody] ItemByID identity)
         {
             try
@@ -124,7 +124,7 @@ namespace NtccSteward.Api.Controllers
                 if (id <= 0)
                     return BadRequest();
 
-                var memberProfile = _repository.Get(id);
+                var memberProfile = _repository.Get(id, churchId);
                 if (memberProfile == null)
                 {
                     return NotFound();
@@ -281,14 +281,14 @@ namespace NtccSteward.Api.Controllers
         }
 
         [HttpPatch]
-        public IHttpActionResult Patch(int id, [FromBody]JsonPatchDocument<MemberProfile> doc)
+        public IHttpActionResult Patch(int id, int churchId, [FromBody]JsonPatchDocument<MemberProfile> doc)
         {
             if (doc == null)
                 return BadRequest();
 
             try
             {
-                var profile = _repository.Get(id);
+                var profile = _repository.Get(id, churchId);
 
                 if (profile == null)
                     return NotFound();

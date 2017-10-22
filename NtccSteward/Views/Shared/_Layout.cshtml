@@ -6,32 +6,23 @@
 
     <title>@ViewBag.Title</title>
 
-    @*<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">*@
-
-    
-    @*<link href="~/Content/bootstrap.min.css" rel="stylesheet" />*@
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
-    @*<link href="~/Content/bootstrap-material-design.min.css" rel="stylesheet" />
-    <link href="~/Content/ripples.min.css" rel="stylesheet" />*@
-
-    @*<link href="~/Content/bootstrap.css" rel="stylesheet" />*@
-    <link href="~/Content/Site.css" rel="stylesheet" />
-
-    @*<script src="~/Scripts/angular.min.js"></script>*@
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.2/angular.min.js" />
+    <link href="//fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 
     @Scripts.Render("~/bundles/modernizr")
+    @*@Scripts.Render("~/bundles/angular")*@
+
+    @Styles.Render("~/Content/bscss")
+    @Styles.Render("~/Content/sitecss")
    
 </head>
 
 @* Added the padding-top, but this will mess things up...  It needs to compensate for the top-fixed navbar, may need to be smaller than 80px *@
-<body ng-app="App">
+@*ng-app="App"*@
+<body >
 
-@{
-    var rootUrl = Html.Action("GetApiUrl", "Account");
- }
     @*initialize appService*@
-    <div ng-controller="appController" ng-init="init('@rootUrl')"></div>
+    @*ng-controller="appController"*@
+    <div ></div>
 
         <header style="margin-top:0px;">
             @*banner style="margin-top:0px;"*@
@@ -82,20 +73,11 @@
             @RenderBody()
         </div>
 
-
-
-    @*<script src="~/Scripts/jquery-3.1.1.min.js"></script>*@
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-
-    @*<script src="~/Scripts/jquery.validate.min.js"></script>*@
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.11.1/jquery.validate.min.js"></script>
-
-    @*<script src="~/Scripts/bootstrap.min.js"></script>*@
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    @*<script src="~/Scripts/material.min.js"></script>
-    <script src="~/Scripts/ripples.min.js"></script>*@
-
-
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/respond")
     @Scripts.Render("~/bundles/site")
 
     @RenderSection("scripts", required: false)

@@ -100,7 +100,7 @@ namespace NtccSteward.Controllers
             var pastoralTeam = teamList.FirstOrDefault(t => t.TeamTypeEnumId == 68); // pastoral team
             if (pastoralTeam != null)
             {
-                var teamjson = await _apiProvider.GetItemAsync($"team/{pastoralTeam.Id}");
+                var teamjson = await _apiProvider.GetItemAsync($"team/{pastoralTeam.Id}/teammates");
                 var team = _apiProvider.DeserializeJson<Team>(teamjson);
                 cp.PastoralTeam = team;
             }
