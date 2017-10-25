@@ -24,16 +24,6 @@ angular.module('App').factory('teamService', ['$http','appService',function ($ht
             p.teamPositionEnumTypeId = profile.teamPositionEnumTypeId;
             p.teammates = $.map(profile.teammates, function (team) { return teamService.createTeamMember(team); })
         }
-        else
-        {
-            p.teamId = "";
-            p.churchId = "";
-            p.name = "";
-            p.desc = "";
-            p.teamTypeEnumId = "";
-            p.teamPositionEnumTypeId = "";
-            p.teammates = [];
-        }
 
         return p;
     }
