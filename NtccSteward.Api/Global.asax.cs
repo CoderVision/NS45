@@ -22,7 +22,7 @@ namespace NtccSteward.Api
             if (HttpContext.Current.Request.HttpMethod == "OPTIONS")
             {
                 HttpContext.Current.Response.AddHeader("Cache-Control", "no-cache");
-                HttpContext.Current.Response.AddHeader("Access-Control-Allow-Methods", "GET, PUT, POST, PATCH");
+                HttpContext.Current.Response.AddHeader("Access-Control-Allow-Methods", "GET, PUT, POST, PATCH, DELETE");
                 HttpContext.Current.Response.AddHeader("Access-Control-Allow-Headers", "Content-Type, Accept, X-Pagination");
                 HttpContext.Current.Response.AddHeader("Access-Control-Max-Age", "1728000");
                 HttpContext.Current.Response.End();

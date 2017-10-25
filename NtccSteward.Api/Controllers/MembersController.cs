@@ -332,7 +332,7 @@ namespace NtccSteward.Api.Controllers
             }
             catch (Exception ex)
             {
-                ErrorHelper.ProcessError(_logger, ex, nameof(Delete));
+                ErrorHelper.ProcessError(_logger, ex, nameof(MergeEmail));
 
                 return InternalServerError();
             }
@@ -361,7 +361,7 @@ namespace NtccSteward.Api.Controllers
             }
             catch (Exception ex)
             {
-                ErrorHelper.ProcessError(_logger, ex, nameof(Delete));
+                ErrorHelper.ProcessError(_logger, ex, nameof(MergePhone));
 
                 return InternalServerError();
             }
@@ -390,7 +390,37 @@ namespace NtccSteward.Api.Controllers
             }
             catch (Exception ex)
             {
-                ErrorHelper.ProcessError(_logger, ex, nameof(Delete));
+                ErrorHelper.ProcessError(_logger, ex, nameof(MergeAddress));
+
+                return InternalServerError();
+            }
+        }
+
+        [Route("Members/{memberId}/{contactInfoId}")]
+        [HttpDelete]
+        public IHttpActionResult DeleteContactInfo(int memberId, int contactInfoId)
+        {
+            try
+            {
+                //EnumTypeId=12:  56 person, 61 ContactInfo
+                var result = this._repository.Delete(contactInfoId, 61);
+
+                if (result.Status == RepositoryActionStatus.Deleted)
+                    return Ok();
+                else if (result.Status == RepositoryActionStatus.NotFound)
+                    return NotFound();
+                else if (result.Status == RepositoryActionStatus.Error)
+                {
+                    ErrorHelper.ProcessError(_logger, result.Exception, nameof(DeleteContactInfo));
+
+                    return InternalServerError();
+                }
+                else
+                    return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                ErrorHelper.ProcessError(_logger, ex, nameof(DeleteContactInfo));
 
                 return InternalServerError();
             }
