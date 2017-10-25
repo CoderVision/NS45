@@ -26,6 +26,12 @@ namespace NtccSteward.Repository
         RepositoryActionResult<MemberProfile> SaveProfile(MemberProfile memberProfile);
 
         RepositoryActionResult<Member> Delete(int id, int entityType);
+
+        RepositoryActionResult<Address> MergeAddress(Address addy);
+
+        RepositoryActionResult<Phone> MergePhone(Phone phone);
+
+        RepositoryActionResult<Email> MergeEmail(Email email);
     }
 
     public class MemberRepository : NtccSteward.Repository.Repository, IMemberRepository
@@ -300,11 +306,6 @@ namespace NtccSteward.Repository
             var memberId = _executor.ExecuteSql<int>("SaveMemberProfile", CommandType.StoredProcedure, paramz, readFx);
             memberProfile.MemberId = memberId.FirstOrDefault();
 
-            Func<SqlDataReader, int> ciReadFx = (reader) =>
-            {
-                return (int)reader["ContactInfoID"];
-            };
-
             foreach (var addy in memberProfile.AddressList)
             {
                 var ciParamz = CreateAddressInfoParams(addy);
@@ -315,7 +316,7 @@ namespace NtccSteward.Repository
                 ciParamz.Add(new SqlParameter("state", addy.State.ToSqlString()));
                 ciParamz.Add(new SqlParameter("zip", addy.Zip.ToSqlString()));
 
-                var list = _executor.ExecuteSql<int>("SaveAddress", CommandType.StoredProcedure, ciParamz, ciReadFx);
+                var list = _executor.ExecuteSql<int>("SaveAddress", CommandType.StoredProcedure, ciParamz, ContactInfoReadFx);
 
                 addy.ContactInfoId = list.First();
             }
@@ -326,7 +327,7 @@ namespace NtccSteward.Repository
                 ciParamz.Add(new SqlParameter("@number", addy.PhoneNumber.ToSqlString()));
                 ciParamz.Add(new SqlParameter("@phoneType", addy.PhoneType));
 
-                var list = _executor.ExecuteSql<int>("SavePhone", CommandType.StoredProcedure, ciParamz, ciReadFx);
+                var list = _executor.ExecuteSql<int>("SavePhone", CommandType.StoredProcedure, ciParamz, ContactInfoReadFx);
 
                 addy.ContactInfoId = list.First();
             }
@@ -336,7 +337,7 @@ namespace NtccSteward.Repository
                 var ciParamz = CreateAddressInfoParams(addy);
                 ciParamz.Add(new SqlParameter("@email", addy.EmailAddress.ToSqlString()));
 
-                var list = _executor.ExecuteSql<int>("SaveEmail", CommandType.StoredProcedure, ciParamz, ciReadFx);
+                var list = _executor.ExecuteSql<int>("SaveEmail", CommandType.StoredProcedure, ciParamz, ContactInfoReadFx);
 
                 addy.ContactInfoId = list.First();
             }
@@ -395,9 +396,63 @@ namespace NtccSteward.Repository
             {
                 return new RepositoryActionResult<Member>(null, RepositoryActionStatus.Error, ex);
             }
+        } 
+
+        public RepositoryActionResult<Email> MergeEmail(Email email)
+        {
+            var ciParamz = CreateAddressInfoParams(email);
+            ciParamz.Add(new SqlParameter("@email", email.EmailAddress.ToSqlString()));
+
+            var list = _executor.ExecuteSql<int>("SaveEmail", CommandType.StoredProcedure, ciParamz, ContactInfoReadFx);
+
+            var contactInfoId = list.First();
+
+            if (email.ContactInfoId == contactInfoId)
+                return new RepositoryActionResult<Email>(email, RepositoryActionStatus.Ok);
+            else
+                return new RepositoryActionResult<Email>(email, RepositoryActionStatus.Created);
         }
 
+        public RepositoryActionResult<Phone> MergePhone(Phone phone)
+        {
+            var ciParamz = CreateAddressInfoParams(phone);
+            ciParamz.Add(new SqlParameter("@number", phone.PhoneNumber.ToSqlString()));
+            ciParamz.Add(new SqlParameter("@phoneType", phone.PhoneType));
 
+            var list = _executor.ExecuteSql<int>("SavePhone", CommandType.StoredProcedure, ciParamz, ContactInfoReadFx);
+
+            var contactInfoId = list.First();
+
+            if (phone.ContactInfoId == contactInfoId)
+                return new RepositoryActionResult<Phone>(phone, RepositoryActionStatus.Ok);
+            else
+                return new RepositoryActionResult<Phone>(phone, RepositoryActionStatus.Created);
+        }
+
+        public RepositoryActionResult<Address> MergeAddress(Address addy)
+        {
+            var ciParamz = CreateAddressInfoParams(addy);
+            ciParamz.Add(new SqlParameter("line1", addy.Line1.ToSqlString()));
+            ciParamz.Add(new SqlParameter("line2", addy.Line2.ToSqlString()));
+            ciParamz.Add(new SqlParameter("line3", addy.Line3.ToSqlString()));
+            ciParamz.Add(new SqlParameter("city", addy.City.ToSqlString()));
+            ciParamz.Add(new SqlParameter("state", addy.State.ToSqlString()));
+            ciParamz.Add(new SqlParameter("zip", addy.Zip.ToSqlString()));
+
+            var list = _executor.ExecuteSql<int>("SaveAddress", CommandType.StoredProcedure, ciParamz, ContactInfoReadFx);
+
+            var contactInfoId = list.First();
+
+            if (addy.ContactInfoId == contactInfoId)
+                return new RepositoryActionResult<Address>(addy, RepositoryActionStatus.Ok);
+            else
+                return new RepositoryActionResult<Address>(addy, RepositoryActionStatus.Created);
+        }
+
+        private int ContactInfoReadFx(SqlDataReader reader)
+        {
+            return (int)reader["ContactInfoID"];
+        }
     }
 }
 

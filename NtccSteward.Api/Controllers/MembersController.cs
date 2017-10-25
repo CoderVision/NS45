@@ -17,6 +17,7 @@ using System.Web.Http.Cors;
 using NtccSteward.Repository.Framework;
 using NtccSteward.Repository;
 using Marvin.JsonPatch;
+using NtccSteward.Core.Models.Common.Address;
 
 namespace NtccSteward.Api.Controllers
 {
@@ -302,6 +303,94 @@ namespace NtccSteward.Api.Controllers
             catch(Exception ex)
             {
                 ErrorHelper.ProcessError(_logger, ex, nameof(Patch));
+
+                return InternalServerError();
+            }
+        }
+
+
+        [Route("Members/{memberId}/email")]
+        [HttpPost]
+        public IHttpActionResult MergeEmail(int memberId, Email email)
+        {
+            if (email == null)
+                return BadRequest();
+
+            try
+            {
+                email.IdentityId = memberId;
+
+                var result = this._repository.MergeEmail(email);
+
+                if (result.Status == RepositoryActionStatus.Ok
+                    || result.Status == RepositoryActionStatus.Created)
+                {
+                    return Ok(result.Entity);
+                }
+                else
+                    return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                ErrorHelper.ProcessError(_logger, ex, nameof(Delete));
+
+                return InternalServerError();
+            }
+        }
+
+        [Route("Members/{memberId}/phone")]
+        [HttpPost]
+        public IHttpActionResult MergePhone(int memberId, Phone phone)
+        {
+            if (phone == null)
+                return BadRequest();
+
+            try
+            {
+                phone.IdentityId = memberId;
+
+                var result = this._repository.MergePhone(phone);
+
+                if (result.Status == RepositoryActionStatus.Ok
+                    || result.Status == RepositoryActionStatus.Created)
+                {
+                    return Ok(result.Entity);
+                }
+                else
+                    return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                ErrorHelper.ProcessError(_logger, ex, nameof(Delete));
+
+                return InternalServerError();
+            }
+        }
+
+        [Route("Members/{memberId}/address")]
+        [HttpPost]
+        public IHttpActionResult MergeAddress(int memberId, Address address)
+        {
+            if (address == null)
+                return BadRequest();
+
+            try
+            {
+                address.IdentityId = memberId;
+
+                var result = this._repository.MergeAddress(address);
+
+                if (result.Status == RepositoryActionStatus.Ok
+                    || result.Status == RepositoryActionStatus.Created)
+                {
+                    return Ok(result.Entity);
+                }
+                else
+                    return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                ErrorHelper.ProcessError(_logger, ex, nameof(Delete));
 
                 return InternalServerError();
             }
