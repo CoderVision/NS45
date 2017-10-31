@@ -109,7 +109,22 @@ namespace NtccSteward.Api.Controllers
         [HttpGet]
         public IHttpActionResult GetProfileMetadata(int churchId)
         {
-            return Ok(_repository.GetProfileMetadata(churchId));
+            var list = _repository.GetProfileMetadata(churchId);
+
+            var ret = new
+            {
+                ChurchList = list.Where(i => i.AppEnumTypeName == "Churches").ToArray(),
+                MemberList = list.Where(i => i.AppEnumTypeName == "Members").ToArray(),
+                TeamList = list.Where(i => i.AppEnumTypeName == "Teams").ToArray(),
+                ContactInfoTypeList = list.Where(i => i.AppEnumTypeName == "ContactInfoType").ToArray(),
+                ContactInfoLocationTypeList = list.Where(i => i.AppEnumTypeName == "ContactInfoLocationType").ToArray(),
+                PhoneTypeList = list.Where(i => i.AppEnumTypeName == "PhoneType").ToArray(),
+                MemberStatusChangeTypeList = list.Where(i => i.AppEnumTypeName == "MemberStatusChangeType").ToArray(),
+                MemberStatusList = list.Where(i => i.AppEnumTypeName == "MemberStatus").ToArray(),
+                MemberTypeList = list.Where(i => i.AppEnumTypeName == "MemberType").ToArray()
+            };
+
+            return Ok(ret);
         }
 
 

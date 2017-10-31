@@ -3,6 +3,7 @@ using NtccSteward.Core.Interfaces.Members;
 using NtccSteward.Core.Models.Common.Address;
 using NtccSteward.Core.Models.Common.CustomAttributes;
 using NtccSteward.Core.Models.Common.Enums;
+using NtccSteward.Core.Models.Team;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,8 @@ namespace NtccSteward.Core.Models.Members
             EmailList = new List<Email>();
             PhoneList = new List<Phone>();
             CustomAttributeList = new List<CustomAttribute>();
-            MetaDataList = new List<AppEnum>();
+            TeamList = new List<TeamInfo>();
+            SponsorList = new List<Member>();
         }
 
         public int MemberId { get; set; }
@@ -47,7 +49,9 @@ namespace NtccSteward.Core.Models.Members
 
         public List<CustomAttribute> CustomAttributeList { get; set; }
 
-        public List<AppEnum> MetaDataList { get; set; }
+        public List<TeamInfo> TeamList { get; set; }
+
+        public List<Member> SponsorList { get; set; }
 
         public int ChurchId { get; set; }
 

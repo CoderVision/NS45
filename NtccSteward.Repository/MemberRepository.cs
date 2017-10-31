@@ -12,6 +12,7 @@ using NtccSteward.Core.Interfaces.Common.Address;
 using NtccSteward.Core.Models.Common.CustomAttributes;
 using NtccSteward.Core.Models.Common.Enums;
 using NtccSteward.Repository.Ordinals;
+using NtccSteward.Core.Models.Team;
 
 namespace NtccSteward.Repository
 {
@@ -229,6 +230,29 @@ namespace NtccSteward.Repository
                             addy.EmailAddress = reader.ValueOrDefault<string>("Email");
 
                             member.EmailList.Add(addy);
+                        }
+
+                        // Teams
+                        reader.NextResult();
+                        while (reader.Read())
+                        {
+                            var team = new TeamInfo();
+                            team.Id = reader.ValueOrDefault<int>("TeamId");
+                            team.Name = reader.ValueOrDefault<string>("Name");
+
+                            member.TeamList.Add(team);
+                        }
+
+                        // Sponsors
+                        reader.NextResult();
+                        while (reader.Read())
+                        {
+                            var sponsor = new Member();
+                            sponsor.id = reader.ValueOrDefault<int>("SponsorId");
+                            sponsor.FirstName = reader.ValueOrDefault<string>("FirstName");
+                            sponsor.LastName = reader.ValueOrDefault<string>("LastName");
+
+                            member.SponsorList.Add(sponsor);
                         }
 
                         // attributes
