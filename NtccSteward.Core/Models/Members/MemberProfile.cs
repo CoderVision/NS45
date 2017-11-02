@@ -20,7 +20,7 @@ namespace NtccSteward.Core.Models.Members
             PhoneList = new List<Phone>();
             CustomAttributeList = new List<CustomAttribute>();
             TeamList = new List<TeamInfo>();
-            SponsorList = new List<Member>();
+            SponsorList = new List<Sponsor>();
         }
 
         public int MemberId { get; set; }
@@ -51,7 +51,7 @@ namespace NtccSteward.Core.Models.Members
 
         public List<TeamInfo> TeamList { get; set; }
 
-        public List<Member> SponsorList { get; set; }
+        public List<Sponsor> SponsorList { get; set; }
 
         public int ChurchId { get; set; }
 

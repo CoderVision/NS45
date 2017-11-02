@@ -130,6 +130,7 @@
     <Compile Include="Models\Members\MemberProfile.cs" />
     <Compile Include="Models\Members\MembersByStatus.cs" />
     <Compile Include="Models\Members\NewMember.cs" />
+    <Compile Include="Models\Members\Sponsor.cs" />
     <Compile Include="Models\Message\ICorrespondence.cs" />
     <Compile Include="Models\Message\Message.cs" />
     <Compile Include="Models\Message\Recipient.cs" />

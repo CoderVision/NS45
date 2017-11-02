@@ -247,8 +247,9 @@ namespace NtccSteward.Repository
                         reader.NextResult();
                         while (reader.Read())
                         {
-                            var sponsor = new Member();
-                            sponsor.id = reader.ValueOrDefault<int>("SponsorId");
+                            var sponsor = new Sponsor();
+                            sponsor.MemberId = reader.ValueOrDefault<int>("MemberId");
+                            sponsor.SponsorId = reader.ValueOrDefault<int>("SponsorId");
                             sponsor.FirstName = reader.ValueOrDefault<string>("FirstName");
                             sponsor.LastName = reader.ValueOrDefault<string>("LastName");
 
@@ -365,6 +366,16 @@ namespace NtccSteward.Repository
 
                 addy.ContactInfoId = list.First();
             }
+
+            var table = new DataTable();
+            table.Columns.Add("Id", typeof(int));
+            memberProfile.SponsorList.ToList().ForEach(s => table.Rows.Add(s.SponsorId));
+
+            var sponsorParamz = new List<SqlParameter>();
+            sponsorParamz.Add(new SqlParameter("memberId", memberProfile.MemberId));
+            sponsorParamz.Add(new SqlParameter("sponsorIds", table));
+
+            _executor.ExecuteSql<int>("SaveSponsor", CommandType.StoredProcedure, sponsorParamz, ContactInfoReadFx);
 
             if (memberProfile.MemberId != 0)
                 return new RepositoryActionResult<MemberProfile>(memberProfile, RepositoryActionStatus.Updated);

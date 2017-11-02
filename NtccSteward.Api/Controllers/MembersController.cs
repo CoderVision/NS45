@@ -160,50 +160,6 @@ namespace NtccSteward.Api.Controllers
         }
 
 
-        //http://localhost:62428/api/member/GetContacts
-        [Route("members/GetContactList")]
-        [HttpGet]
-        public IHttpActionResult GetContactList()
-        {
-            //var list = repository.GetByStatus(status.ChurchID, status.StatusID);
-            var list = new List<Member>();
-            list.Add(CreateMemberTemp("Curtis", "Morgan", 1));
-            list.Add(CreateMemberTemp("Mike", "Tickler", 2));
-            list.Add(CreateMemberTemp("John", "Conner", 3));
-            list.Add(CreateMemberTemp("Dave", "Bean", 4));
-            list.Add(CreateMemberTemp("Kurt", "Anderson", 5));
-
-            return Ok(list);
-        }
-
-
-        private Member CreateMemberTemp(string firstName, string lastName, int id)
-        {
-            var m = new Member();
-
-            m.id = id;
-            m.FirstName = firstName;
-            m.LastName = lastName;
-            m.Status = "Active";
-            m.StatusChangeType = "Changed";
-
-            return m;
-        }
-
-
-        /*
-        POST http://localhost:58648/api/members/GetById
-
-        User-Agent: Fiddler
-        Host: localhost:58648
-        Content-Length: 8
-        Content-Type: application/json
-
-        { ID:4 }    
-        */
-
-
-
 
         // Create Member
         [HttpPost]
