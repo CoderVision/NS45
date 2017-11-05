@@ -33,7 +33,7 @@ namespace NtccSteward.Core.Models.Members
 
         public string Email { get; set; }
 
-        public int SponsorId { get; set; }
+        public List<Sponsor> SponsorList { get; set; }
 
         public int CreatedByUserId { get; set; }
 

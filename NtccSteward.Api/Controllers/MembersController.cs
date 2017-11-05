@@ -140,7 +140,7 @@ namespace NtccSteward.Api.Controllers
                 if (id <= 0)
                     return BadRequest();
 
-                var memberProfile = _repository.Get(id, churchId);
+                var memberProfile = _repository.GetProfile(id, churchId);
                 if (memberProfile == null)
                 {
                     return NotFound();
@@ -174,7 +174,12 @@ namespace NtccSteward.Api.Controllers
 
                 if (result.Status == RepositoryActionStatus.Created)
                 {
-                    return Created(Request.RequestUri + "/" + member.id, member);
+                    // get member from church list
+                    var statusIds = new List<int>() { 49 }; // 49 = Active
+                    var list = _repository.GetList(member.ChurchId, statusIds);
+                    var ret = list.FirstOrDefault(m => m.id.Equals(result.Entity.id));
+
+                    return Created(Request.RequestUri + "/" + ret.id, ret);
                 }
                 else if (result.Status == RepositoryActionStatus.NotFound)
                 {
@@ -260,7 +265,7 @@ namespace NtccSteward.Api.Controllers
 
             try
             {
-                var profile = _repository.Get(id, churchId);
+                var profile = _repository.GetProfile(id, churchId);
 
                 if (profile == null)
                     return NotFound();

@@ -22,7 +22,7 @@ namespace NtccSteward.Repository
         List<Member> GetList(int churchId, IEnumerable<int> statusEnumId);
         List<AppEnum> GetProfileMetadata(int churchId);
 
-        MemberProfile Get(int id, int churchId);
+        MemberProfile GetProfile(int id, int churchId);
 
         RepositoryActionResult<MemberProfile> SaveProfile(MemberProfile memberProfile);
 
@@ -72,7 +72,11 @@ namespace NtccSteward.Repository
             paramz.Add(new SqlParameter("phone", member.Phone.ToSqlString()));
             paramz.Add(new SqlParameter("phone2", member.Phone2.ToSqlString()));
             paramz.Add(new SqlParameter("email", member.Email.ToSqlString()));
-            paramz.Add(new SqlParameter("sponsorId", member.SponsorId));
+
+            var table = new DataTable();
+            table.Columns.Add("Id", typeof(int));
+            member.SponsorList.ToList().ForEach(s => table.Rows.Add(s.SponsorId));
+            paramz.Add(new SqlParameter("sponsorIds", table));
 
             Func<SqlDataReader, int> readFx = (reader) =>
             {
@@ -135,7 +139,7 @@ namespace NtccSteward.Repository
 
 
 
-        public MemberProfile Get(int id, int churchId)
+        public MemberProfile GetProfile(int id, int churchId)
         {
             MemberProfile member = null;
 
