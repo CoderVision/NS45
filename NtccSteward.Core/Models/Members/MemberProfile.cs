@@ -19,7 +19,7 @@ namespace NtccSteward.Core.Models.Members
             EmailList = new List<Email>();
             PhoneList = new List<Phone>();
             CustomAttributeList = new List<CustomAttribute>();
-            TeamList = new List<TeamInfo>();
+            TeamList = new List<Team>();
             SponsorList = new List<Sponsor>();
         }
 
@@ -49,7 +49,7 @@ namespace NtccSteward.Core.Models.Members
 
         public List<CustomAttribute> CustomAttributeList { get; set; }
 
-        public List<TeamInfo> TeamList { get; set; }
+        public List<Team> TeamList { get; set; }
 
         public List<Sponsor> SponsorList { get; set; }
 

@@ -236,9 +236,10 @@ namespace NtccSteward.Repository
                         reader.NextResult();
                         while (reader.Read())
                         {
-                            var team = new TeamInfo();
-                            team.Id = reader.ValueOrDefault<int>("TeamId");
-                            team.Name = reader.ValueOrDefault<string>("Name");
+                            var team = new Core.Models.Members.Team();
+                            team.MemberId = reader.ValueOrDefault<int>("MemberId");
+                            team.TeamId = reader.ValueOrDefault<int>("TeamId");
+                            team.TeamName = reader.ValueOrDefault<string>("TeamName");
 
                             member.TeamList.Add(team);
                         }
@@ -331,6 +332,7 @@ namespace NtccSteward.Repository
             var memberId = _executor.ExecuteSql<int>("SaveMemberProfile", CommandType.StoredProcedure, paramz, readFx);
             memberProfile.MemberId = memberId.FirstOrDefault();
 
+            // Save Address
             foreach (var addy in memberProfile.AddressList)
             {
                 var ciParamz = CreateAddressInfoParams(addy);
@@ -346,6 +348,7 @@ namespace NtccSteward.Repository
                 addy.ContactInfoId = list.First();
             }
 
+            // Save Phone
             foreach (var addy in memberProfile.PhoneList)
             {
                 var ciParamz = CreateAddressInfoParams(addy);
@@ -357,6 +360,7 @@ namespace NtccSteward.Repository
                 addy.ContactInfoId = list.First();
             }
 
+            // Save Email
             foreach (var addy in memberProfile.EmailList)
             {
                 var ciParamz = CreateAddressInfoParams(addy);
@@ -367,15 +371,24 @@ namespace NtccSteward.Repository
                 addy.ContactInfoId = list.First();
             }
 
+            // Save Sponsors
             var table = new DataTable();
             table.Columns.Add("Id", typeof(int));
             memberProfile.SponsorList.ToList().ForEach(s => table.Rows.Add(s.SponsorId));
-
             var sponsorParamz = new List<SqlParameter>();
             sponsorParamz.Add(new SqlParameter("memberId", memberProfile.MemberId));
             sponsorParamz.Add(new SqlParameter("sponsorIds", table));
 
-            _executor.ExecuteSql<int>("SaveSponsor", CommandType.StoredProcedure, sponsorParamz, ContactInfoReadFx);
+            _executor.ExecuteSql<int>("SaveSponsor", CommandType.StoredProcedure, sponsorParamz, null);
+
+            // Save Teams
+            table.Rows.Clear();
+            memberProfile.TeamList.ToList().ForEach(s => table.Rows.Add(s.TeamId));
+            var teamParamz = new List<SqlParameter>();
+            teamParamz.Add(new SqlParameter("memberId", memberProfile.MemberId));
+            teamParamz.Add(new SqlParameter("teamIds", table));
+
+            _executor.ExecuteSql<int>("SaveMemberTeams", CommandType.StoredProcedure, teamParamz, null);
 
             if (memberProfile.MemberId != 0)
                 return new RepositoryActionResult<MemberProfile>(memberProfile, RepositoryActionStatus.Updated);
@@ -445,7 +458,11 @@ namespace NtccSteward.Repository
             if (email.ContactInfoId == contactInfoId)
                 return new RepositoryActionResult<Email>(email, RepositoryActionStatus.Ok);
             else
+            {
+                email.ContactInfoId = contactInfoId;
+
                 return new RepositoryActionResult<Email>(email, RepositoryActionStatus.Created);
+            }
         }
 
         public RepositoryActionResult<Phone> MergePhone(Phone phone)
@@ -461,7 +478,11 @@ namespace NtccSteward.Repository
             if (phone.ContactInfoId == contactInfoId)
                 return new RepositoryActionResult<Phone>(phone, RepositoryActionStatus.Ok);
             else
+            {
+                phone.ContactInfoId = contactInfoId;
+
                 return new RepositoryActionResult<Phone>(phone, RepositoryActionStatus.Created);
+            }
         }
 
         public RepositoryActionResult<Address> MergeAddress(Address addy)
@@ -481,7 +502,11 @@ namespace NtccSteward.Repository
             if (addy.ContactInfoId == contactInfoId)
                 return new RepositoryActionResult<Address>(addy, RepositoryActionStatus.Ok);
             else
+            {
+                addy.ContactInfoId = contactInfoId;
+
                 return new RepositoryActionResult<Address>(addy, RepositoryActionStatus.Created);
+            }
         }
 
         private int ContactInfoReadFx(SqlDataReader reader)
