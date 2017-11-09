@@ -13,12 +13,14 @@ using System.Web.Http.Routing;
 using Newtonsoft.Json;
 using NtccSteward.Repository.Framework;
 using NtccSteward.Core.Models.Church;
+using Marvin.JsonPatch;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace NtccSteward.Api.Controllers
 {
     //[RoutePrefix("api")]
+    [Route("Churches")]
     public class ChurchController : ApiController
     {
         private readonly ILogger _logger;
@@ -32,7 +34,7 @@ namespace NtccSteward.Api.Controllers
 
         // Get list of churches
         [HttpGet]
-        public IHttpActionResult Get(int page, int pageSize, bool showAll = false)
+        public IHttpActionResult Get(int page = 1, int pageSize = 10000, bool showAll = false)
         {
             try
             {
@@ -89,7 +91,7 @@ namespace NtccSteward.Api.Controllers
         }
 
 
-        [Route("church/metadata")]
+        [Route("churches/metadata")]
         [HttpGet]
         public IHttpActionResult GetProfileMetadata()
         {
@@ -202,6 +204,122 @@ namespace NtccSteward.Api.Controllers
                 return InternalServerError();
             }
         }
+
+
+        [HttpPatch]
+        public IHttpActionResult Patch(int id, [FromBody]JsonPatchDocument<ChurchProfile> doc)
+        {
+            if (doc == null)
+                return BadRequest();
+
+            try
+            {
+                var profile = _repository.Get(id);
+
+                if (profile == null)
+                    return NotFound();
+
+                doc.ApplyTo(profile);
+
+                _repository.SaveProfile(profile);
+
+                return Ok(profile);
+            }
+            catch (Exception ex)
+            {
+                ErrorHelper.ProcessError(_logger, ex, nameof(Patch));
+
+                return InternalServerError();
+            }
+        }
+
+
+        //[Route("Members/{memberId}/email")]
+        //[HttpPost]
+        //public IHttpActionResult MergeEmail(int memberId, Email email)
+        //{
+        //    if (email == null)
+        //        return BadRequest();
+
+        //    try
+        //    {
+        //        email.IdentityId = memberId;
+
+        //        var result = this._repository.MergeEmail(email);
+
+        //        if (result.Status == RepositoryActionStatus.Ok
+        //            || result.Status == RepositoryActionStatus.Created)
+        //        {
+        //            return Ok(result.Entity);
+        //        }
+        //        else
+        //            return BadRequest();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ErrorHelper.ProcessError(_logger, ex, nameof(MergeEmail));
+
+        //        return InternalServerError();
+        //    }
+        //}
+
+        //[Route("Members/{memberId}/phone")]
+        //[HttpPost]
+        //public IHttpActionResult MergePhone(int memberId, Phone phone)
+        //{
+        //    if (phone == null)
+        //        return BadRequest();
+
+        //    try
+        //    {
+        //        phone.IdentityId = memberId;
+
+        //        var result = this._repository.MergePhone(phone);
+
+        //        if (result.Status == RepositoryActionStatus.Ok
+        //            || result.Status == RepositoryActionStatus.Created)
+        //        {
+        //            return Ok(result.Entity);
+        //        }
+        //        else
+        //            return BadRequest();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ErrorHelper.ProcessError(_logger, ex, nameof(MergePhone));
+
+        //        return InternalServerError();
+        //    }
+        //}
+
+        //[Route("Members/{memberId}/address")]
+        //[HttpPost]
+        //public IHttpActionResult MergeAddress(int memberId, Address address)
+        //{
+        //    if (address == null)
+        //        return BadRequest();
+
+        //    try
+        //    {
+        //        address.IdentityId = memberId;
+
+        //        var result = this._repository.MergeAddress(address);
+
+        //        if (result.Status == RepositoryActionStatus.Ok
+        //            || result.Status == RepositoryActionStatus.Created)
+        //        {
+        //            return Ok(result.Entity);
+        //        }
+        //        else
+        //            return BadRequest();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ErrorHelper.ProcessError(_logger, ex, nameof(MergeAddress));
+
+        //        return InternalServerError();
+        //    }
+        //}
 
     }
 }
