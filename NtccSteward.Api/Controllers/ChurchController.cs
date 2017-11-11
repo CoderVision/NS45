@@ -95,7 +95,18 @@ namespace NtccSteward.Api.Controllers
         [HttpGet]
         public IHttpActionResult GetProfileMetadata()
         {
-            return Ok(_repository.GetProfileMetadata());
+            var list = _repository.GetProfileMetadata();
+
+            var ret = new
+            {
+                MemberList = list.Where(i => i.AppEnumTypeName == "Members").ToArray(),
+                ContactInfoTypeList = list.Where(i => i.AppEnumTypeName == "ContactInfoType").ToArray(),
+                ContactInfoLocationTypeList = list.Where(i => i.AppEnumTypeName == "ContactInfoLocationType").ToArray(),
+                PhoneTypeList = list.Where(i => i.AppEnumTypeName == "PhoneType").ToArray()
+                //EmailConfigProfiles = default profiles (gmail, icloud, etc.
+            };
+
+            return Ok();
         }
 
         [HttpGet]

@@ -50,7 +50,7 @@ namespace NtccSteward.Repository
             paramz.Add(new SqlParameter("zip", church.Zip.ToSqlString()));
             paramz.Add(new SqlParameter("phone", church.Phone.ToSqlString()));
             paramz.Add(new SqlParameter("email", church.Email.ToSqlString()));
-            
+            paramz.Add(new SqlParameter("timeZoneOffset", church.TimeZoneOffset.ToSqlString()));
 
             Func<SqlDataReader, int> readFx = (reader) =>
             {
