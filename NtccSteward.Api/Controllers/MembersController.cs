@@ -28,11 +28,13 @@ namespace NtccSteward.Api.Controllers
     {
         private readonly ILogger _logger;
         private readonly IMemberRepository _repository = null;
+        private readonly ICommonRepository _commonRepository = null;
 
-        public MembersController(IMemberRepository memberRepository, ILogger logger)
+        public MembersController(IMemberRepository memberRepository, ICommonRepository commonRepository, ILogger logger)
         {
             _repository = memberRepository;
             _logger = logger;
+            _commonRepository = commonRepository;
         }
 
         /// <summary>
@@ -296,7 +298,7 @@ namespace NtccSteward.Api.Controllers
             {
                 email.IdentityId = memberId;
 
-                var result = this._repository.MergeEmail(email);
+                var result = this._commonRepository.MergeEmail(email);
 
                 if (result.Status == RepositoryActionStatus.Ok
                     || result.Status == RepositoryActionStatus.Created)
@@ -325,7 +327,7 @@ namespace NtccSteward.Api.Controllers
             {
                 phone.IdentityId = memberId;
 
-                var result = this._repository.MergePhone(phone);
+                var result = this._commonRepository.MergePhone(phone);
 
                 if (result.Status == RepositoryActionStatus.Ok
                     || result.Status == RepositoryActionStatus.Created)
@@ -354,7 +356,7 @@ namespace NtccSteward.Api.Controllers
             {
                 address.IdentityId = memberId;
 
-                var result = this._repository.MergeAddress(address);
+                var result = this._commonRepository.MergeAddress(address);
 
                 if (result.Status == RepositoryActionStatus.Ok
                     || result.Status == RepositoryActionStatus.Created)

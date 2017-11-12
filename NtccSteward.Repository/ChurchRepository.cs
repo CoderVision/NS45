@@ -11,6 +11,7 @@ using System.Data;
 using NtccSteward.Core.Models.Common.Address;
 using NtccSteward.Repository.Ordinals;
 using NtccSteward.Core.Interfaces.Common.Address;
+using NtccSteward.Core.Models.Team;
 
 namespace NtccSteward.Repository
 {
@@ -21,7 +22,7 @@ namespace NtccSteward.Repository
         List<Church> GetList(bool showAll);
         RepositoryActionResult<ChurchProfile> SaveProfile(ChurchProfile profile);
         RepositoryActionResult<Church> Delete(int id, int entityType);
-        List<AppEnum> GetProfileMetadata();
+        ChurchProfileMetadata GetProfileMetadata(int churchId);
     }
 
     public class ChurchRepository : NtccSteward.Repository.Repository, IChurchRepository
@@ -192,6 +193,19 @@ namespace NtccSteward.Repository
                             church.EmailList.Add(addy);
                         }
 
+                        // Pastoral Team members
+                        reader.NextResult();
+                        while (reader.Read())
+                        {
+                            var teammate = new Teammate();
+                            teammate.Id = reader.ValueOrDefault<int>("TeammateId");
+                            teammate.TeamId = reader.ValueOrDefault<int>("TeamId");
+                            teammate.PersonId = reader.ValueOrDefault<int>("MemberId");
+                            teammate.Name = reader.ValueOrDefault<string>("MemberName");
+                            teammate.TeamPositionEnumId = reader.ValueOrDefault<int>("TeamPositionEnumId");
+                            teammate.TeamPositionEnumDesc = reader.ValueOrDefault<string>("Position");
+                        }
+
                         // attributes
                         //reader.NextResult();
                         //while (reader.Read())
@@ -217,24 +231,67 @@ namespace NtccSteward.Repository
         }
 
 
-        public List<AppEnum> GetProfileMetadata()
+        public ChurchProfileMetadata GetProfileMetadata(int churchId)
         {
-            var paramz = new List<SqlParameter>();
+            var metadata = new ChurchProfileMetadata();
 
-            Func<SqlDataReader, AppEnum> readFx = (reader) =>
+            //var paramz = new List<SqlParameter>();
+            //paramz.Add(new SqlParameter("churchId", churchId));
+
+            //Func<SqlDataReader, AppEnum> readFx = (reader) =>
+            //{
+            //    var appEnum = new AppEnum();
+            //    appEnum.ID = reader.ValueOrDefault<int>("EnumID");
+            //    appEnum.Desc = reader.ValueOrDefault<string>("EnumDesc");
+            //    appEnum.AppEnumTypeID = reader.ValueOrDefault<int>("EnumTypeID");
+            //    appEnum.AppEnumTypeName = reader.ValueOrDefault<string>("EnumTypeName");
+
+            //    return appEnum;
+            //};
+
+            //var list = _executor.ExecuteSql<AppEnum>("GetChurchProfileMetadata", CommandType.StoredProcedure, paramz, readFx);
+
+            using (var cn = new SqlConnection(_executor.ConnectionString))
             {
-                var appEnum = new AppEnum();
-                appEnum.ID = reader.ValueOrDefault<int>("EnumID");
-                appEnum.Desc = reader.ValueOrDefault<string>("EnumDesc");
-                appEnum.AppEnumTypeID = reader.ValueOrDefault<int>("EnumTypeID");
-                appEnum.AppEnumTypeName = reader.ValueOrDefault<string>("EnumTypeName");
+                using (var cmd = new SqlCommand("GetChurchProfileMetadata", cn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add(new SqlParameter("churchId", churchId));
+                    cn.Open();
 
-                return appEnum;
-            };
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                var appEnum = new AppEnum();
+                                appEnum.ID = reader.ValueOrDefault<int>("EnumID");
+                                appEnum.Desc = reader.ValueOrDefault<string>("EnumDesc");
+                                appEnum.AppEnumTypeID = reader.ValueOrDefault<int>("EnumTypeID");
+                                appEnum.AppEnumTypeName = reader.ValueOrDefault<string>("EnumTypeName");
 
-            var list = _executor.ExecuteSql<AppEnum>("GetChurchProfileMetadata", CommandType.StoredProcedure, paramz, readFx);
+                                metadata.Enums.Add(appEnum);
+                            }
 
-            return list;
+                            reader.NextResult();
+
+                            while (reader.Read())
+                            {
+                                var emailProvider = new EmailProvider();
+                                emailProvider.Id = reader.ValueOrDefault<int>("Id");
+                                emailProvider.Name = reader.ValueOrDefault<string>("Name");
+                                emailProvider.Server = reader.ValueOrDefault<string>("Server");
+                                emailProvider.Port = reader.ValueOrDefault<int>("Port");
+
+                                metadata.EmailProviders.Add(emailProvider);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return metadata;
         }
 
 

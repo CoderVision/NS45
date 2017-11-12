@@ -80,6 +80,7 @@
   <ItemGroup>
     <Compile Include="AccountRepository.cs" />
     <Compile Include="ChurchRepository.cs" />
+    <Compile Include="CommonRepository.cs" />
     <Compile Include="Framework\CryptoHashProvider.cs" />
     <Compile Include="Framework\DataExtensions.cs" />
     <Compile Include="Framework\RepositoryActionResult.cs" />

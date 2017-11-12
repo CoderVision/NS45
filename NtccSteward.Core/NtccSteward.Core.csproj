@@ -114,9 +114,11 @@
     <Compile Include="Models\Church\Church.cs" />
     <Compile Include="Models\Church\ChurchProfile.cs" />
     <Compile Include="Interfaces\Church\IChurchProfile.cs" />
+    <Compile Include="Models\Church\ChurchProfileMetadata.cs" />
     <Compile Include="Models\Common\Address\Address.cs" />
     <Compile Include="Models\Common\Address\AddressInfo.cs" />
     <Compile Include="Models\Common\Address\Email.cs" />
+    <Compile Include="Models\Common\Address\EmailProvider.cs" />
     <Compile Include="Models\Common\Address\Phone.cs" />
     <Compile Include="Models\Common\CustomAttributes\CustomAttribute.cs" />
     <Compile Include="Models\Common\CustomAttributes\CustomAttributeDef.cs" />

@@ -19,12 +19,15 @@ namespace NtccSteward.Core.Models.Church
             PhoneList = new List<Phone>();
             CustomAttributeList = new List<CustomAttribute>();
             MetaDataList = new List<AppEnum>();
+            PastoralTeamMembers = new List<Teammate>();
         }
         public List<Address> AddressList { get; set; }
 
         public List<Email> EmailList { get; set; }
 
         public List<Phone> PhoneList { get; set; }
+
+        public List<Teammate> PastoralTeamMembers { get; set; }
 
         public List<CustomAttribute> CustomAttributeList { get; set; }
 

@@ -20,5 +20,7 @@ namespace NtccSteward.Core.Models.Team
         /// Pastor, Assoc., Helper, etc.
         /// </summary>
         public int TeamPositionEnumId { get; set; }
+
+        public string TeamPositionEnumDesc { get; set; }
     }
 }

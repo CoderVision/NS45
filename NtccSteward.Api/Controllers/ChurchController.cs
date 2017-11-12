@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 using NtccSteward.Repository.Framework;
 using NtccSteward.Core.Models.Church;
 using Marvin.JsonPatch;
+using NtccSteward.Core.Models.Common.Address;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -25,11 +26,13 @@ namespace NtccSteward.Api.Controllers
     {
         private readonly ILogger _logger;
         private readonly IChurchRepository _repository = null;
+        private readonly ICommonRepository _commonRepository = null;
 
-        public ChurchController(IChurchRepository repository, ILogger logger)
+        public ChurchController(IChurchRepository repository, ICommonRepository commonRepository, ILogger logger)
         {
             _repository = repository;
             _logger = logger;
+            _commonRepository = commonRepository;
         }
 
         // Get list of churches
@@ -91,19 +94,21 @@ namespace NtccSteward.Api.Controllers
         }
 
 
-        [Route("churches/metadata")]
+        [Route("churches/{churchId}/metadata")]
         [HttpGet]
-        public IHttpActionResult GetProfileMetadata()
+        public IHttpActionResult GetProfileMetadata(int churchId)
         {
-            var list = _repository.GetProfileMetadata();
+            var metadata = _repository.GetProfileMetadata(churchId);
 
             var ret = new
             {
-                MemberList = list.Where(i => i.AppEnumTypeName == "Members").ToArray(),
-                ContactInfoTypeList = list.Where(i => i.AppEnumTypeName == "ContactInfoType").ToArray(),
-                ContactInfoLocationTypeList = list.Where(i => i.AppEnumTypeName == "ContactInfoLocationType").ToArray(),
-                PhoneTypeList = list.Where(i => i.AppEnumTypeName == "PhoneType").ToArray()
-                //EmailConfigProfiles = default profiles (gmail, icloud, etc.
+                StatusList = metadata.Enums.Where(i => i.AppEnumTypeName == "ActiveStatus").ToArray(),
+                MemberList = metadata.Enums.Where(i => i.AppEnumTypeName == "Members").ToArray(),
+                PastoralTeamPositionType = metadata.Enums.Where(i => i.AppEnumTypeName == "PastoralTeamPositionType").ToArray(),
+                ContactInfoTypeList = metadata.Enums.Where(i => i.AppEnumTypeName == "ContactInfoType").ToArray(),
+                ContactInfoLocationTypeList = metadata.Enums.Where(i => i.AppEnumTypeName == "ContactInfoLocationType").ToArray(),
+                PhoneTypeList = metadata.Enums.Where(i => i.AppEnumTypeName == "PhoneType").ToArray(),
+                EmailProfiles = metadata.EmailProviders
             };
 
             return Ok();
@@ -245,92 +250,92 @@ namespace NtccSteward.Api.Controllers
         }
 
 
-        //[Route("Members/{memberId}/email")]
-        //[HttpPost]
-        //public IHttpActionResult MergeEmail(int memberId, Email email)
-        //{
-        //    if (email == null)
-        //        return BadRequest();
+        [Route("Members/{churchId}/email")]
+        [HttpPost]
+        public IHttpActionResult MergeEmail(int churchId, Email email)
+        {
+            if (email == null)
+                return BadRequest();
 
-        //    try
-        //    {
-        //        email.IdentityId = memberId;
+            try
+            {
+                email.IdentityId = churchId;
 
-        //        var result = this._repository.MergeEmail(email);
+                var result = this._commonRepository.MergeEmail(email);
 
-        //        if (result.Status == RepositoryActionStatus.Ok
-        //            || result.Status == RepositoryActionStatus.Created)
-        //        {
-        //            return Ok(result.Entity);
-        //        }
-        //        else
-        //            return BadRequest();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        ErrorHelper.ProcessError(_logger, ex, nameof(MergeEmail));
+                if (result.Status == RepositoryActionStatus.Ok
+                    || result.Status == RepositoryActionStatus.Created)
+                {
+                    return Ok(result.Entity);
+                }
+                else
+                    return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                ErrorHelper.ProcessError(_logger, ex, nameof(MergeEmail));
 
-        //        return InternalServerError();
-        //    }
-        //}
+                return InternalServerError();
+            }
+        }
 
-        //[Route("Members/{memberId}/phone")]
-        //[HttpPost]
-        //public IHttpActionResult MergePhone(int memberId, Phone phone)
-        //{
-        //    if (phone == null)
-        //        return BadRequest();
+        [Route("Members/{churchId}/phone")]
+        [HttpPost]
+        public IHttpActionResult MergePhone(int churchId, Phone phone)
+        {
+            if (phone == null)
+                return BadRequest();
 
-        //    try
-        //    {
-        //        phone.IdentityId = memberId;
+            try
+            {
+                phone.IdentityId = churchId;
 
-        //        var result = this._repository.MergePhone(phone);
+                var result = this._commonRepository.MergePhone(phone);
 
-        //        if (result.Status == RepositoryActionStatus.Ok
-        //            || result.Status == RepositoryActionStatus.Created)
-        //        {
-        //            return Ok(result.Entity);
-        //        }
-        //        else
-        //            return BadRequest();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        ErrorHelper.ProcessError(_logger, ex, nameof(MergePhone));
+                if (result.Status == RepositoryActionStatus.Ok
+                    || result.Status == RepositoryActionStatus.Created)
+                {
+                    return Ok(result.Entity);
+                }
+                else
+                    return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                ErrorHelper.ProcessError(_logger, ex, nameof(MergePhone));
 
-        //        return InternalServerError();
-        //    }
-        //}
+                return InternalServerError();
+            }
+        }
 
-        //[Route("Members/{memberId}/address")]
-        //[HttpPost]
-        //public IHttpActionResult MergeAddress(int memberId, Address address)
-        //{
-        //    if (address == null)
-        //        return BadRequest();
+        [Route("Members/{churchId}/address")]
+        [HttpPost]
+        public IHttpActionResult MergeAddress(int churchId, Address address)
+        {
+            if (address == null)
+                return BadRequest();
 
-        //    try
-        //    {
-        //        address.IdentityId = memberId;
+            try
+            {
+                address.IdentityId = churchId;
 
-        //        var result = this._repository.MergeAddress(address);
+                var result = this._commonRepository.MergeAddress(address);
 
-        //        if (result.Status == RepositoryActionStatus.Ok
-        //            || result.Status == RepositoryActionStatus.Created)
-        //        {
-        //            return Ok(result.Entity);
-        //        }
-        //        else
-        //            return BadRequest();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        ErrorHelper.ProcessError(_logger, ex, nameof(MergeAddress));
+                if (result.Status == RepositoryActionStatus.Ok
+                    || result.Status == RepositoryActionStatus.Created)
+                {
+                    return Ok(result.Entity);
+                }
+                else
+                    return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                ErrorHelper.ProcessError(_logger, ex, nameof(MergeAddress));
 
-        //        return InternalServerError();
-        //    }
-        //}
+                return InternalServerError();
+            }
+        }
 
     }
 }
