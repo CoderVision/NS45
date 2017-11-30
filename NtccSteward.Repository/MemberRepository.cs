@@ -32,12 +32,15 @@ namespace NtccSteward.Repository
     public class MemberRepository : NtccSteward.Repository.Repository, IMemberRepository
     {
         private readonly SqlCmdExecutor _executor;
+        private readonly ICommonRepository commonRepository;
 
         public MemberRepository(string connectionString)
         {
             this.ConnectionString = connectionString;
 
             _executor = new SqlCmdExecutor(connectionString);
+
+            commonRepository = new CommonRepository(connectionString);
         }
 
         /// <summary>
@@ -333,40 +336,19 @@ namespace NtccSteward.Repository
             // Save Address
             foreach (var addy in memberProfile.AddressList)
             {
-                var ciParamz = CreateAddressInfoParams(addy);
-                ciParamz.Add(new SqlParameter("line1", addy.Line1.ToSqlString()));
-                ciParamz.Add(new SqlParameter("line2", addy.Line2.ToSqlString()));
-                ciParamz.Add(new SqlParameter("line3", addy.Line3.ToSqlString()));
-                ciParamz.Add(new SqlParameter("city", addy.City.ToSqlString()));
-                ciParamz.Add(new SqlParameter("state", addy.State.ToSqlString()));
-                ciParamz.Add(new SqlParameter("zip", addy.Zip.ToSqlString()));
-
-                var list = _executor.ExecuteSql<int>("SaveAddress", CommandType.StoredProcedure, ciParamz, ContactInfoReadFx);
-
-                addy.ContactInfoId = list.First();
+                commonRepository.MergeAddress(addy);
             }
 
             // Save Phone
             foreach (var addy in memberProfile.PhoneList)
             {
-                var ciParamz = CreateAddressInfoParams(addy);
-                ciParamz.Add(new SqlParameter("@number", addy.PhoneNumber.ToSqlString()));
-                ciParamz.Add(new SqlParameter("@phoneType", addy.PhoneType));
-
-                var list = _executor.ExecuteSql<int>("SavePhone", CommandType.StoredProcedure, ciParamz, ContactInfoReadFx);
-
-                addy.ContactInfoId = list.First();
+                commonRepository.MergePhone(addy);
             }
 
             // Save Email
             foreach (var addy in memberProfile.EmailList)
             {
-                var ciParamz = CreateAddressInfoParams(addy);
-                ciParamz.Add(new SqlParameter("@email", addy.EmailAddress.ToSqlString()));
-
-                var list = _executor.ExecuteSql<int>("SaveEmail", CommandType.StoredProcedure, ciParamz, ContactInfoReadFx);
-
-                addy.ContactInfoId = list.First();
+                commonRepository.MergeEmail(addy);
             }
 
             // Save Sponsors

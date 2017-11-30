@@ -111,7 +111,7 @@ namespace NtccSteward.Api.Controllers
                 EmailProfiles = metadata.EmailProviders
             };
 
-            return Ok();
+            return Ok(ret);
         }
 
         [HttpGet]
@@ -250,7 +250,7 @@ namespace NtccSteward.Api.Controllers
         }
 
 
-        [Route("Members/{churchId}/email")]
+        [Route("churches/{churchId}/email")]
         [HttpPost]
         public IHttpActionResult MergeEmail(int churchId, Email email)
         {
@@ -279,7 +279,7 @@ namespace NtccSteward.Api.Controllers
             }
         }
 
-        [Route("Members/{churchId}/phone")]
+        [Route("churches/{churchId}/phone")]
         [HttpPost]
         public IHttpActionResult MergePhone(int churchId, Phone phone)
         {
@@ -308,7 +308,7 @@ namespace NtccSteward.Api.Controllers
             }
         }
 
-        [Route("Members/{churchId}/address")]
+        [Route("churches/{churchId}/address")]
         [HttpPost]
         public IHttpActionResult MergeAddress(int churchId, Address address)
         {

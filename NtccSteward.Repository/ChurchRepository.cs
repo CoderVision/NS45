@@ -28,12 +28,14 @@ namespace NtccSteward.Repository
     public class ChurchRepository : NtccSteward.Repository.Repository, IChurchRepository
     {
         private readonly SqlCmdExecutor _executor;
+        private readonly ICommonRepository commonRepository;
 
         public ChurchRepository(string connectionString)
         {
             this.ConnectionString = connectionString;
 
             _executor = new SqlCmdExecutor(connectionString);
+            commonRepository = new CommonRepository(connectionString);
         }
 
 
@@ -319,38 +321,17 @@ namespace NtccSteward.Repository
 
             foreach (var addy in profile.AddressList)
             {
-                var ciParamz = CreateAddressInfoParams(addy);
-                ciParamz.Add(new SqlParameter("line1", addy.Line1.ToSqlString()));
-                ciParamz.Add(new SqlParameter("line2", addy.Line2.ToSqlString()));
-                ciParamz.Add(new SqlParameter("line3", addy.Line3.ToSqlString()));
-                ciParamz.Add(new SqlParameter("city", addy.City.ToSqlString()));
-                ciParamz.Add(new SqlParameter("state", addy.State.ToSqlString()));
-                ciParamz.Add(new SqlParameter("zip", addy.Zip.ToSqlString()));
-
-                var list = _executor.ExecuteSql<int>("SaveAddress", CommandType.StoredProcedure, ciParamz, ciReadFx);
-
-                addy.ContactInfoId = list.First();
+                commonRepository.MergeAddress(addy);
             }
 
             foreach (var addy in profile.PhoneList)
             {
-                var ciParamz = CreateAddressInfoParams(addy);
-                ciParamz.Add(new SqlParameter("@number", addy.PhoneNumber.ToSqlString()));
-                ciParamz.Add(new SqlParameter("@phoneType", addy.PhoneType));
-
-                var list = _executor.ExecuteSql<int>("SavePhone", CommandType.StoredProcedure, ciParamz, ciReadFx);
-
-                addy.ContactInfoId = list.First();
+                commonRepository.MergePhone(addy);
             }
 
             foreach (var addy in profile.EmailList)
             {
-                var ciParamz = CreateAddressInfoParams(addy);
-                ciParamz.Add(new SqlParameter("@email", addy.EmailAddress.ToSqlString()));
-
-                var list = _executor.ExecuteSql<int>("SaveEmail", CommandType.StoredProcedure, ciParamz, ciReadFx);
-
-                addy.ContactInfoId = list.First();
+                commonRepository.MergeEmail(addy);
             }
 
             if (profile.PastoralTeam != null)
