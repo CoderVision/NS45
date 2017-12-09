@@ -107,7 +107,7 @@ namespace NtccSteward.Api.Controllers
         }
 
 
-        [Route("members/metadata")]
+        [Route("members/metadata/{churchId}")]
         [HttpGet]
         public IHttpActionResult GetProfileMetadata(int churchId)
         {
