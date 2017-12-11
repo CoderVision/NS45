@@ -1,17 +1,16 @@
 ﻿
+using NtccSteward.Core.Interfaces.Common.Address;
 using NtccSteward.Core.Models.Church;
+using NtccSteward.Core.Models.Common.Address;
+using NtccSteward.Core.Models.Common.Enums;
+using NtccSteward.Core.Models.Team;
 using NtccSteward.Repository.Framework;
+using NtccSteward.Repository.Ordinals;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Threading.Tasks;
-using NtccSteward.Core.Models.Common.Enums;
-using System.Data;
-using NtccSteward.Core.Models.Common.Address;
-using NtccSteward.Repository.Ordinals;
-using NtccSteward.Core.Interfaces.Common.Address;
-using NtccSteward.Core.Models.Team;
 
 namespace NtccSteward.Repository
 {
@@ -143,6 +142,9 @@ namespace NtccSteward.Repository
                         church.StatusId = reader.ValueOrDefault<int>("StatusId", 0);
                         church.StatusDesc = reader.ValueOrDefault("StatusDesc", string.Empty);
                         church.Comment = reader.ValueOrDefault("Comment", string.Empty);
+                        church.TimeZoneOffset = reader.ValueOrDefault("TimeZoneOffset", string.Empty);
+                        church.SmsAccountSID = reader.ValueOrDefault("AccoundSid", string.Empty);
+                        church.SmsAccountToken = reader.ValueOrDefault("AccontToken", string.Empty);
 
                         // address info
                         reader.NextResult();
@@ -304,6 +306,7 @@ namespace NtccSteward.Repository
             paramz.Add(new SqlParameter("name", profile.Name.ToSqlString()));
             paramz.Add(new SqlParameter("statusEnumId", profile.StatusId));
             paramz.Add(new SqlParameter("comments", profile.Comment.ToSqlString()));
+            paramz.Add(new SqlParameter("timeZoneOffset", profile.TimeZoneOffset.ToSqlString()));
 
             Func<SqlDataReader, int> readFx = (reader) =>
             {

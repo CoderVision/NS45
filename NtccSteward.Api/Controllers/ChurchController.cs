@@ -108,7 +108,7 @@ namespace NtccSteward.Api.Controllers
                 ContactInfoTypeList = metadata.Enums.Where(i => i.AppEnumTypeName == "ContactInfoType").ToArray(),
                 ContactInfoLocationTypeList = metadata.Enums.Where(i => i.AppEnumTypeName == "ContactInfoLocationType").ToArray(),
                 PhoneTypeList = metadata.Enums.Where(i => i.AppEnumTypeName == "PhoneType").ToArray(),
-                EmailProfiles = metadata.EmailProviders
+                EmailProviders = metadata.EmailProviders
             };
 
             return Ok(ret);

@@ -44,5 +44,19 @@ namespace NtccSteward.Core.Models.Church
         public string Comment { get; set; }
 
         public Team.Team PastoralTeam { get; set; }
+
+        public string TimeZoneOffset { get; set; }
+
+        public int EmailConfigId { get; set; }
+
+        public int EmailConfigProfileId { get; set; }
+
+        public string EmailConfigUsername { get; set; }
+
+        public string EmailConfigPassword { get; set; }
+
+        public string SmsAccountSID { get; set; }
+
+        public string SmsAccountToken { get; set; }
     }
 }
