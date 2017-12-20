@@ -12,3 +12,5 @@
 /NtccSteward.Core/obj
 /NtccSteward.Api/obj
 /NtccSteward/obj
+/NtccSteward.Repository/obj/Release
+/NtccSteward.IdSvr/obj/Debug
