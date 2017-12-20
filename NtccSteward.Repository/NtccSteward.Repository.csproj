@@ -25,6 +25,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -80,12 +81,12 @@
   <ItemGroup>
     <Compile Include="AccountRepository.cs" />
     <Compile Include="ChurchRepository.cs" />
-    <Compile Include="CommonRepository.cs" />
     <Compile Include="Framework\CryptoHashProvider.cs" />
     <Compile Include="Framework\DataExtensions.cs" />
     <Compile Include="Framework\RepositoryActionResult.cs" />
     <Compile Include="Framework\RepositoryActionStatus.cs" />
     <Compile Include="Framework\SqlCmdExecutor.cs" />
+    <Compile Include="CommonRepository.cs" />
     <Compile Include="LoggerRepository.cs" />
     <Compile Include="MemberRepository.cs" />
     <Compile Include="MessageRepository.cs" />

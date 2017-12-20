@@ -114,6 +114,7 @@ namespace NtccSteward.Api.Controllers
             return Ok(ret);
         }
 
+        [Route("churches/{id}")]
         [HttpGet]
         public IHttpActionResult Get(int id)
         {

@@ -143,8 +143,11 @@ namespace NtccSteward.Repository
                         church.StatusDesc = reader.ValueOrDefault("StatusDesc", string.Empty);
                         church.Comment = reader.ValueOrDefault("Comment", string.Empty);
                         church.TimeZoneOffset = reader.ValueOrDefault("TimeZoneOffset", string.Empty);
-                        church.SmsAccountSID = reader.ValueOrDefault("AccoundSid", string.Empty);
-                        church.SmsAccountToken = reader.ValueOrDefault("AccontToken", string.Empty);
+                        church.SmsAccountSID = reader.ValueOrDefault("AccountSid", string.Empty);
+                        church.SmsAccountToken = reader.ValueOrDefault("AccountToken", string.Empty);
+                        church.EmailConfigProfileId = reader.ValueOrDefault<int>("EmailConfigProfileId");
+                        church.EmailConfigUsername = reader.ValueOrDefault<string>("EmailConfigUsername");
+                        church.EmailConfigPassword = reader.ValueOrDefault<string>("EmailConfigPassword");
 
                         // address info
                         reader.NextResult();
@@ -307,8 +310,13 @@ namespace NtccSteward.Repository
             paramz.Add(new SqlParameter("statusEnumId", profile.StatusId));
             paramz.Add(new SqlParameter("comments", profile.Comment.ToSqlString()));
             paramz.Add(new SqlParameter("timeZoneOffset", profile.TimeZoneOffset.ToSqlString()));
+            paramz.Add(new SqlParameter("smsAccoundSid", profile.SmsAccountSID.ToSqlString()));
+            paramz.Add(new SqlParameter("smsAccountToken", profile.SmsAccountToken.ToSqlString()));
+            paramz.Add(new SqlParameter("emailConfigProfileId", profile.EmailConfigProfileId));
+            paramz.Add(new SqlParameter("emailConfigUserName", profile.EmailConfigUsername.ToSqlString()));
+            paramz.Add(new SqlParameter("emailConfigPassword", profile.EmailConfigPassword.ToSqlString()));
 
-            Func<SqlDataReader, int> readFx = (reader) =>
+            Func <SqlDataReader, int> readFx = (reader) =>
             {
                 return (int)reader["ChurchId"];
             };
