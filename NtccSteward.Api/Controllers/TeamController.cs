@@ -10,6 +10,7 @@ using System.Web.Http;
 
 namespace NtccSteward.Repository.Controllers
 {
+    [Route("Teams")]
     public class TeamController : ApiController
     {
         private readonly ILogger _logger;
@@ -21,7 +22,7 @@ namespace NtccSteward.Repository.Controllers
             _logger = logger;
         }
 
-        [Route("church/{churchId}/team")]
+        [Route("church/{churchId}/teams")]
         /// <summary>
         /// Gets a list of all Teams for the specified church.
         /// </summary>
@@ -47,7 +48,7 @@ namespace NtccSteward.Repository.Controllers
         }
 
 
-        [Route("team/{id}/profile")]
+        [Route("teams/{id}/profile")]
         public IHttpActionResult GetProfile(int id)
         {
             try
@@ -67,7 +68,7 @@ namespace NtccSteward.Repository.Controllers
             }
         }
 
-        [Route("team/{id}/profileMetadata")]
+        [Route("teams/{id}/profileMetadata")]
         public IHttpActionResult GetProfileMetadata(int id)
         {
             try
@@ -143,7 +144,7 @@ namespace NtccSteward.Repository.Controllers
         /// <param name="churchId"></param>
         /// <returns></returns>
         /// 
-        [Route("team/{teamId}/teammates")]
+        [Route("teams/{teamId}/teammates")]
         public IHttpActionResult GetTeammates(int teamId)
         {
             try
@@ -164,18 +165,18 @@ namespace NtccSteward.Repository.Controllers
         }
 
 
-        [Route("team/{teamId}/teammates/{teammateId}")]
-        public IHttpActionResult DeleteTeammate(int teamId, int teammateId)
+        [Route("teams/{teamId}/teammates/{memberId}")]
+        public IHttpActionResult DeleteTeammate(int teamId, int memberId)
         {
             try
             {
                 if (teamId <= 0)
                     return BadRequest("Invalid teamId");
 
-                if (teammateId <= 0)
-                    return BadRequest("Invalid teammateId");
+                if (memberId <= 0)
+                    return BadRequest("Invalid memberId");
 
-                var team = _repository.DeleteTeammate(teamId, teammateId);
+                var team = _repository.DeleteTeammate(teamId, memberId);
 
                 if (team.Status == Framework.RepositoryActionStatus.Deleted)
                     return StatusCode(HttpStatusCode.NoContent);

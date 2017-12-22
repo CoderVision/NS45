@@ -207,10 +207,12 @@ namespace NtccSteward.Repository
                             var teammate = new Teammate();
                             teammate.Id = reader.ValueOrDefault<int>("TeammateId");
                             teammate.TeamId = reader.ValueOrDefault<int>("TeamId");
-                            teammate.PersonId = reader.ValueOrDefault<int>("MemberId");
+                            teammate.MemberId = reader.ValueOrDefault<int>("MemberId");
                             teammate.Name = reader.ValueOrDefault<string>("MemberName");
                             teammate.TeamPositionEnumId = reader.ValueOrDefault<int>("TeamPositionEnumId");
                             teammate.TeamPositionEnumDesc = reader.ValueOrDefault<string>("Position");
+
+                            church.PastoralTeamMembers.Add(teammate);
                         }
 
                         // attributes
@@ -372,7 +374,7 @@ namespace NtccSteward.Repository
                     paramz.Clear();
                     paramz.Add(new SqlParameter("@teammateId", teamMate.Id));
                     paramz.Add(new SqlParameter("@teamId", teamMate.TeamId));
-                    paramz.Add(new SqlParameter("@personId", teamMate.PersonId));
+                    paramz.Add(new SqlParameter("@personId", teamMate.MemberId));
                     paramz.Add(new SqlParameter("@teamPositionEnumId", teamMate.TeamPositionEnumId));
 
                     var teammateIds = _executor.ExecuteSql<int>("SaveTeammate", CommandType.StoredProcedure, paramz, readFx);
