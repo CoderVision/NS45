@@ -132,7 +132,7 @@ namespace NtccSteward.Repository
                             var teammate = new Teammate();
                             teammate.Id = (int)reader["TeammateId"];
                             teammate.TeamId = (int)reader["TeamId"];
-                            teammate.PersonId = (int)reader["PersonId"];
+                            teammate.MemberId = (int)reader["PersonId"];
                             teammate.TeamPositionEnumId = (int)reader["TeamPositionEnumId"];
                             teammate.Name = reader.ValueOrDefault<string>("TeammateName", string.Empty);
                             team.Teammates.Add(teammate);
@@ -189,7 +189,7 @@ namespace NtccSteward.Repository
                         var teammate = new Teammate();
                         teammate.Id = (int)reader["TeammateId"];
                         teammate.TeamId = (int)reader["TeamId"];
-                        teammate.PersonId = (int)reader["PersonId"];
+                        teammate.MemberId = (int)reader["PersonId"];
                         teammate.TeamPositionEnumId = (int)reader["TeamPositionEnumId"];
                         teammate.Name = reader.ValueOrDefault<string>("Name", string.Empty);
                         list.Add(teammate);
@@ -201,13 +201,13 @@ namespace NtccSteward.Repository
         }
 
 
-        public RepositoryActionResult<Teammate> DeleteTeammate(int teamId, int teammateId)
+        public RepositoryActionResult<Teammate> DeleteTeammate(int teamId, int memberId)
         {
             try
             {
                 var paramz = new List<SqlParameter>();
                 paramz.Add(new SqlParameter("teamId", teamId));
-                paramz.Add(new SqlParameter("teammateId", teammateId));
+                paramz.Add(new SqlParameter("memberId", memberId));
 
                 Func<SqlDataReader, int> readFx = (reader) =>
                 {

@@ -1,12 +1,10 @@
 ﻿using NtccSteward.Core.Interfaces.Common.Address;
 using NtccSteward.Core.Models.Common.Address;
 using NtccSteward.Repository.Framework;
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Web;
 
 namespace NtccSteward.Repository
 {

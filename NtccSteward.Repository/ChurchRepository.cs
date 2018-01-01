@@ -1,17 +1,16 @@
 ﻿
+using NtccSteward.Core.Interfaces.Common.Address;
 using NtccSteward.Core.Models.Church;
+using NtccSteward.Core.Models.Common.Address;
+using NtccSteward.Core.Models.Common.Enums;
+using NtccSteward.Core.Models.Team;
 using NtccSteward.Repository.Framework;
+using NtccSteward.Repository.Ordinals;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Threading.Tasks;
-using NtccSteward.Core.Models.Common.Enums;
-using System.Data;
-using NtccSteward.Core.Models.Common.Address;
-using NtccSteward.Repository.Ordinals;
-using NtccSteward.Core.Interfaces.Common.Address;
-using NtccSteward.Core.Models.Team;
 
 namespace NtccSteward.Repository
 {
@@ -143,6 +142,12 @@ namespace NtccSteward.Repository
                         church.StatusId = reader.ValueOrDefault<int>("StatusId", 0);
                         church.StatusDesc = reader.ValueOrDefault("StatusDesc", string.Empty);
                         church.Comment = reader.ValueOrDefault("Comment", string.Empty);
+                        church.TimeZoneOffset = reader.ValueOrDefault("TimeZoneOffset", string.Empty);
+                        church.SmsAccountSID = reader.ValueOrDefault("AccountSid", string.Empty);
+                        church.SmsAccountToken = reader.ValueOrDefault("AccountToken", string.Empty);
+                        church.EmailConfigProfileId = reader.ValueOrDefault<int>("EmailConfigProfileId");
+                        church.EmailConfigUsername = reader.ValueOrDefault<string>("EmailConfigUsername");
+                        church.EmailConfigPassword = reader.ValueOrDefault<string>("EmailConfigPassword");
 
                         // address info
                         reader.NextResult();
@@ -202,10 +207,12 @@ namespace NtccSteward.Repository
                             var teammate = new Teammate();
                             teammate.Id = reader.ValueOrDefault<int>("TeammateId");
                             teammate.TeamId = reader.ValueOrDefault<int>("TeamId");
-                            teammate.PersonId = reader.ValueOrDefault<int>("MemberId");
+                            teammate.MemberId = reader.ValueOrDefault<int>("MemberId");
                             teammate.Name = reader.ValueOrDefault<string>("MemberName");
                             teammate.TeamPositionEnumId = reader.ValueOrDefault<int>("TeamPositionEnumId");
                             teammate.TeamPositionEnumDesc = reader.ValueOrDefault<string>("Position");
+
+                            church.PastoralTeamMembers.Add(teammate);
                         }
 
                         // attributes
@@ -304,8 +311,14 @@ namespace NtccSteward.Repository
             paramz.Add(new SqlParameter("name", profile.Name.ToSqlString()));
             paramz.Add(new SqlParameter("statusEnumId", profile.StatusId));
             paramz.Add(new SqlParameter("comments", profile.Comment.ToSqlString()));
+            paramz.Add(new SqlParameter("timeZoneOffset", profile.TimeZoneOffset.ToSqlString()));
+            paramz.Add(new SqlParameter("smsAccoundSid", profile.SmsAccountSID.ToSqlString()));
+            paramz.Add(new SqlParameter("smsAccountToken", profile.SmsAccountToken.ToSqlString()));
+            paramz.Add(new SqlParameter("emailConfigProfileId", profile.EmailConfigProfileId));
+            paramz.Add(new SqlParameter("emailConfigUserName", profile.EmailConfigUsername.ToSqlString()));
+            paramz.Add(new SqlParameter("emailConfigPassword", profile.EmailConfigPassword.ToSqlString()));
 
-            Func<SqlDataReader, int> readFx = (reader) =>
+            Func <SqlDataReader, int> readFx = (reader) =>
             {
                 return (int)reader["ChurchId"];
             };
@@ -361,7 +374,7 @@ namespace NtccSteward.Repository
                     paramz.Clear();
                     paramz.Add(new SqlParameter("@teammateId", teamMate.Id));
                     paramz.Add(new SqlParameter("@teamId", teamMate.TeamId));
-                    paramz.Add(new SqlParameter("@personId", teamMate.PersonId));
+                    paramz.Add(new SqlParameter("@personId", teamMate.MemberId));
                     paramz.Add(new SqlParameter("@teamPositionEnumId", teamMate.TeamPositionEnumId));
 
                     var teammateIds = _executor.ExecuteSql<int>("SaveTeammate", CommandType.StoredProcedure, paramz, readFx);

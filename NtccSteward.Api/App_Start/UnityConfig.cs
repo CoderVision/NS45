@@ -23,14 +23,14 @@ namespace NtccSteward.Api
             // Dependency Injection trouble-shooting.
             //http://stackoverflow.com/questions/24254189/make-sure-that-the-controller-has-a-parameterless-public-constructor-error
 
-            var defaultConnectionString = ConfigurationManager.ConnectionStrings["Default"].ConnectionString;
+            // register repositories
             var loginConnectionString = ConfigurationManager.ConnectionStrings["Login"].ConnectionString;
             var pepper = ConfigurationManager.AppSettings["Pepper"].ToString();
-
-            // register repositories
-            container.RegisterInstance<ICommonRepository>(new CommonRepository(loginConnectionString));
-            container.RegisterInstance<ITeamRepository>(new TeamRepository(loginConnectionString));
             container.RegisterInstance<IAccountRepository>(new AccountRepository(loginConnectionString, pepper));
+
+            var defaultConnectionString = ConfigurationManager.ConnectionStrings["Default"].ConnectionString;
+            container.RegisterInstance<ICommonRepository>(new CommonRepository(defaultConnectionString));
+            container.RegisterInstance<ITeamRepository>(new TeamRepository(defaultConnectionString));
             container.RegisterInstance<IChurchRepository>(new ChurchRepository(defaultConnectionString));
             container.RegisterInstance<ILogger>(new LoggerRepository(defaultConnectionString));
             container.RegisterInstance<IMemberRepository>(new MemberRepository(defaultConnectionString));

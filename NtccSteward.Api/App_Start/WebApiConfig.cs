@@ -39,8 +39,9 @@ namespace NtccSteward.Api
             config.Formatters.JsonFormatter.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
             config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
 
+            // disabled this because it was caching churches even when address info is updated.
             // Add automatic caching.  to add SQL Server caching, add CacheCow's SQL server NuGet package.
-            config.MessageHandlers.Add(new CacheCow.Server.CachingHandler(config));
+           // config.MessageHandlers.Add(new CacheCow.Server.CachingHandler(config));
         }
     }
 }

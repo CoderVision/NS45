@@ -12,7 +12,7 @@ namespace NtccSteward.Core.Models.Team
 
         public int TeamId { get; set; }
 
-        public int PersonId { get; set; }
+        public int MemberId { get; set; }
 
         public string Name { get; set; }
 

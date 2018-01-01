@@ -2,4 +2,15 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
+/.vs
 /NtccSteward/bin
+/NtccSteward.Api/bin
+/NtccSteward.IdSvr/obj/Release
+/NtccSteward.Repository/obj/Debug
+/NtccSteward.Repository/bin
+/NtccSteward.Core/bin
+/NtccSteward.Core/obj
+/NtccSteward.Api/obj
+/NtccSteward/obj
+/NtccSteward.Repository/obj/Release
+/NtccSteward.IdSvr/obj/Debug
