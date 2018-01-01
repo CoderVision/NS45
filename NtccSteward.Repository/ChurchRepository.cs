@@ -204,6 +204,19 @@ namespace NtccSteward.Repository
                         reader.NextResult();
                         while (reader.Read())
                         {
+                            Team pt = church.PastoralTeam;
+                            if (pt == null)
+                            {
+                                pt = new Team();
+                                pt.Id = reader.ValueOrDefault<int>("TeamId");
+                                pt.ChurchId = church.Id;
+                                pt.Name = reader.ValueOrDefault<string>("TeamName");
+                                pt.Desc = reader.ValueOrDefault<string>("TeamDesc");
+                                pt.TeamTypeEnumId = reader.ValueOrDefault<int>("TeamTypeEnumId");
+
+                                church.PastoralTeam = pt;
+                            }
+
                             var teammate = new Teammate();
                             teammate.Id = reader.ValueOrDefault<int>("TeammateId");
                             teammate.TeamId = reader.ValueOrDefault<int>("TeamId");
@@ -212,7 +225,7 @@ namespace NtccSteward.Repository
                             teammate.TeamPositionEnumId = reader.ValueOrDefault<int>("TeamPositionEnumId");
                             teammate.TeamPositionEnumDesc = reader.ValueOrDefault<string>("Position");
 
-                            church.PastoralTeamMembers.Add(teammate);
+                            pt.Teammates.Add(teammate);
                         }
 
                         // attributes

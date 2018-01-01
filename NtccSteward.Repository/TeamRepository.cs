@@ -190,9 +190,12 @@ namespace NtccSteward.Repository
                         var teammate = new Teammate();
                         teammate.Id = (int)reader["TeammateId"];
                         teammate.TeamId = (int)reader["TeamId"];
-                        teammate.MemberId = (int)reader["PersonId"];
+                        teammate.MemberId = (int)reader["EntityId"];
                         teammate.TeamPositionEnumId = (int)reader["TeamPositionEnumId"];
+                        teammate.TeamPositionEnumDesc = reader.ValueOrDefault<string>("TeamPositionEnumDesc", string.Empty);
                         teammate.Name = reader.ValueOrDefault<string>("Name", string.Empty);
+                        teammate.ChurchId = (int)reader["ChurchId"];
+
                         list.Add(teammate);
                     }
                 }
@@ -239,7 +242,6 @@ namespace NtccSteward.Repository
             paramz.Add(new SqlParameter("teammateId", teammate.Id));
             paramz.Add(new SqlParameter("teamId", teammate.TeamId));
             paramz.Add(new SqlParameter("entityId", teammate.MemberId));
-            paramz.Add(new SqlParameter("churchId", teammate.ChurchId));
             paramz.Add(new SqlParameter("entityTypeEnumId", 56)); // 56:  entity is a person.  could be a team (78), or something else
             paramz.Add(new SqlParameter("teamPositionEnumId", teammate.TeamPositionEnumId));
 
@@ -253,8 +255,10 @@ namespace NtccSteward.Repository
             var id = list.FirstOrDefault();
             if (id > 0)
             {
-                teammate.Id = id;
-                return new RepositoryActionResult<Teammate>(teammate, RepositoryActionStatus.Created);
+                var team = this.GetTeammates(teammate.TeamId);
+                var retTeammate = team.FirstOrDefault(tm => tm.Id == id);
+
+                return new RepositoryActionResult<Teammate>(retTeammate, RepositoryActionStatus.Created);
             }
             else
             {

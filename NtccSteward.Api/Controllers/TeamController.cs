@@ -128,8 +128,11 @@ namespace NtccSteward.Repository.Controllers
 
                 if (result.Status == Framework.RepositoryActionStatus.Created)
                 {
-
                     return Created(Request.RequestUri + "/" + result.Entity.Id, result.Entity);
+                }
+                else if (result.Status == Framework.RepositoryActionStatus.Ok)
+                {
+                    return Ok(result.Entity);
                 }
                 else
                     return BadRequest();
@@ -179,9 +182,11 @@ namespace NtccSteward.Repository.Controllers
                 if (teamId <= 0)
                     return BadRequest("Invalid teamId");
 
-                var team = _repository.GetTeammates(teamId);
+                teammate.TeamId = teamId;
 
-                return Ok(team);
+                var result = _repository.SaveTeammate(teammate);
+
+                  return Ok(result.Entity);
             }
             catch (Exception ex)
             {
