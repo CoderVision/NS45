@@ -23,6 +23,7 @@ namespace NtccSteward.Repository.Controllers
         }
 
         [Route("church/{churchId}/teams")]
+        [HttpGet]
         /// <summary>
         /// Gets a list of all Teams for the specified church.
         /// </summary>
@@ -49,6 +50,7 @@ namespace NtccSteward.Repository.Controllers
 
 
         [Route("teams/{id}/profile")]
+        [HttpGet]
         public IHttpActionResult GetProfile(int id)
         {
             try
@@ -69,6 +71,7 @@ namespace NtccSteward.Repository.Controllers
         }
 
         [Route("teams/{id}/profileMetadata")]
+        [HttpGet]
         public IHttpActionResult GetProfileMetadata(int id)
         {
             try
@@ -89,6 +92,7 @@ namespace NtccSteward.Repository.Controllers
             }
         }
 
+        [HttpDelete]
         public IHttpActionResult Delete(int id)
         {
             try
@@ -115,11 +119,12 @@ namespace NtccSteward.Repository.Controllers
 
 
         // add new
+        [HttpPost]
         public IHttpActionResult Post(TeamInfo team)
         {
             try
             {
-                var result = _repository.CreateTeam(team);
+                var result = _repository.SaveTeam(team);
 
                 if (result.Status == Framework.RepositoryActionStatus.Created)
                 {
@@ -145,7 +150,29 @@ namespace NtccSteward.Repository.Controllers
         /// <returns></returns>
         /// 
         [Route("teams/{teamId}/teammates")]
+        [HttpGet]
         public IHttpActionResult GetTeammates(int teamId)
+        {
+            try
+            {
+                if (teamId <= 0)
+                    return BadRequest("Invalid teamId");
+
+                var team = _repository.GetTeammates(teamId);
+
+                return Ok(team);
+            }
+            catch (Exception ex)
+            {
+                ErrorHelper.ProcessError(_logger, ex, nameof(GetTeammates));
+
+                return InternalServerError();
+            }
+        }
+
+        [Route("teams/{teamId}/teammates")]
+        [HttpPost]
+        public IHttpActionResult PostTeammates(int teamId, Teammate teammate)
         {
             try
             {
@@ -166,6 +193,7 @@ namespace NtccSteward.Repository.Controllers
 
 
         [Route("teams/{teamId}/teammates/{memberId}")]
+        [HttpDelete]
         public IHttpActionResult DeleteTeammate(int teamId, int memberId)
         {
             try

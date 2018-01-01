@@ -13,11 +13,12 @@ namespace NtccSteward.Repository
     {
         List<Team> GetList(int churchId);
         Team GetTeam(int teamId);
-        RepositoryActionResult<TeamInfo> CreateTeam(TeamInfo Team);
+        RepositoryActionResult<TeamInfo> SaveTeam(TeamInfo Team);
 
         RepositoryActionResult<Team> DeleteTeam(int id);
 
         List<Teammate> GetTeammates(int teamId);
+        RepositoryActionResult<Teammate> SaveTeammate(Teammate teammate);
         RepositoryActionResult<Teammate> DeleteTeammate(int teamId, int teammateId);
     }
 
@@ -65,9 +66,9 @@ namespace NtccSteward.Repository
             return list;
         }
 
-        public RepositoryActionResult<TeamInfo> CreateTeam(TeamInfo team)
+        public RepositoryActionResult<TeamInfo> SaveTeam(TeamInfo team)
         {
-            var proc = "CreateTeam";
+            var proc = "SaveTeam";
 
             var paramz = new List<SqlParameter>();
             paramz.Add(new SqlParameter("name", team.Name));
@@ -230,6 +231,35 @@ namespace NtccSteward.Repository
             }
         }
 
+        public RepositoryActionResult<Teammate> SaveTeammate(Teammate teammate)
+        {
+            var proc = "SaveTeammate";
 
+            var paramz = new List<SqlParameter>();
+            paramz.Add(new SqlParameter("teammateId", teammate.Id));
+            paramz.Add(new SqlParameter("teamId", teammate.TeamId));
+            paramz.Add(new SqlParameter("entityId", teammate.MemberId));
+            paramz.Add(new SqlParameter("churchId", teammate.ChurchId));
+            paramz.Add(new SqlParameter("entityTypeEnumId", 56)); // 56:  entity is a person.  could be a team (78), or something else
+            paramz.Add(new SqlParameter("teamPositionEnumId", teammate.TeamPositionEnumId));
+
+            Func<SqlDataReader, int> readFx = (reader) =>
+            {
+                return (int)reader["Id"];
+            };
+
+            var list = _executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, readFx);
+
+            var id = list.FirstOrDefault();
+            if (id > 0)
+            {
+                teammate.Id = id;
+                return new RepositoryActionResult<Teammate>(teammate, RepositoryActionStatus.Created);
+            }
+            else
+            {
+                return new RepositoryActionResult<Teammate>(null, RepositoryActionStatus.Error);
+            }
+        }
     }
 }

@@ -12,6 +12,8 @@ namespace NtccSteward.Core.Models.Team
 
         public int TeamId { get; set; }
 
+        public int ChurchId { get; set; }
+
         public int MemberId { get; set; }
 
         public string Name { get; set; }
