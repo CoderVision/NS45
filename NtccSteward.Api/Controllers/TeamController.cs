@@ -71,7 +71,7 @@ namespace NtccSteward.Repository.Controllers
             }
         }
 
-        [Route("teams/metadata/{churchId}")]
+        [Route("church/{churchId}/teams/metadata")]
         [HttpGet]
         public IHttpActionResult GetMetadata(int churchId)
         {
@@ -90,11 +90,6 @@ namespace NtccSteward.Repository.Controllers
                     //MemberList = metadata.Enums.Where(i => i.AppEnumTypeName == "Members").ToArray(),
                     TeamTypes = metadata.EnumTypes,
                     TeamEnums = metadata.Enums
-                    //    PastoralTeamPositionType = metadata.Enums.Where(i => i.AppEnumTypeName == "PastoralTeamPositionType").ToArray(),
-                    //    ContactInfoTypeList = metadata.Enums.Where(i => i.AppEnumTypeName == "ContactInfoType").ToArray(),
-                    //    ContactInfoLocationTypeList = metadata.Enums.Where(i => i.AppEnumTypeName == "ContactInfoLocationType").ToArray(),
-                    //    PhoneTypeList = metadata.Enums.Where(i => i.AppEnumTypeName == "PhoneType").ToArray(),
-                    //    EmailProviders = metadata.EmailProviders
                 };
 
                 return Ok(ret);

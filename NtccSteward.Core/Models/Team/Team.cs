@@ -20,6 +20,9 @@ namespace NtccSteward.Core.Models.Team
 
         public int ChurchId { get; set; }
 
+        public string TeamLeader { get; set; }
+
+        public int TeammateCount { get; set; }
         /// <summary>
         /// Pastoral Team, Evangelistic Team, etc.
         /// </summary>

@@ -123,6 +123,9 @@ namespace NtccSteward.Repository
                         team.TeamTypeEnumId = (int)reader["TeamTypeEnumId"];
                         team.TeamTypeEnumDesc = reader["TeamTypeEnumDesc"].ToString();
                         team.TeamPositionEnumTypeId = (int)reader["TeamPositionEnumTypeId"];
+                        team.TeammateCount = (int)reader["TeammateCount"];
+                        team.TeamLeader = reader.ValueOrDefault<string>("TeamLeader", string.Empty);
+
                         list.Add(team);
                     }
                 }
@@ -136,22 +139,29 @@ namespace NtccSteward.Repository
             var proc = "SaveTeam";
 
             var paramz = new List<SqlParameter>();
+            paramz.Add(new SqlParameter("id", team.Id));
             paramz.Add(new SqlParameter("name", team.Name));
             paramz.Add(new SqlParameter("desc", team.Desc));
             paramz.Add(new SqlParameter("churchId", team.ChurchId));
             paramz.Add(new SqlParameter("teamTypeEnumId", team.TeamTypeEnumId));
 
-            Func<SqlDataReader, int> readFx = (reader) =>
+            Func<SqlDataReader, Tuple<int,int>> readFx = (reader) =>
             {
-                return (int)reader["Id"];
+                var id = (int)reader["Id"];
+                var teamPositionEnumTypeId = (int)reader["TeamPositionEnumTypeId"];
+
+                return new Tuple<int, int>(id, teamPositionEnumTypeId);
             };
 
-            var list = _executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, readFx);
+            var list = _executor.ExecuteSql<Tuple<int, int>>(proc, CommandType.StoredProcedure, paramz, readFx);
 
-            var id = list.FirstOrDefault();
-            if (id > 0)
+            var newTeam = list.FirstOrDefault();
+            if (newTeam.Item1 > 0)
             {
-                team.Id = id;
+                // update id and position type
+                team.Id = newTeam.Item1;
+                team.TeamPositionEnumTypeId = newTeam.Item2;
+
                 return new RepositoryActionResult<TeamInfo>(team, RepositoryActionStatus.Created);
             }
             else
