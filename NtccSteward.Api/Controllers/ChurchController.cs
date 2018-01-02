@@ -96,7 +96,7 @@ namespace NtccSteward.Api.Controllers
 
         [Route("churches/{churchId}/metadata")]
         [HttpGet]
-        public IHttpActionResult GetProfileMetadata(int churchId)
+        public IHttpActionResult GetMetadata(int churchId)
         {
             var metadata = _repository.GetProfileMetadata(churchId);
 

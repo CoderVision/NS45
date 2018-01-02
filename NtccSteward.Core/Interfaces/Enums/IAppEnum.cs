@@ -11,6 +11,7 @@ namespace NtccSteward.Core.Interfaces.Enums
         string Desc { get; set; }
         int AppEnumTypeID { get; set; }
         string AppEnumTypeName { get; set; }
+        int OptionsEnumTypeID { get; set; }
         int SortOrder { get; set; }
     }
 }

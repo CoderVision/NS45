@@ -12,6 +12,7 @@ namespace NtccSteward.Core.Models.Common.Enums
         public string Desc { get; set; }
         public int AppEnumTypeID { get; set; }
         public string AppEnumTypeName { get; set; }
+        public int OptionsEnumTypeID { get; set; }
         public int SortOrder { get; set; }
     }
 }

@@ -82,10 +82,13 @@
     <Compile Include="Factories\AddressInfoFactory.cs" />
     <Compile Include="Factories\MemberFactory.cs" />
     <Compile Include="Factories\TeamFactory.cs" />
+    <Compile Include="Framework\TeamPositionTypes.cs" />
     <Compile Include="Framework\AppConfigProvider.cs" />
+    <Compile Include="Framework\EnumTypes.cs" />
     <Compile Include="Framework\LogLevel.cs" />
     <Compile Include="Framework\MessageDirection.cs" />
     <Compile Include="Framework\MessageType.cs" />
+    <Compile Include="Framework\TeamTypes.cs" />
     <Compile Include="Interfaces\Account\IAccountPasswordChange.cs" />
     <Compile Include="Interfaces\Account\IAccountRequest.cs" />
     <Compile Include="Interfaces\Account\ILogin.cs" />
@@ -145,6 +148,7 @@
     <Compile Include="Models\Team\Team.cs" />
     <Compile Include="Models\Team\TeamInfo.cs" />
     <Compile Include="Models\Team\Teammate.cs" />
+    <Compile Include="Models\Team\TeamMetadata.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

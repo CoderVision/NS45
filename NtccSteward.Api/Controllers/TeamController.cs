@@ -1,4 +1,5 @@
 ﻿using NtccSteward.Api.Framework;
+using NtccSteward.Core.Framework;
 using NtccSteward.Core.Models.Team;
 using NtccSteward.Repository;
 using System;
@@ -70,23 +71,36 @@ namespace NtccSteward.Repository.Controllers
             }
         }
 
-        [Route("teams/{id}/profileMetadata")]
+        [Route("teams/{teamId}/metadata")]
         [HttpGet]
-        public IHttpActionResult GetProfileMetadata(int id)
+        public IHttpActionResult GetMetadata(int churchId)
         {
             try
             {
-                if (id <= 0)
+                if (churchId <= 0)
                     return BadRequest("Invalid id");
 
-                // use the id to get the churchId
-                var team = _repository.GetTeam(id);
+                var response = _repository.GetMetadata(churchId);
 
-                return Ok(team);
+                var metadata = response.Entity;
+
+                var ret = new
+                {
+                //    StatusList = metadata.Enums.Where(i => i.AppEnumTypeName == "ActiveStatus").ToArray(),
+                    MemberList = metadata.Enums.Where(i => i.AppEnumTypeName == "Members").ToArray(),
+                    TeamTypes = metadata.Enums.Where(i => i.AppEnumTypeName == "TeamType").ToArray(),
+                    //    PastoralTeamPositionType = metadata.Enums.Where(i => i.AppEnumTypeName == "PastoralTeamPositionType").ToArray(),
+                    //    ContactInfoTypeList = metadata.Enums.Where(i => i.AppEnumTypeName == "ContactInfoType").ToArray(),
+                    //    ContactInfoLocationTypeList = metadata.Enums.Where(i => i.AppEnumTypeName == "ContactInfoLocationType").ToArray(),
+                    //    PhoneTypeList = metadata.Enums.Where(i => i.AppEnumTypeName == "PhoneType").ToArray(),
+                    //    EmailProviders = metadata.EmailProviders
+                };
+
+                return Ok(ret);
             }
             catch (Exception ex)
             {
-                ErrorHelper.ProcessError(_logger, ex, nameof(GetProfile));
+                ErrorHelper.ProcessError(_logger, ex, nameof(GetMetadata));
 
                 return InternalServerError();
             }
@@ -124,6 +138,11 @@ namespace NtccSteward.Repository.Controllers
         {
             try
             {
+                if (team.TeamTypeEnumId == (int)TeamTypes.Evangelistic)
+                    team.TeamPositionEnumTypeId = (int)EnumTypes.EvangelicalTeamPositionType;
+                else if (team.TeamTypeEnumId == (int)TeamTypes.Pastoral)
+                    team.TeamPositionEnumTypeId = (int)EnumTypes.PastoralTeamPositionType;
+
                 var result = _repository.SaveTeam(team);
 
                 if (result.Status == Framework.RepositoryActionStatus.Created)

@@ -1,4 +1,5 @@
-﻿using NtccSteward.Core.Models.Team;
+﻿using NtccSteward.Core.Models.Common.Enums;
+using NtccSteward.Core.Models.Team;
 using NtccSteward.Repository.Framework;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,8 @@ namespace NtccSteward.Repository
         List<Teammate> GetTeammates(int teamId);
         RepositoryActionResult<Teammate> SaveTeammate(Teammate teammate);
         RepositoryActionResult<Teammate> DeleteTeammate(int teamId, int teammateId);
+
+        RepositoryActionResult<TeamMetadata> GetMetadata(int churchId);
     }
 
     public class TeamRepository : NtccSteward.Repository.Repository, ITeamRepository
@@ -31,6 +34,53 @@ namespace NtccSteward.Repository
             this.ConnectionString = connectionString;
 
             _executor = new SqlCmdExecutor(connectionString);
+        }
+
+        public RepositoryActionResult<TeamMetadata> GetMetadata(int churchId)
+        {
+            var metadata = new TeamMetadata();
+
+            using (var cn = new SqlConnection(_executor.ConnectionString))
+            {
+                using (var cmd = new SqlCommand("GetChurchProfileMetadata", cn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add(new SqlParameter("churchId", churchId));
+                    cn.Open();
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                var appEnum = new AppEnum();
+                                appEnum.ID = reader.ValueOrDefault<int>("EnumID");
+                                appEnum.Desc = reader.ValueOrDefault<string>("EnumDesc");
+                                appEnum.AppEnumTypeID = reader.ValueOrDefault<int>("EnumTypeID");
+                                appEnum.AppEnumTypeName = reader.ValueOrDefault<string>("EnumTypeName");
+
+                                metadata.Enums.Add(appEnum);
+                            }
+
+                            //reader.NextResult();
+
+                            //while (reader.Read())
+                            //{
+                            //    var emailProvider = new EmailProvider();
+                            //    emailProvider.Id = reader.ValueOrDefault<int>("Id");
+                            //    emailProvider.Name = reader.ValueOrDefault<string>("Name");
+                            //    emailProvider.Server = reader.ValueOrDefault<string>("Server");
+                            //    emailProvider.Port = reader.ValueOrDefault<int>("Port");
+
+                            //    metadata.EmailProviders.Add(emailProvider);
+                            //}
+                        }
+                    }
+                }
+            }
+
+            return new RepositoryActionResult<TeamMetadata>(metadata, RepositoryActionStatus.Ok);
         }
 
         public List<Team> GetList(int churchId)
