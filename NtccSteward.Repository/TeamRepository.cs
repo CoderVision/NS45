@@ -1,5 +1,6 @@
 ﻿using NtccSteward.Core.Interfaces.Team;
 using NtccSteward.Core.Models.Common.Enums;
+//using NtccSteward.Core.Models.Members;
 using NtccSteward.Core.Models.Team;
 using NtccSteward.Repository.Framework;
 using System;
@@ -14,7 +15,7 @@ namespace NtccSteward.Repository
 {
     public interface ITeamRepository
     {
-        List<Team> GetList(int churchId);
+        List<Core.Models.Team.Team> GetList(int churchId);
         Team GetTeam(int teamId);
         RepositoryActionResult<ITeam> SaveTeam(ITeam Team);
 
@@ -67,9 +68,8 @@ namespace NtccSteward.Repository
                                 metadata.EnumTypes.Add(appEnum);
                             }
 
-                            reader.NextResult();
-
                             // read enums for above enum types
+                            reader.NextResult();
                             while (reader.Read())
                             {
                                 var appEnum = new AppEnum();
@@ -82,9 +82,8 @@ namespace NtccSteward.Repository
                                 metadata.Enums.Add(appEnum);
                             }
 
-                            reader.NextResult();
-
                             // read churches
+                            reader.NextResult();
                             while (reader.Read())
                             {
                                 var church = new c.Church();
@@ -92,6 +91,18 @@ namespace NtccSteward.Repository
                                 church.Name = reader.ValueOrDefault<string>("Name");
 
                                 metadata.Churches.Add(church);
+                            }
+
+                            // read members
+                            reader.NextResult();
+                            while (reader.Read())
+                            {
+                                var member = new Core.Models.Members.Member();
+                                member.id = reader.ValueOrDefault<int>("Id");
+                                member.FirstName = reader.ValueOrDefault<string>("FirstName");
+                                member.LastName = reader.ValueOrDefault<string>("LastName");
+
+                                metadata.Members.Add(member);
                             }
                         }
                     }
@@ -215,6 +226,7 @@ namespace NtccSteward.Repository
                             teammate.TeamId = (int)reader["TeamId"];
                             teammate.MemberId = (int)reader["EntityId"];
                             teammate.TeamPositionEnumId = (int)reader["TeamPositionEnumId"];
+                            teammate.TeamPositionEnumDesc = reader.ValueOrDefault<string>("Position", string.Empty);
                             teammate.Name = reader.ValueOrDefault<string>("TeammateName", string.Empty);
                             team.Teammates.Add(teammate);
                         }

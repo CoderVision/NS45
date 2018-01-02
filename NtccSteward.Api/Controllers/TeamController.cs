@@ -87,11 +87,10 @@ namespace NtccSteward.Repository.Controllers
 
                 var ret = new
                 {
-                //    StatusList = metadata.Enums.Where(i => i.AppEnumTypeName == "ActiveStatus").ToArray(),
-                    //MemberList = metadata.Enums.Where(i => i.AppEnumTypeName == "Members").ToArray(),
+                    MemberList = metadata.Members.Select(m => new { Id = m.id, Desc = $"{m.FirstName} {m.LastName}".Trim() }),
                     TeamTypes = metadata.EnumTypes,
                     TeamEnums = metadata.Enums,
-                    churchList = metadata.Churches.Select(c => new { Id = c.id, Name = c.Name })
+                    ChurchList = metadata.Churches.Select(c => new { Id = c.id, Name = c.Name }),
                 };
 
                 return Ok(ret);
