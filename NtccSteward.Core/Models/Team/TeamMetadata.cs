@@ -1,4 +1,5 @@
 ﻿using NtccSteward.Core.Models.Common.Enums;
+using c = NtccSteward.Core.Models.Church;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +13,10 @@ namespace NtccSteward.Core.Models.Team
         {
             Enums = new List<AppEnum>();
             EnumTypes = new List<AppEnum>();
+            Churches = new List<c.Church>();
         }
         public List<AppEnum> EnumTypes { get; set; }
         public List<AppEnum> Enums { get; set; }
+        public List<c.Church> Churches { get; set; }
     }
 }

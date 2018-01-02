@@ -1,4 +1,5 @@
-﻿using NtccSteward.Api.Framework;
+﻿using Marvin.JsonPatch;
+using NtccSteward.Api.Framework;
 using NtccSteward.Core.Framework;
 using NtccSteward.Core.Models.Team;
 using NtccSteward.Repository;
@@ -89,7 +90,8 @@ namespace NtccSteward.Repository.Controllers
                 //    StatusList = metadata.Enums.Where(i => i.AppEnumTypeName == "ActiveStatus").ToArray(),
                     //MemberList = metadata.Enums.Where(i => i.AppEnumTypeName == "Members").ToArray(),
                     TeamTypes = metadata.EnumTypes,
-                    TeamEnums = metadata.Enums
+                    TeamEnums = metadata.Enums,
+                    churchList = metadata.Churches.Select(c => new { Id = c.id, Name = c.Name })
                 };
 
                 return Ok(ret);
@@ -231,6 +233,37 @@ namespace NtccSteward.Repository.Controllers
             catch (Exception ex)
             {
                 ErrorHelper.ProcessError(_logger, ex, nameof(DeleteTeammate));
+
+                return InternalServerError();
+            }
+        }
+
+        [Route("teams/{teamId}")]
+        [HttpPatch]
+        public IHttpActionResult Patch(int teamId, [FromBody]JsonPatchDocument<Team> doc)
+        {
+            if (doc == null)
+                return BadRequest();
+
+            try
+            {
+                var profile = _repository.GetTeam(teamId);
+
+                if (profile == null)
+                    return NotFound();
+
+                doc.ApplyTo(profile);
+
+                _repository.SaveTeam(profile);
+
+                foreach (var teammate in profile.Teammates)
+                    _repository.SaveTeammate(teammate);
+
+                return Ok(profile);
+            }
+            catch (Exception ex)
+            {
+                ErrorHelper.ProcessError(_logger, ex, nameof(Patch));
 
                 return InternalServerError();
             }

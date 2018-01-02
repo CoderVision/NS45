@@ -18,6 +18,8 @@ namespace NtccSteward.Core.Models.Team
 
         public string Desc { get; set; }
 
+        public string Comment { get; set; }
+
         public int ChurchId { get; set; }
 
         public string TeamLeader { get; set; }
