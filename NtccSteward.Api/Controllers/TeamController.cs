@@ -71,7 +71,7 @@ namespace NtccSteward.Repository.Controllers
             }
         }
 
-        [Route("teams/{teamId}/metadata")]
+        [Route("teams/metadata/{churchId}")]
         [HttpGet]
         public IHttpActionResult GetMetadata(int churchId)
         {
@@ -87,8 +87,9 @@ namespace NtccSteward.Repository.Controllers
                 var ret = new
                 {
                 //    StatusList = metadata.Enums.Where(i => i.AppEnumTypeName == "ActiveStatus").ToArray(),
-                    MemberList = metadata.Enums.Where(i => i.AppEnumTypeName == "Members").ToArray(),
-                    TeamTypes = metadata.Enums.Where(i => i.AppEnumTypeName == "TeamType").ToArray(),
+                    //MemberList = metadata.Enums.Where(i => i.AppEnumTypeName == "Members").ToArray(),
+                    TeamTypes = metadata.EnumTypes,
+                    TeamEnums = metadata.Enums
                     //    PastoralTeamPositionType = metadata.Enums.Where(i => i.AppEnumTypeName == "PastoralTeamPositionType").ToArray(),
                     //    ContactInfoTypeList = metadata.Enums.Where(i => i.AppEnumTypeName == "ContactInfoType").ToArray(),
                     //    ContactInfoLocationTypeList = metadata.Enums.Where(i => i.AppEnumTypeName == "ContactInfoLocationType").ToArray(),
@@ -138,11 +139,6 @@ namespace NtccSteward.Repository.Controllers
         {
             try
             {
-                if (team.TeamTypeEnumId == (int)TeamTypes.Evangelistic)
-                    team.TeamPositionEnumTypeId = (int)EnumTypes.EvangelicalTeamPositionType;
-                else if (team.TeamTypeEnumId == (int)TeamTypes.Pastoral)
-                    team.TeamPositionEnumTypeId = (int)EnumTypes.PastoralTeamPositionType;
-
                 var result = _repository.SaveTeam(team);
 
                 if (result.Status == Framework.RepositoryActionStatus.Created)

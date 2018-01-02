@@ -11,7 +11,9 @@ namespace NtccSteward.Core.Models.Team
         public TeamMetadata()
         {
             Enums = new List<AppEnum>();
+            EnumTypes = new List<AppEnum>();
         }
+        public List<AppEnum> EnumTypes { get; set; }
         public List<AppEnum> Enums { get; set; }
     }
 }

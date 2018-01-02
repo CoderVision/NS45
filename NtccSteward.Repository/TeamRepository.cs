@@ -42,7 +42,7 @@ namespace NtccSteward.Repository
 
             using (var cn = new SqlConnection(_executor.ConnectionString))
             {
-                using (var cmd = new SqlCommand("GetChurchProfileMetadata", cn))
+                using (var cmd = new SqlCommand("GetTeamProfileMetadata", cn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.Add(new SqlParameter("churchId", churchId));
@@ -52,6 +52,7 @@ namespace NtccSteward.Repository
                     {
                         if (reader.HasRows)
                         {
+                            // read enum types
                             while (reader.Read())
                             {
                                 var appEnum = new AppEnum();
@@ -59,11 +60,25 @@ namespace NtccSteward.Repository
                                 appEnum.Desc = reader.ValueOrDefault<string>("EnumDesc");
                                 appEnum.AppEnumTypeID = reader.ValueOrDefault<int>("EnumTypeID");
                                 appEnum.AppEnumTypeName = reader.ValueOrDefault<string>("EnumTypeName");
+                                appEnum.OptionsEnumTypeID = reader.ValueOrDefault<int>("OptionsEnumTypeID");
+
+                                metadata.EnumTypes.Add(appEnum);
+                            }
+
+                            reader.NextResult();
+
+                            // read enums for above enum types
+                            while (reader.Read())
+                            {
+                                var appEnum = new AppEnum();
+                                appEnum.ID = reader.ValueOrDefault<int>("EnumID");
+                                appEnum.Desc = reader.ValueOrDefault<string>("EnumDesc");
+                                appEnum.AppEnumTypeID = reader.ValueOrDefault<int>("EnumTypeID");
+                                appEnum.AppEnumTypeName = reader.ValueOrDefault<string>("EnumTypeName");
+                                appEnum.OptionsEnumTypeID = reader.ValueOrDefault<int>("OptionsEnumTypeID");
 
                                 metadata.Enums.Add(appEnum);
                             }
-
-                            //reader.NextResult();
 
                             //while (reader.Read())
                             //{
@@ -125,7 +140,6 @@ namespace NtccSteward.Repository
             paramz.Add(new SqlParameter("desc", team.Desc));
             paramz.Add(new SqlParameter("churchId", team.ChurchId));
             paramz.Add(new SqlParameter("teamTypeEnumId", team.TeamTypeEnumId));
-            paramz.Add(new SqlParameter("teamPositionEnumTypeId", team.TeamPositionEnumTypeId));
 
             Func<SqlDataReader, int> readFx = (reader) =>
             {
