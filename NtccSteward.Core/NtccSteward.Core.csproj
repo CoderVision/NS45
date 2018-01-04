@@ -143,6 +143,9 @@
     <Compile Include="Models\Message\Message.cs" />
     <Compile Include="Models\Message\Recipient.cs" />
     <Compile Include="Models\Message\RecipientGroup.cs" />
+    <Compile Include="Models\Report\ActiveGuestListReportData.cs" />
+    <Compile Include="Models\Report\IReportData.cs" />
+    <Compile Include="Models\Report\ReportTypes.cs" />
     <Compile Include="Models\Services\SmsSettings.cs" />
     <Compile Include="Interfaces\Team\ITeam.cs" />
     <Compile Include="Interfaces\Team\ITeammate.cs" />

@@ -220,6 +220,7 @@
     <Compile Include="Controllers\ChurchController.cs" />
     <Compile Include="Controllers\MembersController.cs" />
     <Compile Include="Controllers\MessageController.cs" />
+    <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\TeamController.cs" />
     <Compile Include="Framework\ErrorHelper.cs" />
     <Compile Include="Framework\VersionConstraint.cs" />

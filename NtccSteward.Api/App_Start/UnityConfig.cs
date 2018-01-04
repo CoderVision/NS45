@@ -35,7 +35,7 @@ namespace NtccSteward.Api
             container.RegisterInstance<ILogger>(new LoggerRepository(defaultConnectionString));
             container.RegisterInstance<IMemberRepository>(new MemberRepository(defaultConnectionString));
             container.RegisterInstance<IMessageRepository>(new MessageRepository(defaultConnectionString));
-
+            container.RegisterInstance<IReportsRepository>(new ReportsRepository(defaultConnectionString));
 
             // register controllers
             container.RegisterType<AccountController>();
