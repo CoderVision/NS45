@@ -123,7 +123,9 @@ namespace NtccSteward.Api.Controllers
                 PhoneTypeList = list.Where(i => i.AppEnumTypeName == "PhoneType").ToArray(),
                 MemberStatusChangeTypeList = list.Where(i => i.AppEnumTypeName == "MemberStatusChangeType").ToArray(),
                 MemberStatusList = list.Where(i => i.AppEnumTypeName == "MemberStatus").ToArray(),
-                MemberTypeList = list.Where(i => i.AppEnumTypeName == "MemberType").ToArray()
+                MemberTypeList = list.Where(i => i.AppEnumTypeName == "MemberType").ToArray(),
+                ActivityTypeList = list.Where(i => i.AppEnumTypeName == "ActivityType").ToArray(),
+                ActivityResponseType = list.Where(i => i.AppEnumTypeName == "ActivityResponseType").ToArray()
             };
 
             return Ok(ret);
@@ -281,6 +283,37 @@ namespace NtccSteward.Api.Controllers
             catch(Exception ex)
             {
                 ErrorHelper.ProcessError(_logger, ex, nameof(Patch));
+
+                return InternalServerError();
+            }
+        }
+
+
+        [Route("members/activity")]
+        [HttpPost]
+        public IHttpActionResult PostActivity([FromBody] Activity activity)
+        {
+            try
+            {
+                if (activity == null)
+                    return BadRequest();
+
+                var result = _repository.SaveActivity(activity);
+
+                if (result.Status == RepositoryActionStatus.Created)
+                {
+                    return Ok(activity);
+                }
+                else if (result.Status == RepositoryActionStatus.NotFound)
+                {
+                    return NotFound();
+                }
+
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                ErrorHelper.ProcessError(_logger, ex, nameof(Post));
 
                 return InternalServerError();
             }

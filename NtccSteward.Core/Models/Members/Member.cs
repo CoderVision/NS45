@@ -24,7 +24,11 @@ namespace NtccSteward.Core.Models.Members
 
         public string Status { get; set; }
 
+        public int StatusId { get; set; }
+
         public string StatusChangeType { get; set; }
+
+        public int StatusChangeTypeId { get; set; }
 
         public string Email { get; set; }
 
@@ -32,6 +36,16 @@ namespace NtccSteward.Core.Models.Members
 
         public string Address { get; set; }
 
-        public DateTime? ActivityDate { get; set; }
+        // last activity date
+        public DateTimeOffset? ActivityDate { get; set; }
+
+        public string Comments { get; set; }
+
+        public string Sponsor { get; set; }
+
+        public int SponsorId { get; set; }
+
+        public int TeamId { get; set; }
+        public string Team { get; set; }
     }
 }

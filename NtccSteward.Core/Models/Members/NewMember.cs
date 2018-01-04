@@ -9,7 +9,7 @@ namespace NtccSteward.Core.Models.Members
     {
         public int id { get; set; }
 
-        public DateTime DateCame { get; set; }
+        public DateTimeOffset DateCame { get; set; }
 
         public bool IsGroup { get; set; }
 
