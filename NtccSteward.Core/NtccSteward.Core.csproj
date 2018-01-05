@@ -128,6 +128,7 @@
     <Compile Include="Models\Common\CustomAttributes\CustomAttributeDef.cs" />
     <Compile Include="Models\Common\Enums\AppEnum.cs" />
     <Compile Include="Models\Common\Enums\AppEnumType.cs" />
+    <Compile Include="Models\Common\Misc\Item.cs" />
     <Compile Include="Models\Common\Parameters\GetCorrespondenceParameter.cs" />
     <Compile Include="Models\Common\Parameters\GetMessagesParameter.cs" />
     <Compile Include="Models\Common\Parameters\ItemByID.cs" />
@@ -145,6 +146,7 @@
     <Compile Include="Models\Message\RecipientGroup.cs" />
     <Compile Include="Models\Report\ActiveGuestListReportData.cs" />
     <Compile Include="Models\Report\IReportData.cs" />
+    <Compile Include="Models\Report\ReportMetadata.cs" />
     <Compile Include="Models\Report\ReportTypes.cs" />
     <Compile Include="Models\Services\SmsSettings.cs" />
     <Compile Include="Interfaces\Team\ITeam.cs" />

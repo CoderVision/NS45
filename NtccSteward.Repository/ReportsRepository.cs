@@ -12,6 +12,7 @@ namespace NtccSteward.Repository
     public interface IReportsRepository
     {
         object GetReportData(ReportTypes reportType, int churchId);
+        ReportMetadata GetMetadata(int churchId);
     }
 
     public class ReportsRepository : NtccSteward.Repository.Repository, IReportsRepository
@@ -65,6 +66,11 @@ namespace NtccSteward.Repository
             var list = _executor.ExecuteSql<ActiveGuestListReportData>("GetActiveGuestListReport", CommandType.StoredProcedure, paramz, readFx);
 
             return list;
+        }
+
+        public ReportMetadata GetMetadata(int churchId)
+        {
+            return new ReportMetadata();
         }
     }
 }

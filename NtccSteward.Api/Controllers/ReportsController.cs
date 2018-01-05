@@ -13,11 +13,11 @@ namespace NtccSteward.Api.Controllers
     public class ReportsController : ApiController
     {
         private readonly ILogger logger;
-        private readonly IReportsRepository reportsRepository = null;
+        private readonly IReportsRepository repository = null;
 
-        public ReportsController(IReportsRepository reportsRepository, ILogger logger)
+        public ReportsController(IReportsRepository repository, ILogger logger)
         {
-            this.reportsRepository = reportsRepository;
+            this.repository = repository;
             this.logger = logger;
         }
 
@@ -31,7 +31,7 @@ namespace NtccSteward.Api.Controllers
 
             try
             {
-                var reportData = this.reportsRepository.GetReportData(reportType, churchId);
+                var reportData = this.repository.GetReportData(reportType, churchId);
 
                 return Ok(reportData);
             }
@@ -41,6 +41,24 @@ namespace NtccSteward.Api.Controllers
 
                 return InternalServerError();
             }
+        }
+
+
+        [Route("reports/metadata")]
+        [HttpGet]
+        public IHttpActionResult GetMetadata(int churchId)
+        {
+            var metadata = this.repository.GetMetadata(churchId);
+
+            var ret = new
+            {
+                StatusList = metadata.Enums.Where(i => i.AppEnumTypeName == "ActiveStatus").ToArray(),
+                MemberList = metadata.Members.Select(m => new { Id = m.id, Name=m.FullName, TeamId= m.TeamId }),
+                Teams = metadata.Teams.Select(t => new { Id = t.Id, Name = t.Name }),
+                Churches = metadata.Churches.Select(c => new { Id = c.id, Name = c.Name })
+            };
+
+            return Ok(ret);
         }
     }
 }
