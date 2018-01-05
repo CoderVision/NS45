@@ -42,8 +42,9 @@ namespace NtccSteward.Repository
 
             Func<SqlDataReader, ActiveGuestListReportData> readFx = (reader) =>
             {
+                var activityDateIdx = reader.GetOrdinal("ActivityDate");
                 var data = new ActiveGuestListReportData();
-                data.LastActivityDate = reader.ValueOrDefault<DateTimeOffset>("ActivityDate");
+                data.LastActivityDate = reader.IsDBNull(activityDateIdx) ? (DateTimeOffset?)null : reader.ValueOrDefault<DateTimeOffset>(activityDateIdx);
                 data.MemberId = reader.ValueOrDefault<int>("ID");
                 data.MemberName = reader.ValueOrDefault<string>("Name");
                 data.MemberAddress = reader.ValueOrDefault<string>("Address");
@@ -53,6 +54,11 @@ namespace NtccSteward.Repository
                 data.SponsorName = reader.ValueOrDefault<string>("Sponsor");
                 data.TeamId = reader.ValueOrDefault<int>("TeamId");
                 data.TeamName = reader.ValueOrDefault<string>("TeamName");
+                data.Comments = reader.ValueOrDefault<string>("Comment");
+                data.StatusId = reader.ValueOrDefault<int>("StatusId");
+                data.Status = reader.ValueOrDefault<string>("Status");
+                data.StatusChangeTypeId = reader.ValueOrDefault<int>("StatusChangeTypeId");
+                data.StatusChangeType = reader.ValueOrDefault<string>("StatusChangeType");
                 return data;
             };
 

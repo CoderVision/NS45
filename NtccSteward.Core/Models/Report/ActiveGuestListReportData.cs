@@ -29,6 +29,12 @@ namespace NtccSteward.Core.Models.Report
 
         public string Status { get; set; }
 
-        public DateTimeOffset LastActivityDate { get; set; }
+        public DateTimeOffset? LastActivityDate { get; set; }
+
+        public string Comments { get; set; }
+
+        public int StatusChangeTypeId { get; set; }
+
+        public string StatusChangeType { get; set; }
     }
 }
