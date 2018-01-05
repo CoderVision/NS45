@@ -30,5 +30,9 @@ namespace NtccSteward.ViewModels.Team
         public int TeamPositionEnumTypeId { get; set; }
 
         public List<Teammate> Teammates { get; set; }
+
+        public string Desc { get; set; }
+
+        public string Comment { get; set; }
     }
 }

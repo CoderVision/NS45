@@ -1,4 +1,7 @@
-﻿using NtccSteward.Core.Models.Report;
+﻿using NtccSteward.Core.Models.Church;
+using NtccSteward.Core.Models.Common.Enums;
+using NtccSteward.Core.Models.Members;
+using NtccSteward.Core.Models.Report;
 using NtccSteward.Repository.Framework;
 using System;
 using System.Collections.Generic;
@@ -70,7 +73,73 @@ namespace NtccSteward.Repository
 
         public ReportMetadata GetMetadata(int churchId)
         {
-            return new ReportMetadata();
+            var metadata = new ReportMetadata();
+
+            using (var cn = new SqlConnection(_executor.ConnectionString))
+            {
+                using (var cmd = new SqlCommand("GetReportMetadata", cn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add(new SqlParameter("churchId", churchId));
+                    cn.Open();
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            // read enum types
+                            while (reader.Read())
+                            {
+                                var appEnum = new AppEnum();
+                                appEnum.ID = reader.ValueOrDefault<int>("EnumID");
+                                appEnum.Desc = reader.ValueOrDefault<string>("EnumDesc");
+                                appEnum.AppEnumTypeID = reader.ValueOrDefault<int>("EnumTypeID");
+                                appEnum.AppEnumTypeName = reader.ValueOrDefault<string>("EnumTypeName");
+                                appEnum.OptionsEnumTypeID = reader.ValueOrDefault<int>("OptionsEnumTypeID");
+
+                                metadata.Enums.Add(appEnum);
+                            }
+
+                            // read churches
+                            reader.NextResult();
+                            while (reader.Read())
+                            {
+                                var church = new Church();
+                                church.id = reader.ValueOrDefault<int>("Id");
+                                church.Name = reader.ValueOrDefault<string>("Name");
+
+                                metadata.Churches.Add(church);
+                            }
+
+                            // read teams
+                            reader.NextResult();
+                            while (reader.Read())
+                            {
+                                var team = new NtccSteward.Core.Models.Team.Team();
+                                team.Id = reader.ValueOrDefault<int>("TeamId");
+                                team.Name = reader.ValueOrDefault<string>("Name");
+
+                                metadata.Teams.Add(team);
+                            }
+
+                            // read members
+                            reader.NextResult();
+                            while (reader.Read())
+                            {
+                                var member = new Core.Models.Members.Member();
+                                member.id = reader.ValueOrDefault<int>("Id");
+                                member.FirstName = reader.ValueOrDefault<string>("FirstName");
+                                member.LastName = reader.ValueOrDefault<string>("LastName");
+                                member.TeamId = reader.ValueOrDefault<int>("TeamId");
+
+                                metadata.Members.Add(member);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return metadata;
         }
     }
 }

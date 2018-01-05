@@ -44,7 +44,7 @@ namespace NtccSteward.Api.Controllers
         }
 
 
-        [Route("reports/metadata")]
+        [Route("reports/metadata/{churchId}")]
         [HttpGet]
         public IHttpActionResult GetMetadata(int churchId)
         {
@@ -52,10 +52,10 @@ namespace NtccSteward.Api.Controllers
 
             var ret = new
             {
-                StatusList = metadata.Enums.Where(i => i.AppEnumTypeName == "ActiveStatus").ToArray(),
+                StatusList = metadata.Enums.Where(i => i.AppEnumTypeName == "MemberStatus").ToArray(),
                 MemberList = metadata.Members.Select(m => new { Id = m.id, Name=m.FullName, TeamId= m.TeamId }),
-                Teams = metadata.Teams.Select(t => new { Id = t.Id, Name = t.Name }),
-                Churches = metadata.Churches.Select(c => new { Id = c.id, Name = c.Name })
+                TeamList = metadata.Teams.Select(t => new { Id = t.Id, Name = t.Name }),
+                ChurchList = metadata.Churches.Select(c => new { Id = c.id, Name = c.Name })
             };
 
             return Ok(ret);
