@@ -21,9 +21,9 @@ namespace NtccSteward.Api.Controllers
             this.logger = logger;
         }
 
-        [Route("reports/{reportId}/church/{churchId}")]
+        [Route("reports/{reportId}")]
         [HttpGet]
-        public IHttpActionResult Get(int reportId, int churchId)
+        public IHttpActionResult Get(int reportId)
         {
             ReportTypes reportType;
             if (!Enum.TryParse(reportId.ToString(), out reportType))
@@ -31,7 +31,9 @@ namespace NtccSteward.Api.Controllers
 
             try
             {
-                var reportData = this.repository.GetReportData(reportType, churchId);
+                var list = this.Request.GetQueryNameValuePairs().ToList();
+
+                var reportData = this.repository.GetReportData(reportType, list);
 
                 return Ok(reportData);
             }

@@ -14,7 +14,7 @@ namespace NtccSteward.Repository
 {
     public interface IReportsRepository
     {
-        object GetReportData(ReportTypes reportType, int churchId);
+        object GetReportData(ReportTypes reportType, List<KeyValuePair<string, string>> paramsCollection);
         ReportMetadata GetMetadata(int churchId);
     }
 
@@ -31,18 +31,34 @@ namespace NtccSteward.Repository
             commonRepository = new CommonRepository(connectionString);
         }
 
-        public object GetReportData(ReportTypes reportType, int churchId)
+        public object GetReportData(ReportTypes reportType, List<KeyValuePair<string, string>> paramsCollection)
         {
             if (reportType == ReportTypes.ActiveGuestList)
-                return GetActiveGuestList(churchId);
+                return GetActiveGuestList(paramsCollection);
             else
                 return null;
         }
 
-        public List<ActiveGuestListReportData> GetActiveGuestList(int churchId)
+        public List<ActiveGuestListReportData> GetActiveGuestList(List<KeyValuePair<string, string>> paramsCollection)
         {
+            var churchId = paramsCollection.FirstOrDefault(p => p.Key.Equals("churchId")).Value;
+            //var period = paramsCollection.FirstOrDefault(p => p.Key.Equals("period")).Value;
+            //var date = paramsCollection.FirstOrDefault(p => p.Key.Equals("date")).Value;
+            var statusIds = paramsCollection.FirstOrDefault(p => p.Key.Equals("statusIds")).Value;
+            var teamId = paramsCollection.FirstOrDefault(p => p.Key.Equals("teamId")).Value;
+            var sponsorId = paramsCollection.FirstOrDefault(p => p.Key.Equals("sponsorId")).Value;
+
+            var idlist = statusIds.Split(new[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
+            var arylist = Array.ConvertAll<string, int>(idlist, int.Parse);
+            var statusTable = new DataTable();
+            statusTable.Columns.Add("Id", typeof(int));
+            arylist.ToList().ForEach(s => statusTable.Rows.Add(s));
+
             var paramz = new List<SqlParameter>();
             paramz.Add(new SqlParameter("churchId", churchId));
+            paramz.Add(new SqlParameter("teamId", teamId));
+            paramz.Add(new SqlParameter("sponsorId", sponsorId));
+            paramz.Add(new SqlParameter("statusEnumIDs", statusTable));
 
             Func<SqlDataReader, ActiveGuestListReportData> readFx = (reader) =>
             {
