@@ -27,7 +27,7 @@ namespace NtccSteward.IdentityServer
                     SiteName = "NtccSteward Security Token Service",
                     IssuerUri = ConfigurationManager.AppSettings["NtccStewardIssuerUri"],  // does not have to be an existing uri
                     PublicOrigin = ConfigurationManager.AppSettings["NtccStewardStsOrigin"],
-                    SigningCertificate = LoadCertificate()
+                    SigningCertificate = LoadCertificate()  // certificate that is used for encrpting token, not ssl
                 };
 
                 idSvrApp.UseIdentityServer(options);

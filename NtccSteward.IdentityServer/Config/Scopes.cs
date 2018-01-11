@@ -14,9 +14,9 @@ namespace NtccSteward.IdentityServer.Config
             {
                 new Scope
                 {
-                    Name="Application",
+                    Name="ApplicationAccess",
                     DisplayName = "Application Usage",
-                    Description = "Allow users to use the main application",
+                    Description = "Allow users to use the application",
                     Type = ScopeType.Resource
                 }
             };
