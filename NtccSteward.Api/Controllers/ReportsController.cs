@@ -10,6 +10,7 @@ using System.Web.Http;
 
 namespace NtccSteward.Api.Controllers
 {
+    [Authorize]
     public class ReportsController : ApiController
     {
         private readonly ILogger logger;

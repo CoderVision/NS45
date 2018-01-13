@@ -22,6 +22,7 @@ namespace NtccSteward.Api.Controllers
 {
     //[RoutePrefix("api")]
     [Route("Churches")]
+    [Authorize]
     public class ChurchController : ApiController
     {
         private readonly ILogger _logger;
