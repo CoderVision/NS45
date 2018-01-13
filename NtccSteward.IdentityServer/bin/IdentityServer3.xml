@@ -157,26 +157,6 @@
             <param name="formatParameters">The format parameters.</param>
             <returns></returns>
         </member>
-        <member name="T:IdentityServer3.Core.Configuration.AuthenticationTicketModel">
-            <summary>
-            A model class represending an authentication ticket
-            </summary>
-        </member>
-        <member name="M:IdentityServer3.Core.Configuration.AuthenticationTicketModel.#ctor(System.Security.Claims.ClaimsIdentity,System.Collections.Generic.IDictionary{System.String,System.String})">
-            <summary>
-            Instantiates an instance of authentication ticket
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.AuthenticationTicketModel.Identity">
-            <summary>
-            The claims identity of the authentication ticket
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.AuthenticationTicketModel.Properties">
-            <summary>
-            Authentication ticket properties
-            </summary>
-        </member>
         <member name="T:IdentityServer3.Core.Configuration.CookieSecureMode">
             <summary>
             Indicates if secure flag should be issued for a cookie.
@@ -190,71 +170,6 @@
         <member name="F:IdentityServer3.Core.Configuration.CookieSecureMode.Always">
             <summary>
             The secure flag will always be issued.
-            </summary>
-        </member>
-        <member name="T:IdentityServer3.Core.Configuration.DiscoveryOptions">
-            <summary>
-            Options class to configure discovery endpoint
-            </summary>
-        </member>
-        <member name="M:IdentityServer3.Core.Configuration.DiscoveryOptions.#ctor">
-            <summary>
-            Initializes with default values
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.DiscoveryOptions.ShowEndpoints">
-            <summary>
-            Show endpoints
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.DiscoveryOptions.ShowKeySet">
-            <summary>
-            Show signing keys
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.DiscoveryOptions.ShowIdentityScopes">
-            <summary>
-            Show identity scopes
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.DiscoveryOptions.ShowResourceScopes">
-            <summary>
-            Show resource scopes
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.DiscoveryOptions.ShowClaims">
-            <summary>
-            Show identity claims
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.DiscoveryOptions.ShowResponseTypes">
-            <summary>
-            Show response types
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.DiscoveryOptions.ShowResponseModes">
-            <summary>
-            Show response modes
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.DiscoveryOptions.ShowGrantTypes">
-            <summary>
-            Show standard grant types
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.DiscoveryOptions.ShowCustomGrantTypes">
-            <summary>
-            Show custom grant types
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.DiscoveryOptions.ShowTokenEndpointAuthenticationMethods">
-            <summary>
-            Show token endpoint authentication methods
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.DiscoveryOptions.CustomEntries">
-            <summary>
-            Adds custom entries to the discovery document
             </summary>
         </member>
         <member name="T:IdentityServer3.Core.Configuration.EventsOptions">
@@ -293,165 +208,6 @@
             <value>
               <c>true</c> if error events should be raised; otherwise, <c>false</c>.
             </value>
-        </member>
-        <member name="T:IdentityServer3.Core.Configuration.InputLengthRestrictions">
-            <summary>
-            Defines the input length restrictions for different values
-            </summary>
-        </member>
-        <member name="M:IdentityServer3.Core.Configuration.InputLengthRestrictions.#ctor">
-            <summary>
-            Creates InputLengthRestrictions with default values
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.InputLengthRestrictions.ClientId">
-            <summary>
-            Max length for client_id
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.InputLengthRestrictions.ClientSecret">
-            <summary>
-            Max length for external client secrets
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.InputLengthRestrictions.Scope">
-            <summary>
-            Max length for scope
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.InputLengthRestrictions.RedirectUri">
-            <summary>
-            Max length for redirect_uri
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.InputLengthRestrictions.Nonce">
-            <summary>
-            Max length for nonce
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.InputLengthRestrictions.UiLocale">
-            <summary>
-            Max length for ui_locale
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.InputLengthRestrictions.LoginHint">
-            <summary>
-            Max length for login_hint
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.InputLengthRestrictions.AcrValues">
-            <summary>
-            Max length for acr_values
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.InputLengthRestrictions.GrantType">
-            <summary>
-            Max length for grant_type
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.InputLengthRestrictions.UserName">
-            <summary>
-            Max length for username
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.InputLengthRestrictions.Password">
-            <summary>
-            Max length for password
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.InputLengthRestrictions.CspReport">
-            <summary>
-            Max length for CSP reports
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.InputLengthRestrictions.IdentityProvider">
-            <summary>
-            Max length for external identity provider name
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.InputLengthRestrictions.ExternalError">
-            <summary>
-            Max length for external identity provider errors
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.InputLengthRestrictions.AuthorizationCode">
-            <summary>
-            Max length for authorization codes
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.InputLengthRestrictions.RefreshToken">
-            <summary>
-            Max length for refresh tokens
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.InputLengthRestrictions.TokenHandle">
-            <summary>
-            Max length for token handles
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.InputLengthRestrictions.Jwt">
-            <summary>
-            Max length for JWTs
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.InputLengthRestrictions.CodeChallengeMinLength">
-            <summary>
-            Min length for the code challenge
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.InputLengthRestrictions.CodeChallengeMaxLength">
-            <summary>
-            Max length for the code challenge
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.InputLengthRestrictions.CodeVerifierMinLength">
-            <summary>
-            Min length for the code verifier
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.InputLengthRestrictions.CodeVerifierMaxLength">
-            <summary>
-            Max length for the code verifier
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.InputLengthRestrictions.ProofKey">
-            <summary>
-            Max length for proof keys
-            </summary>
-        </member>
-        <member name="T:IdentityServer3.Core.Configuration.IAuthenticationSessionStoreProvider">
-            <summary>
-            Providers the authentication session stores functions
-            </summary>
-        </member>
-        <member name="M:IdentityServer3.Core.Configuration.IAuthenticationSessionStoreProvider.RemoveAsync(System.String)">
-            <summary>
-            Provides the remove functionality of session store
-            </summary>
-            <param name="key">Session key</param>
-            <returns>Async task</returns>
-        </member>
-        <member name="M:IdentityServer3.Core.Configuration.IAuthenticationSessionStoreProvider.RenewAsync(System.String,IdentityServer3.Core.Configuration.AuthenticationTicketModel)">
-            <summary>
-            Provides the renew functionality of session store
-            </summary>
-            <param name="key">Session key</param>
-            <param name="identity">Authentication ticket</param>
-            <returns>Async task</returns>
-        </member>
-        <member name="M:IdentityServer3.Core.Configuration.IAuthenticationSessionStoreProvider.RetrieveAsync(System.String)">
-            <summary>
-            Provides the retrieve functionality of session store
-            </summary>
-            <param name="key">Session key</param>
-            <returns>Async task with authentication ticket result</returns>
-        </member>
-        <member name="M:IdentityServer3.Core.Configuration.IAuthenticationSessionStoreProvider.StoreAsync(IdentityServer3.Core.Configuration.AuthenticationTicketModel)">
-            <summary>
-            Provides the store functionality of session store
-            </summary>
-            <param name="ticket">Authentication ticket</param>
-            <returns>Async task with session key</returns>
         </member>
         <member name="T:IdentityServer3.Core.Configuration.X509CertificateDataProtector">
             <summary>
@@ -501,48 +257,10 @@
             <param name="entropy">The entropy.</param>
             <returns></returns>
         </member>
-        <member name="T:IdentityServer3.Core.Endpoints.IntrospectionEndpointController">
-            <summary>
-            Endpoint for token introspection - see https://tools.ietf.org/html/draft-ietf-oauth-introspection-11
-            </summary>
-        </member>
-        <member name="M:IdentityServer3.Core.Endpoints.IntrospectionEndpointController.Post">
-            <summary>
-            POST
-            </summary>
-            <returns>Introspection response</returns>
-        </member>
         <member name="T:IdentityServer3.Core.Endpoints.RevocationEndpointController">
             <summary>
             Implementation of RFC 7009 (http://tools.ietf.org/html/rfc7009)
             </summary>
-        </member>
-        <member name="T:IdentityServer3.Core.Events.TokenRevokedDetails">
-            <summary>
-            Event details for token revocation event
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Events.TokenRevokedDetails.Token">
-            <summary>
-            Gets or sets the token.
-            </summary>
-            <value>
-            The token that was revoked.
-            </value>
-        </member>
-        <member name="P:IdentityServer3.Core.Events.TokenRevokedDetails.TokenType">
-            <summary>
-            Gets or sets the token toke.
-            </summary>
-            <value>
-            The type of token that was revoked. Access token or Refresh.
-            </value>
-        </member>
-        <member name="P:IdentityServer3.Core.Events.TokenRevokedDetails.SubjectId">
-            <summary>
-            Gets or sets the subject Id
-            </summary>
-            <value></value>
         </member>
         <member name="T:IdentityServer3.Core.Configuration.LoggingOptions">
             <summary>
@@ -567,7 +285,7 @@
             Gets or sets a value indicating whether web API diagnostics logging should be set to verbose.
             </summary>
             <value>
-            <c>true</c> if web API diagnostics logging should be verbose; otherwise, <c>false</c>.
+            <c>true</c> if web API diagnostics logging shozld be verbose; otherwise, <c>false</c>.
             </value>
         </member>
         <member name="P:IdentityServer3.Core.Configuration.LoggingOptions.EnableHttpLogging">
@@ -682,14 +400,6 @@
             </summary>
             <value>
             <c>true</c> if the token revocation endpoint is enabled; otherwise, <c>false</c>.
-            </value>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.EndpointOptions.EnableIntrospectionEndpoint">
-            <summary>
-            Gets or sets a value indicating whether the introspection endpoint is enabled.
-            </summary>
-            <value>
-            <c>true</c> if the introspection endpoint is enabled; otherwise, <c>false</c>.
             </value>
         </member>
         <member name="T:IdentityServer3.Core.Endpoints.CheckSessionEndpointController">
@@ -885,14 +595,6 @@
         <member name="P:IdentityServer3.Core.Events.AccessTokenIssuedDetails.TokenType">
             <summary>
             Gets or sets the type of the access token.
-            </summary>
-            <value>
-            The type of the token.
-            </value>
-        </member>
-        <member name="P:IdentityServer3.Core.Events.AccessTokenIssuedDetails.ReferenceTokenHandle">
-            <summary>
-            Gets or sets the type of the reference token handle.
             </summary>
             <value>
             The type of the token.
@@ -1120,7 +822,7 @@
         </member>
         <member name="T:IdentityServer3.Core.Models.HashExtensions">
             <summary>
-            Extension methods for hashing strings and byte arrays
+            Extension methods for hashing strings
             </summary>
         </member>
         <member name="M:IdentityServer3.Core.Models.HashExtensions.Sha256(System.String)">
@@ -1129,13 +831,6 @@
             </summary>
             <param name="input">The input.</param>
             <returns>A hash</returns>
-        </member>
-        <member name="M:IdentityServer3.Core.Models.HashExtensions.Sha256(System.Byte[])">
-            <summary>
-            Creates a SHA256 hash of the specified input.
-            </summary>
-            <param name="input">The input.</param>
-            <returns>A hash.</returns>
         </member>
         <member name="M:IdentityServer3.Core.Models.HashExtensions.Sha512(System.String)">
             <summary>
@@ -1282,15 +977,6 @@
             <exception cref="T:System.ArgumentNullException">env</exception>
             <exception cref="T:System.Exception">No partial login</exception>
         </member>
-        <member name="M:IdentityServer3.Core.Extensions.OwinEnvironmentExtensions.GetPartialLoginRememberMeAsync(System.Collections.Generic.IDictionary{System.String,System.Object})">
-            <summary>
-            Returns true if the user checked the "remember me" flag on the login page prior to the partial login.
-            </summary>
-            <param name="env">The env.</param>
-            <returns></returns>
-            <exception cref="T:System.ArgumentNullException">env</exception>
-            <exception cref="T:System.Exception">No partial login</exception>
-        </member>
         <member name="M:IdentityServer3.Core.Extensions.OwinEnvironmentExtensions.GetSignInMessage(System.Collections.Generic.IDictionary{System.String,System.Object},System.String)">
             <summary>
             Gets the sign in message.
@@ -1307,43 +993,6 @@
         <member name="M:IdentityServer3.Core.Extensions.OwinEnvironmentExtensions.GetSignInMessage(System.Collections.Generic.IDictionary{System.String,System.Object})">
             <summary>
             Gets the sign in message.
-            </summary>
-            <param name="env">The OWIN environment.</param>
-            <returns></returns>
-            <exception cref="T:System.ArgumentNullException">
-            env
-            or
-            id
-            </exception>
-        </member>
-        <member name="M:IdentityServer3.Core.Extensions.OwinEnvironmentExtensions.GetSignOutMessageId(System.Collections.Generic.IDictionary{System.String,System.Object})">
-            <summary>
-            Gets the sign out message id.
-            </summary>
-            <param name="env">The OWIN environment.</param>
-            <returns></returns>
-            <exception cref="T:System.ArgumentNullException">
-            env
-            or
-            id
-            </exception>
-        </member>
-        <member name="M:IdentityServer3.Core.Extensions.OwinEnvironmentExtensions.GetSignOutMessage(System.Collections.Generic.IDictionary{System.String,System.Object},System.String)">
-            <summary>
-            Gets the sign out message.
-            </summary>
-            <param name="env">The OWIN environment.</param>
-            <param name="id">The sign out message id.</param>
-            <returns></returns>
-            <exception cref="T:System.ArgumentNullException">
-            env
-            or
-            id
-            </exception>
-        </member>
-        <member name="M:IdentityServer3.Core.Extensions.OwinEnvironmentExtensions.GetSignOutMessage(System.Collections.Generic.IDictionary{System.String,System.Object})">
-            <summary>
-            Gets the sign out message.
             </summary>
             <param name="env">The OWIN environment.</param>
             <returns></returns>
@@ -1382,89 +1031,6 @@
             </summary>
             <param name="env">The OWIN environment.</param>
             <returns></returns>
-        </member>
-        <member name="M:IdentityServer3.Core.Extensions.OwinEnvironmentExtensions.SetIdentityServerOrigin(System.Collections.Generic.IDictionary{System.String,System.Object},System.String)">
-            <summary>
-            Sets the origin for the current request.
-            </summary>
-            <param name="env">The OWIN environment.</param>
-            <param name="origin">The origin.</param>
-            <returns></returns>
-        </member>
-        <member name="M:IdentityServer3.Core.Extensions.OwinEnvironmentExtensions.GetIdentityServerOrigin(System.Collections.Generic.IDictionary{System.String,System.Object})">
-            <summary>
-            Gets the explicitly configured per-request origin, or the current requests's origin.
-            Note: This API ignores any configured IdentityServerOptions' PublicOrigin property.
-            </summary>
-            <param name="env">The OWIN environment.</param>
-            <returns></returns>
-        </member>
-        <member name="M:IdentityServer3.Core.Extensions.OwinEnvironmentExtensions.ResolveDependency``1(System.Collections.Generic.IDictionary{System.String,System.Object})">
-            <summary>
-            Resolves dependency T from the IdentityServer DI system.
-            </summary>
-            <param name="env">The OWIN environment.</param>
-            <returns></returns>
-        </member>
-        <member name="M:IdentityServer3.Core.Extensions.OwinEnvironmentExtensions.ResolveDependency(System.Collections.Generic.IDictionary{System.String,System.Object},System.Type)">
-            <summary>
-            Resolves dependency type from the IdentityServer DI system.
-            </summary>
-            <param name="env">The OWIN environment.</param>
-            <param name="type">The Type to resolve.</param>
-            <returns></returns>
-        </member>
-        <member name="M:IdentityServer3.Core.Extensions.OwinEnvironmentExtensions.RenderLoggedOutViewAsync(System.Collections.Generic.IDictionary{System.String,System.Object},System.String)">
-            <summary>
-            Requests that the logged out view be rendered and the signout message cookie be removed.
-            </summary>
-            <param name="env">The OWIN environment.</param>
-            <param name="signOutMessageId">The sign out message id.</param>
-            <returns></returns>
-        </member>
-        <member name="M:IdentityServer3.Core.Extensions.OwinEnvironmentExtensions.ProcessFederatedSignoutAsync(System.Collections.Generic.IDictionary{System.String,System.Object})">
-            <summary>
-            Revokes authentication cookies and renders HTML to trigger single signout of all clients. This is intended to be used within an iframe when an external, upstream IdP is providing a signout callback to IdentityServer for single signout.
-            </summary>
-            <param name="env">The OWIN environment.</param>
-            <returns></returns>
-        </member>
-        <member name="M:IdentityServer3.Core.Extensions.OwinEnvironmentExtensions.GetIdentityServerIssuerUri(System.Collections.Generic.IDictionary{System.String,System.Object})">
-            <summary>
-            Returns the IssuerUri from either the IdentityServerOptions or calculated from the incoming request URL.
-            </summary>
-            <param name="env">The OWIN environment.</param>
-            <returns></returns>
-        </member>
-        <member name="M:IdentityServer3.Core.Extensions.OwinEnvironmentExtensions.GetClientIdsForCurrentAuthenticationSession(System.Collections.Generic.IDictionary{System.String,System.Object})">
-            <summary>
-            Returns collection of ClientIds that the user has signed into for the current authentication session.
-            </summary>
-            <param name="env">The OWIN environment.</param>
-            <returns></returns>
-        </member>
-        <member name="M:IdentityServer3.Core.Extensions.OwinEnvironmentExtensions.IssueClientToken(System.Collections.Generic.IDictionary{System.String,System.Object},System.String,System.String,System.Int32,System.Collections.Generic.List{System.Security.Claims.Claim})">
-            <summary>
-            Creates a JWT access token for situations where identityserver extensibility code needs to act as a client to a token protected service
-            </summary>
-            <param name="env">The OWIN environment.</param>
-            <param name="clientId">The value of the client_id claim in the token.</param>
-            <param name="scope">The value of the scope claim in the token.</param>
-            <param name="lifetime">The lifetime of the token.</param>
-            <param name="extraClaims">Additional claims to include in token.</param>
-            <returns>a JWT</returns>
-        </member>
-        <member name="T:IdentityServer3.Core.Models.TokenExtensions">
-            <summary>
-            Extension methods for Token
-            </summary>
-        </member>
-        <member name="M:IdentityServer3.Core.Models.TokenExtensions.CreateJwtPayload(IdentityServer3.Core.Models.Token)">
-            <summary>
-            Turns a token object into JWT payload
-            </summary>
-            <param name="token">The token</param>
-            <returns>Serialized JWT payload</returns>
         </member>
         <member name="T:Microsoft.Security.Application.CodeCharts.CodeChartHelper">
             <summary>
@@ -4236,19 +3802,6 @@
             </exception>
             <exception cref="T:System.InvalidOperationException">ViewService is already configured</exception>
         </member>
-        <member name="M:IdentityServer3.Core.Configuration.IdentityServerServiceFactoryExtensions.ConfigureDefaultViewService``1(IdentityServer3.Core.Configuration.IdentityServerServiceFactory,IdentityServer3.Core.Services.Default.DefaultViewServiceOptions)">
-            <summary>
-            Configures a derived default view service.
-            </summary>
-            <param name="factory">The factory.</param>
-            <param name="options">The default view service options.</param>
-            <exception cref="T:System.ArgumentNullException">
-            factory
-            or
-            options
-            </exception>
-            <exception cref="T:System.InvalidOperationException">ViewService is already configured</exception>
-        </member>
         <member name="M:IdentityServer3.Core.Configuration.IdentityServerServiceFactoryExtensions.UseInMemoryUsers(IdentityServer3.Core.Configuration.IdentityServerServiceFactory,System.Collections.Generic.List{IdentityServer3.Core.Services.InMemory.InMemoryUser})">
             <summary>
             Configures the factory to use in-memory users.
@@ -4313,33 +3866,6 @@
             <param name="scope">The scope.</param>
             <returns></returns>
             <exception cref="T:System.ArgumentNullException">localization</exception>
-        </member>
-        <member name="T:IdentityServer3.Core.Logging.NoopLogProvider">
-            <summary>
-            A no-op log provider to disable all logging
-            </summary>
-        </member>
-        <member name="M:IdentityServer3.Core.Logging.NoopLogProvider.GetLogger(System.String)">
-            <summary>
-             Nop logger
-            </summary>
-            <param name="name"></param>
-            <returns></returns>
-        </member>
-        <member name="M:IdentityServer3.Core.Logging.NoopLogProvider.OpenMappedContext(System.String,System.String)">
-            <summary>
-             Nop logger
-            </summary>
-            <param name="key"></param>
-            <param name="value"></param>
-            <returns></returns>
-        </member>
-        <member name="M:IdentityServer3.Core.Logging.NoopLogProvider.OpenNestedContext(System.String)">
-            <summary>
-             Nop logger
-            </summary>
-            <param name="message"></param>
-            <returns></returns>
         </member>
         <member name="T:IdentityServer3.Core.Models.ClientPermissionDescription">
             <summary>
@@ -4440,11 +3966,6 @@
             <value>
             The authenticate result.
             </value>
-        </member>
-        <member name="P:IdentityServer3.Core.Models.PostAuthenticationContext.ShowLoginPageOnErrorResult">
-            <summary>
-            Gets or sets if the login page should be used to show the error from the authenticate result (as opposed to the general error page).
-            </summary>
         </member>
         <member name="T:IdentityServer3.Core.Models.ProfileDataRequestContext">
             <summary>
@@ -4604,47 +4125,6 @@
             <value>
             The authenticate result.
             </value>
-        </member>
-        <member name="P:IdentityServer3.Core.Models.PreAuthenticationContext.ShowLoginPageOnErrorResult">
-            <summary>
-            Gets or sets if the login page should be used to show the error from the authenticate result (as opposed to the general error page).
-            </summary>
-        </member>
-        <member name="T:IdentityServer3.Core.Models.RsaPublicKeyJwk">
-            <summary>
-            Models an RSA public key JWK
-            </summary>
-        </member>
-        <member name="M:IdentityServer3.Core.Models.RsaPublicKeyJwk.#ctor(System.String)">
-            <summary>
-            Initializes the JWK with a key id
-            </summary>
-            <param name="kid"></param>
-        </member>
-        <member name="P:IdentityServer3.Core.Models.RsaPublicKeyJwk.kty">
-            <summary>
-            key type
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Models.RsaPublicKeyJwk.n">
-            <summary>
-            modulus
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Models.RsaPublicKeyJwk.e">
-            <summary>
-            exponent
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Models.RsaPublicKeyJwk.alg">
-            <summary>
-            algorithm
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Models.RsaPublicKeyJwk.kid">
-            <summary>
-            key identifier
-            </summary>
         </member>
         <member name="T:IdentityServer3.Core.Models.Secret">
             <summary>
@@ -4827,14 +4307,6 @@
             </summary>
             <value>
             The subject.
-            </value>
-        </member>
-        <member name="P:IdentityServer3.Core.Models.SignOutContext.ClientId">
-            <summary>
-            Gets or sets the client id.
-            </summary>
-            <value>
-            The client id.
             </value>
         </member>
         <member name="T:IdentityServer3.Core.Services.Caching.CachingClientStore">
@@ -5093,15 +4565,6 @@
               <c>true</c> if [cache views]; otherwise, <c>false</c>.
             </value>
         </member>
-        <member name="P:IdentityServer3.Core.Services.Default.DefaultViewServiceOptions.CustomViewDirectory">
-            <summary>
-            Gets or sets a value indicating the path to the filesystem directory that contain custom views. 
-            This value is only used when the ViewLoader property has not been explicitly set.
-            </summary>
-            <value>
-             The filesystem path to the views directory.
-            </value>
-        </member>
         <member name="T:IdentityServer3.Core.Services.Default.DefaultViewServiceRegistration">
             <summary>
             Registration for the default view service.
@@ -5280,188 +4743,6 @@
             </summary>
             <param name="options">The options.</param>
         </member>
-        <member name="T:IdentityServer3.Core.Services.Default.DefaultAuthenticationSessionValidator">
-            <summary>
-            Default implementation of IAuthenticationSessionValidator. Always returns true.
-            </summary>
-        </member>
-        <member name="T:IdentityServer3.Core.Services.IAuthenticationSessionValidator">
-            <summary>
-            Interface to allow validation of a user's authentication session.
-            </summary>
-        </member>
-        <member name="M:IdentityServer3.Core.Services.IAuthenticationSessionValidator.IsAuthenticationSessionValidAsync(System.Security.Claims.ClaimsPrincipal)">
-            <summary>
-            This method is called whenever an authentication cookie is presented to IdentityServer for the logged in user.
-            Return true to indicate the authentication cookie should be honored, false otherwise.
-            </summary>
-            <param name="subject">The user.</param>
-            <returns>true if authentication session is valid, false otherwise.</returns>
-        </member>
-        <member name="M:IdentityServer3.Core.Services.Default.DefaultAuthenticationSessionValidator.IsAuthenticationSessionValidAsync(System.Security.Claims.ClaimsPrincipal)">
-            <summary>
-            This method is called whenever an authentication cookie is presented to IdentityServer for the logged in user.
-            Return true to indicate the authentication cookie should be honored, false otherwise.
-            </summary>
-            <param name="subject">The user.</param>
-            <returns>true if authentication session is valid, false otherwise.</returns>
-        </member>
-        <member name="T:IdentityServer3.Core.Services.Default.DefaultCustomTokenResponseGenerator">
-            <summary>
-            nop custom token response generator
-            </summary>
-        </member>
-        <member name="T:IdentityServer3.Core.Services.ICustomTokenResponseGenerator">
-            <summary>
-            Allows adding custom data to a token response
-            </summary>
-        </member>
-        <member name="M:IdentityServer3.Core.Services.ICustomTokenResponseGenerator.GenerateAsync(IdentityServer3.Core.Validation.ValidatedTokenRequest,IdentityServer3.Core.Models.TokenResponse)">
-            <summary>
-            Custom response generation
-            </summary>
-            <param name="request">The validated request.</param>
-            <param name="response">The standard token response.</param>
-            <returns>The custom token response.</returns>
-        </member>
-        <member name="M:IdentityServer3.Core.Services.Default.DefaultCustomTokenResponseGenerator.GenerateAsync(IdentityServer3.Core.Validation.ValidatedTokenRequest,IdentityServer3.Core.Models.TokenResponse)">
-            <summary>
-            Custom response generation
-            </summary>
-            <param name="request">The validated request.</param>
-            <param name="response">The standard token response.</param>
-            <returns>The custom token response.</returns>
-        </member>
-        <member name="T:IdentityServer3.Core.Services.Default.DefaultSigningKeyService">
-            <summary>
-            Default signing key service based on IdentityServerOptions
-            </summary>
-        </member>
-        <member name="T:IdentityServer3.Core.Services.ISigningKeyService">
-            <summary>
-            Service that deals with public and private keys used for token generation and metadata
-            </summary>
-        </member>
-        <member name="M:IdentityServer3.Core.Services.ISigningKeyService.GetSigningKeyAsync">
-            <summary>
-            Retrieves the primary signing key
-            </summary>
-            <returns>Signing key</returns>
-        </member>
-        <member name="M:IdentityServer3.Core.Services.ISigningKeyService.GetPublicKeysAsync">
-            <summary>
-            Retrieves all public keys that can be used to validate tokens
-            </summary>
-            <returns>Public keys</returns>
-        </member>
-        <member name="M:IdentityServer3.Core.Services.ISigningKeyService.GetKidAsync(System.Security.Cryptography.X509Certificates.X509Certificate2)">
-            <summary>
-            Calculates the key id for a given x509 certificate
-            </summary>
-            <param name="certificate"></param>
-            <returns></returns>
-        </member>
-        <member name="M:IdentityServer3.Core.Services.Default.DefaultSigningKeyService.#ctor(IdentityServer3.Core.Configuration.IdentityServerOptions)">
-            <summary>
-            Initializes the services with identity server options
-            </summary>
-            <param name="options"></param>
-        </member>
-        <member name="M:IdentityServer3.Core.Services.Default.DefaultSigningKeyService.GetKidAsync(System.Security.Cryptography.X509Certificates.X509Certificate2)">
-            <summary>
-            Calculates the key id for a given x509 certificate
-            </summary>
-            <param name="certificate"></param>
-            <returns>kid</returns>
-        </member>
-        <member name="M:IdentityServer3.Core.Services.Default.DefaultSigningKeyService.GetPublicKeysAsync">
-            <summary>
-            Retrieves all public keys that can be used to validate tokens
-            </summary>
-            <returns>x509 certificates</returns>
-        </member>
-        <member name="M:IdentityServer3.Core.Services.Default.DefaultSigningKeyService.GetSigningKeyAsync">
-            <summary>
-            Retrieves the primary signing key
-            </summary>
-            <returns>x509 certificate</returns>
-        </member>
-        <member name="T:IdentityServer3.Core.Services.Default.DefaultTokenSigningService">
-            <summary>
-            Default token signing service
-            </summary>
-        </member>
-        <member name="T:IdentityServer3.Core.Services.ITokenSigningService">
-            <summary>
-            Logic for signing security tokens
-            </summary>
-        </member>
-        <member name="M:IdentityServer3.Core.Services.ITokenSigningService.SignTokenAsync(IdentityServer3.Core.Models.Token)">
-            <summary>
-            Signs the token.
-            </summary>
-            <param name="token">The token.</param>
-            <returns>A protected and serialized security token</returns>
-        </member>
-        <member name="F:IdentityServer3.Core.Services.Default.DefaultTokenSigningService._options">
-            <summary>
-            The identity server options
-            </summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Services.Default.DefaultTokenSigningService._keyService">
-            <summary>
-            The signing key service
-            </summary>
-        </member>
-        <member name="M:IdentityServer3.Core.Services.Default.DefaultTokenSigningService.#ctor(IdentityServer3.Core.Configuration.IdentityServerOptions)">
-            <summary>
-            Initializes a new instance of the <see cref="T:IdentityServer3.Core.Services.Default.DefaultTokenSigningService"/> class.
-            </summary>
-            <param name="options">The options.</param>
-        </member>
-        <member name="M:IdentityServer3.Core.Services.Default.DefaultTokenSigningService.#ctor(IdentityServer3.Core.Services.ISigningKeyService)">
-            <summary>
-            Initializes a new instance of the <see cref="T:IdentityServer3.Core.Services.Default.DefaultTokenSigningService"/> class.
-            </summary>
-            <param name="keyService">The signing key service.</param>
-        </member>
-        <member name="M:IdentityServer3.Core.Services.Default.DefaultTokenSigningService.SignTokenAsync(IdentityServer3.Core.Models.Token)">
-            <summary>
-            Signs the token.
-            </summary>
-            <param name="token">The token.</param>
-            <returns>
-            A protected and serialized security token
-            </returns>
-        </member>
-        <member name="M:IdentityServer3.Core.Services.Default.DefaultTokenSigningService.GetSigningCredentialsAsync">
-            <summary>
-            Retrieves the signing credential (override to load key from alternative locations)
-            </summary>
-            <returns>The signing credential</returns>
-        </member>
-        <member name="M:IdentityServer3.Core.Services.Default.DefaultTokenSigningService.CreateJsonWebToken(IdentityServer3.Core.Models.Token,System.IdentityModel.Tokens.SigningCredentials)">
-            <summary>
-            Creates the json web token.
-            </summary>
-            <param name="token">The token.</param>
-            <param name="credentials">The credentials.</param>
-            <returns>The signed JWT</returns>
-        </member>
-        <member name="M:IdentityServer3.Core.Services.Default.DefaultTokenSigningService.CreatePayload(IdentityServer3.Core.Models.Token)">
-            <summary>
-            Creates the JWT payload
-            </summary>
-            <param name="token">The token.</param>
-            <returns>The JWT payload</returns>
-        </member>
-        <member name="M:IdentityServer3.Core.Services.Default.DefaultTokenSigningService.CreateHeaderAsync(System.IdentityModel.Tokens.SigningCredentials)">
-            <summary>
-            Creates the JWT header
-            </summary>
-            <param name="credential">The credentials.</param>
-            <returns>The JWT header</returns>
-        </member>
         <member name="T:IdentityServer3.Core.Validation.BasicAuthenticationSecretParser">
             <summary>
             Parses a Basic Authentication header
@@ -5479,121 +4760,9 @@
             <param name="environment">The environment.</param>
             <returns>A parsed secret</returns>
         </member>
-        <member name="M:IdentityServer3.Core.Validation.BasicAuthenticationSecretParser.#ctor(IdentityServer3.Core.Configuration.IdentityServerOptions)">
-            <summary>
-            Creates the parser with a reference to identity server options
-            </summary>
-            <param name="options">IdentityServer options</param>
-        </member>
         <member name="M:IdentityServer3.Core.Validation.BasicAuthenticationSecretParser.ParseAsync(System.Collections.Generic.IDictionary{System.String,System.Object})">
             <summary>
             Tries to find a secret on the environment that can be used for authentication
-            </summary>
-            <param name="environment">The environment.</param>
-            <returns>
-            A parsed secret
-            </returns>
-        </member>
-        <member name="T:IdentityServer3.Core.Validation.ValidationResult">
-            <summary>
-            Minimal validation result class (base-class for more complext validation results)
-            </summary>
-        </member>
-        <member name="M:IdentityServer3.Core.Validation.ValidationResult.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:IdentityServer3.Core.Validation.ValidationResult"/> class.
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Validation.ValidationResult.IsError">
-            <summary>
-            Gets or sets a value indicating whether the validation was successful.
-            </summary>
-            <value>
-              <c>true</c> if the validation is failed; otherwise, <c>false</c>.
-            </value>
-        </member>
-        <member name="P:IdentityServer3.Core.Validation.ValidationResult.Error">
-            <summary>
-            Gets or sets the error.
-            </summary>
-            <value>
-            The error.
-            </value>
-        </member>
-        <member name="P:IdentityServer3.Core.Validation.ValidationResult.ErrorDescription">
-            <summary>
-            Gets or sets the error description.
-            </summary>
-            <value>
-            The error description.
-            </value>
-        </member>
-        <member name="T:IdentityServer3.Core.Validation.RequestedTokenTypes">
-            <summary>
-            Types of token you can request at the token endpoint
-            </summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Validation.RequestedTokenTypes.Bearer">
-            <summary>
-            Bearer token
-            </summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Validation.RequestedTokenTypes.PoP">
-            <summary>
-            Proof of possession token
-            </summary>
-        </member>
-        <member name="T:IdentityServer3.Core.Validation.ResponseTypeEqualityComparer">
-            <summary>
-            Compares resource_type strings, where the order of space-delimited values is insignificant.
-            </summary>
-            <remarks>
-            <para>
-            This is to handle the fact that the order of multi-valued response_type lists is
-            insignificant, per the <see href="https://tools.ietf.org/html/rfc6749#section-3.1.1">OAuth2 spec</see>
-            and the 
-            (<see href="http://openid.net/specs/oauth-v2-multiple-response-types-1_0-03.html#terminology">OAuth 
-            2.0 Multiple Response Type Encoding Practices draft </see>).
-            </para>
-            </remarks>
-        </member>
-        <member name="M:IdentityServer3.Core.Validation.ResponseTypeEqualityComparer.Equals(System.String,System.String)">
-            <summary>
-            Determines whether the specified values are equal.
-            </summary>
-            <param name="x">The first string to compare.</param>
-            <param name="y">The second string to compare.</param>
-            <returns>true if the specified values are equal; otherwise, false.</returns>
-        </member>
-        <member name="M:IdentityServer3.Core.Validation.ResponseTypeEqualityComparer.GetHashCode(System.String)">
-            <summary>
-            Returns a hash code for the value.
-            </summary>
-            <param name="value">The value for which a hash code is to be returned.</param>
-            <returns>A hash code for the value, suitable for use in hashing algorithms and data structures like a hash table.</returns>
-        </member>
-        <member name="T:IdentityServer3.Core.Validation.ScopeSecretValidationResult">
-            <summary>
-            Validation result for client validation
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Validation.ScopeSecretValidationResult.Scope">
-            <summary>
-            Gets or sets the client.
-            </summary>
-            <value>
-            The client.
-            </value>
-        </member>
-        <member name="T:IdentityServer3.Core.Validation.ClientAssertionSecretParser">
-            <summary>
-            Parses a POST body for secrets
-            </summary>
-        </member>
-        <member name="M:IdentityServer3.Core.Validation.ClientAssertionSecretParser.ParseAsync(System.Collections.Generic.IDictionary{System.String,System.Object})">
-            <summary>
-            Tries to find a JWT client assertion token on the environment that can be used for authentication
-            Used for "private_key_jwt" client authentication method as defined in http://openid.net/specs/openid-connect-core-1_0.html#ClientAuthentication
             </summary>
             <param name="environment">The environment.</param>
             <returns>
@@ -5722,15 +4891,25 @@
               <c>true</c> if allow all; otherwise, <c>false</c>.
             </value>
         </member>
-        <member name="T:IdentityServer3.Core.Validation.EmbeddedCertificateJwtSecurityTokenHandler">
+        <member name="T:IdentityServer3.Core.Services.ICustomGrantValidator">
             <summary>
-            Can verify tokens that only embed "x5c" key and don't contain "x5t"
+            Handles validation of token requests using custom grant types
             </summary>
-            <remarks>
-            Current version implementation of <see cref="P:System.IdentityModel.Tokens.JwtHeader.SigningCredentials"/> returns NamedKeySecurityKeyIdentifierClause for "x5c" key in the token and incorrectly handles its value,
-            which must be an array of Base64 encoded certificates according to the specification.
-            So it is readded as X509RawDataKeyIdentifierClause, which is then correctly validated by the default JwtSecurityTokenHandler implementation
-            </remarks>
+        </member>
+        <member name="M:IdentityServer3.Core.Services.ICustomGrantValidator.ValidateAsync(IdentityServer3.Core.Validation.ValidatedTokenRequest)">
+            <summary>
+            Validates the custom grant request.
+            </summary>
+            <param name="request">The validated token request.</param>
+            <returns>A principal</returns>
+        </member>
+        <member name="P:IdentityServer3.Core.Services.ICustomGrantValidator.GrantType">
+            <summary>
+            Returns the grant type this validator can deal with
+            </summary>
+            <value>
+            The type of the grant.
+            </value>
         </member>
         <member name="T:IdentityServer3.Core.Validation.HashedSharedSecretValidator">
             <summary>
@@ -5854,28 +5033,6 @@
               <c>true</c> is the URI is valid; <c>false</c> otherwise.
             </returns>
         </member>
-        <member name="T:IdentityServer3.Core.Validation.PrivateKeyJwtSecretValidator">
-            <summary>
-            Validates a secret based on RS256 signed JWT token
-            </summary>
-        </member>
-        <member name="M:IdentityServer3.Core.Validation.PrivateKeyJwtSecretValidator.#ctor(IdentityServer3.Core.Configuration.IdentityServerOptions)">
-            <summary>
-            Instantiates an instance of private_key_jwt secret validator
-            </summary>
-            <param name="options">IdentityServer options</param>
-        </member>
-        <member name="M:IdentityServer3.Core.Validation.PrivateKeyJwtSecretValidator.ValidateAsync(System.Collections.Generic.IEnumerable{IdentityServer3.Core.Models.Secret},IdentityServer3.Core.Models.ParsedSecret)">
-            <summary>
-            Validates a secret
-            </summary>
-            <param name="secrets">The stored secrets.</param>
-            <param name="parsedSecret">The received secret.</param>
-            <returns>
-            A validation result
-            </returns>
-            <exception cref="T:System.ArgumentException">ParsedSecret.Credential is not a JWT token</exception>
-        </member>
         <member name="T:IdentityServer3.Core.Validation.PlainTextSharedSecretValidator">
             <summary>
             Validates a secret stored in plain text
@@ -5896,12 +5053,6 @@
             <summary>
             Parses a POST body for secrets
             </summary>
-        </member>
-        <member name="M:IdentityServer3.Core.Validation.PostBodySecretParser.#ctor(IdentityServer3.Core.Configuration.IdentityServerOptions)">
-            <summary>
-            Creates the parser with options
-            </summary>
-            <param name="options">IdentityServer options</param>
         </member>
         <member name="M:IdentityServer3.Core.Validation.PostBodySecretParser.ParseAsync(System.Collections.Generic.IDictionary{System.String,System.Object})">
             <summary>
@@ -6041,6 +5192,40 @@
             Validation result for authorize requests
             </summary>
         </member>
+        <member name="T:IdentityServer3.Core.Validation.ValidationResult">
+            <summary>
+            Minimal validation result class (base-class for more complext validation results)
+            </summary>
+        </member>
+        <member name="M:IdentityServer3.Core.Validation.ValidationResult.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:IdentityServer3.Core.Validation.ValidationResult"/> class.
+            </summary>
+        </member>
+        <member name="P:IdentityServer3.Core.Validation.ValidationResult.IsError">
+            <summary>
+            Gets or sets a value indicating whether the validation was successful.
+            </summary>
+            <value>
+              <c>true</c> if the validation is failed; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:IdentityServer3.Core.Validation.ValidationResult.Error">
+            <summary>
+            Gets or sets the error.
+            </summary>
+            <value>
+            The error.
+            </value>
+        </member>
+        <member name="P:IdentityServer3.Core.Validation.ValidationResult.ErrorDescription">
+            <summary>
+            Gets or sets the error description.
+            </summary>
+            <value>
+            The error description.
+            </value>
+        </member>
         <member name="M:IdentityServer3.Core.Validation.AuthorizeRequestValidationResult.#ctor">
             <summary>
             Initializes a new instance of the <see cref="T:IdentityServer3.Core.Validation.AuthorizeRequestValidationResult"/> class.
@@ -6148,11 +5333,6 @@
               Looks up a localized string similar to Resource Owner Password Flow Login Success.
             </summary>
         </member>
-        <member name="P:IdentityServer3.Core.Resources.Events.TokenRevoked">
-            <summary>
-              Looks up a localized string similar to Token Revoked Event.
-            </summary>
-        </member>
         <member name="T:IdentityServer3.Core.Models.SignOutMessage">
             <summary>
             Models the request from a client to sign the user out.
@@ -6219,22 +5399,6 @@
         <member name="P:IdentityServer3.Core.Configuration.CspOptions.ConnectSrc">
             <summary>
             Allows additional connect sources to be indicated.
-            </summary>
-            <value>
-            The connect source.
-            </value>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.CspOptions.ImgSrc">
-            <summary>
-            Allows additional image sources to be indicated.
-            </summary>
-            <value>
-            The connect source.
-            </value>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.CspOptions.FrameSrc">
-            <summary>
-            Allows additional iframe sources to be indicated.
             </summary>
             <value>
             The connect source.
@@ -6494,72 +5658,6 @@
             Validation result for token requests
             </summary>
         </member>
-        <member name="T:IdentityServer3.Core.ViewModels.AuthorizeResponseViewModel">
-            <summary>
-            Models the data needed to render the authorize response page.
-            </summary>
-        </member>
-        <member name="T:IdentityServer3.Core.ViewModels.CommonViewModel">
-            <summary>
-            Models common data needed to render pages in IdentityServer.
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.ViewModels.CommonViewModel.SiteUrl">
-            <summary>
-            The site URL.
-            </summary>
-            <value>
-            The site URL.
-            </value>
-        </member>
-        <member name="P:IdentityServer3.Core.ViewModels.CommonViewModel.SiteName">
-            <summary>
-            Gets or sets the name of the site.
-            </summary>
-            <value>
-            The name of the site.
-            </value>
-        </member>
-        <member name="P:IdentityServer3.Core.ViewModels.CommonViewModel.CurrentUser">
-            <summary>
-            The current logged in display name.
-            </summary>
-            <value>
-            The current user.
-            </value>
-        </member>
-        <member name="P:IdentityServer3.Core.ViewModels.CommonViewModel.LogoutUrl">
-            <summary>
-            The URL to allow a user to logout.
-            </summary>
-            <value>
-            The logout URL.
-            </value>
-        </member>
-        <member name="P:IdentityServer3.Core.ViewModels.CommonViewModel.Custom">
-            <summary>
-            Gets or sets the custom data for the model.
-            </summary>
-            <value>
-            The custom data.
-            </value>
-        </member>
-        <member name="P:IdentityServer3.Core.ViewModels.AuthorizeResponseViewModel.ResponseFormUri">
-            <summary>
-            The action URI for the response form.
-            </summary>
-            <value>
-            The URI.
-            </value>
-        </member>
-        <member name="P:IdentityServer3.Core.ViewModels.AuthorizeResponseViewModel.ResponseFormFields">
-            <summary>
-            The input elements for the response form.
-            </summary>
-            <value>
-            The HTML.
-            </value>
-        </member>
         <member name="T:IdentityServer3.Core.ViewModels.RevokeClientPermission">
             <summary>
             Models data submitted to revoke a subject's permissions to a client 
@@ -6597,14 +5695,6 @@
             </summary>
             <value>
             The subject.
-            </value>
-        </member>
-        <member name="P:IdentityServer3.Core.Validation.ValidatedRequest.SessionId">
-            <summary>
-            Gets or sets the session identifier.
-            </summary>
-            <value>
-            The session identifier.
             </value>
         </member>
         <member name="P:IdentityServer3.Core.Validation.ValidatedRequest.Options">
@@ -6894,14 +5984,6 @@
             The nonce.
             </value>
         </member>
-        <member name="P:IdentityServer3.Core.Models.TokenCreationRequest.ProofKey">
-            <summary>
-            Gets or sets proof key that should be bound to the token.
-            </summary>
-            <value>
-            The key.
-            </value>
-        </member>
         <member name="T:IdentityServer3.Core.Resources.Scopes">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.
@@ -7178,7 +6260,7 @@
             Initializes a new instance of the <see cref="T:IdentityServer3.Core.Models.AuthenticateResult"/> class. This
             version of the constructor indicates a full login.
             </summary>
-            <param name="subject">The subject claim used to uniquely identify the user.</param>
+            <param name="subject">The subject claim used to uniquely identifier the user.</param>
             <param name="name">The name claim used as the display name.</param>
             <param name="claims">Additional claims that will be maintained in the principal.</param>
             <param name="identityProvider">The identity provider. This should used when an external 
@@ -7200,7 +6282,7 @@
             current web server. The <c>"~/"</c> prefix is supported to allow application-relative
             paths to be used (e.g. "~/path").
             </param>
-            <param name="subject">The subject claim used to uniquely identify the user.</param>
+            <param name="subject">The subject claim used to uniquely identifier the user.</param>
             <param name="name">The name claim used as the display name.</param>
             <param name="claims">Additional claims that will be maintained in the principal.</param>
             <param name="identityProvider">The identity provider. This should used when an external 
@@ -7417,6 +6499,51 @@
             <summary>
             Models the data needed to render the logged out page.
             </summary>
+        </member>
+        <member name="T:IdentityServer3.Core.ViewModels.CommonViewModel">
+            <summary>
+            Models common data needed to render pages in IdentityServer.
+            </summary>
+        </member>
+        <member name="P:IdentityServer3.Core.ViewModels.CommonViewModel.SiteUrl">
+            <summary>
+            The site URL.
+            </summary>
+            <value>
+            The site URL.
+            </value>
+        </member>
+        <member name="P:IdentityServer3.Core.ViewModels.CommonViewModel.SiteName">
+            <summary>
+            Gets or sets the name of the site.
+            </summary>
+            <value>
+            The name of the site.
+            </value>
+        </member>
+        <member name="P:IdentityServer3.Core.ViewModels.CommonViewModel.CurrentUser">
+            <summary>
+            The current logged in display name.
+            </summary>
+            <value>
+            The current user.
+            </value>
+        </member>
+        <member name="P:IdentityServer3.Core.ViewModels.CommonViewModel.LogoutUrl">
+            <summary>
+            The URL to allow a user to logout.
+            </summary>
+            <value>
+            The logout URL.
+            </value>
+        </member>
+        <member name="P:IdentityServer3.Core.ViewModels.CommonViewModel.Custom">
+            <summary>
+            Gets or sets the custom data for the model.
+            </summary>
+            <value>
+            The custom data.
+            </value>
         </member>
         <member name="P:IdentityServer3.Core.ViewModels.LoggedOutViewModel.IFrameUrls">
             <summary>
@@ -7749,15 +6876,6 @@
             The login page links.
             </value>
         </member>
-        <member name="P:IdentityServer3.Core.Configuration.AuthenticationOptions.RequireSignOutPrompt">
-            <summary>
-            Gets or sets a value indicating whether IdentityServer will always show a confirmation page for sign-out.
-            Defaults to false.
-            </summary>
-            <value>
-            <c>true</c> if sign-out prompt is required; otherwise, <c>false</c>.
-            </value>
-        </member>
         <member name="P:IdentityServer3.Core.Configuration.AuthenticationOptions.EnableSignOutPrompt">
             <summary>
             Gets or sets a value indicating whether IdentityServer will show a confirmation page for sign-out.
@@ -7766,14 +6884,6 @@
             </summary>
             <value>
             <c>true</c> if sign-out prompt is enabled; otherwise, <c>false</c>.
-            </value>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.AuthenticationOptions.EnableAutoCallbackForFederatedSignout">
-            <summary>
-            Gets or sets a value indicating whether IdentityServer automatically sends a callback URL for federated post-logout redirects. Defaults to false.
-            </summary>
-            <value>
-            <c>true</c> if callback URL sent for federated post-logout redirects; otherwise, <c>false</c>.
             </value>
         </member>
         <member name="P:IdentityServer3.Core.Configuration.AuthenticationOptions.EnablePostSignOutAutoRedirect">
@@ -7910,12 +7020,6 @@
             <value>
             The secure.
             </value>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.CookieOptions.SessionStoreProvider">
-            <summary>
-            An optional container in which to store the identity across requests. When used, only a session identifier is sent
-            to the client. This can be used to mitigate potential problems with very large identities.
-            </summary>
         </member>
         <member name="T:IdentityServer3.Core.Models.RefreshToken">
             <summary>
@@ -8278,11 +7382,6 @@
             The error view
             </summary>
         </member>
-        <member name="F:IdentityServer3.Core.Services.Default.DefaultViewService.AuthorizeResponseView">
-            <summary>
-            The authorize response view
-            </summary>
-        </member>
         <member name="F:IdentityServer3.Core.Services.Default.DefaultViewService.config">
             <summary>
             The configuration
@@ -8356,15 +7455,6 @@
             Stream for the HTML
             </returns>
         </member>
-        <member name="M:IdentityServer3.Core.Services.Default.DefaultViewService.AuthorizeResponse(IdentityServer3.Core.ViewModels.AuthorizeResponseViewModel)">
-            <summary>
-            Loads the HTML for the authorize response page.
-            </summary>
-            <param name="model">The model.</param>
-            <returns>
-            Stream for the HTML
-            </returns>
-        </member>
         <member name="M:IdentityServer3.Core.Services.Default.DefaultViewService.Render(IdentityServer3.Core.ViewModels.CommonViewModel,System.String)">
             <summary>
             Renders the specified page.
@@ -8414,6 +7504,52 @@
             or
             scripts
             </exception>
+        </member>
+        <member name="T:IdentityServer3.Core.Services.Default.DefaultTokenSigningService">
+            <summary>
+            Default token signing service
+            </summary>
+        </member>
+        <member name="T:IdentityServer3.Core.Services.ITokenSigningService">
+            <summary>
+            Logic for signing security tokens
+            </summary>
+        </member>
+        <member name="M:IdentityServer3.Core.Services.ITokenSigningService.SignTokenAsync(IdentityServer3.Core.Models.Token)">
+            <summary>
+            Signs the token.
+            </summary>
+            <param name="token">The token.</param>
+            <returns>A protected and serialized security token</returns>
+        </member>
+        <member name="F:IdentityServer3.Core.Services.Default.DefaultTokenSigningService._options">
+            <summary>
+            The identity server options
+            </summary>
+        </member>
+        <member name="M:IdentityServer3.Core.Services.Default.DefaultTokenSigningService.#ctor(IdentityServer3.Core.Configuration.IdentityServerOptions)">
+            <summary>
+            Initializes a new instance of the <see cref="T:IdentityServer3.Core.Services.Default.DefaultTokenSigningService"/> class.
+            </summary>
+            <param name="options">The options.</param>
+        </member>
+        <member name="M:IdentityServer3.Core.Services.Default.DefaultTokenSigningService.SignTokenAsync(IdentityServer3.Core.Models.Token)">
+            <summary>
+            Signs the token.
+            </summary>
+            <param name="token">The token.</param>
+            <returns>
+            A protected and serialized security token
+            </returns>
+            <exception cref="T:System.InvalidOperationException">Invalid token type</exception>
+        </member>
+        <member name="M:IdentityServer3.Core.Services.Default.DefaultTokenSigningService.CreateJsonWebToken(IdentityServer3.Core.Models.Token,System.IdentityModel.Tokens.SigningCredentials)">
+            <summary>
+            Creates the json web token.
+            </summary>
+            <param name="token">The token.</param>
+            <param name="credentials">The credentials.</param>
+            <returns></returns>
         </member>
         <member name="T:IdentityServer3.Core.Configuration.IdentityServerOptions">
             <summary>
@@ -8497,14 +7633,6 @@
             The endpoints configuration.
             </value>
         </member>
-        <member name="P:IdentityServer3.Core.Configuration.IdentityServerOptions.DiscoveryOptions">
-            <summary>
-            Gets or sets the discovery endpoint configuration.
-            </summary>
-            <value>
-            The discovery endpoint configuration.
-            </value>
-        </member>
         <member name="P:IdentityServer3.Core.Configuration.IdentityServerOptions.AuthenticationOptions">
             <summary>
             Gets or sets the authentication options.
@@ -8551,14 +7679,6 @@
             </summary>
             <value>
             The events options.
-            </value>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.IdentityServerOptions.InputLengthRestrictions">
-            <summary>
-            Gets or sets the max input length restrictions.
-            </summary>
-            <value>
-            The length restrictions.
             </value>
         </member>
         <member name="P:IdentityServer3.Core.Configuration.IdentityServerOptions.EnableWelcomePage">
@@ -8791,30 +7911,6 @@
             The CORS policy service.
             </value>
         </member>
-        <member name="P:IdentityServer3.Core.Configuration.IdentityServerServiceFactory.CustomTokenResponseGenerator">
-            <summary>
-            Gets or sets the custom token response generator
-            </summary>
-            <value>
-            The custom token response generator
-            </value>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.IdentityServerServiceFactory.AuthenticationSessionValidator">
-            <summary>
-            Gets or sets the authentication session validator.
-            </summary>
-            <value>
-            The authentication session validator.
-            </value>
-        </member>
-        <member name="P:IdentityServer3.Core.Configuration.IdentityServerServiceFactory.SigningKeyService">
-            <summary>
-            Gets or sets the signing key service.
-            </summary>
-            <value>
-            The signing key service.
-            </value>
-        </member>
         <member name="T:IdentityServer3.Core.Endpoints.AccessTokenValidationController">
             <summary>
             Endpoint for validating access tokens
@@ -8854,16 +7950,13 @@
             OpenID Connect end session endpoint
             </summary>
         </member>
-        <member name="M:IdentityServer3.Core.Endpoints.EndSessionController.#ctor(IdentityServer3.Core.Configuration.IdentityServerOptions,IdentityServer3.Core.Validation.EndSessionRequestValidator,IdentityServer3.Core.ResponseHandling.EndSessionResponseGenerator,IdentityServer3.Core.Configuration.Hosting.ClientListCookie,IdentityServer3.Core.Services.IClientStore,IdentityServer3.Core.Configuration.Hosting.SessionCookie)">
+        <member name="M:IdentityServer3.Core.Endpoints.EndSessionController.#ctor(IdentityServer3.Core.Configuration.IdentityServerOptions,IdentityServer3.Core.Validation.EndSessionRequestValidator,IdentityServer3.Core.ResponseHandling.EndSessionResponseGenerator)">
             <summary>
             Initializes a new instance of the <see cref="T:IdentityServer3.Core.Endpoints.EndSessionController"/> class.
             </summary>
             <param name="options">The options.</param>
             <param name="validator">The validator.</param>
             <param name="generator">The generator.</param>
-            <param name="clientListCookie">The client list.</param>
-            <param name="clientStore">The client store.</param>
-            <param name="sessionCookie">The session cookie.</param>
         </member>
         <member name="M:IdentityServer3.Core.Endpoints.EndSessionController.Logout">
             <summary>
@@ -8871,7 +7964,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:IdentityServer3.Core.Endpoints.EndSessionController.LogoutCallback(System.String)">
+        <member name="M:IdentityServer3.Core.Endpoints.EndSessionController.LogoutCallback">
             <summary>
             Logout callback
             </summary>
@@ -8971,30 +8064,6 @@
             </summary>
             <value>
               <c>true</c> if consent was shown; otherwise, <c>false</c>.
-            </value>
-        </member>
-        <member name="P:IdentityServer3.Core.Models.AuthorizationCode.SessionId">
-            <summary>
-            Gets or sets the session identifier.
-            </summary>
-            <value>
-            The session identifier.
-            </value>
-        </member>
-        <member name="P:IdentityServer3.Core.Models.AuthorizationCode.CodeChallenge">
-            <summary>
-            Gets or sets the code challenge.
-            </summary>
-            <value>
-            The code challenge.
-            </value>
-        </member>
-        <member name="P:IdentityServer3.Core.Models.AuthorizationCode.CodeChallengeMethod">
-            <summary>
-            Gets or sets the code challenge method.
-            </summary>
-            <value>
-            The code challenge method
             </value>
         </member>
         <member name="P:IdentityServer3.Core.Models.AuthorizationCode.SubjectId">
@@ -9217,22 +8286,7 @@
             The events service
             </summary>
         </member>
-        <member name="F:IdentityServer3.Core.Services.Default.DefaultTokenService._owinEnvironmentService">
-            <summary>
-            The OWIN environment service
-            </summary>
-        </member>
         <member name="M:IdentityServer3.Core.Services.Default.DefaultTokenService.#ctor(IdentityServer3.Core.Configuration.IdentityServerOptions,IdentityServer3.Core.Services.IClaimsProvider,IdentityServer3.Core.Services.ITokenHandleStore,IdentityServer3.Core.Services.ITokenSigningService,IdentityServer3.Core.Services.IEventService)">
-            <summary>
-            Initializes a new instance of the <see cref="T:IdentityServer3.Core.Services.Default.DefaultTokenService"/> class. This overloaded constructor is deprecated and will be removed in 3.0.0.
-            </summary>
-            <param name="options">The options.</param>
-            <param name="claimsProvider">The claims provider.</param>
-            <param name="tokenHandles">The token handles.</param>
-            <param name="signingService">The signing service.</param>
-            <param name="events">The events service.</param>
-        </member>
-        <member name="M:IdentityServer3.Core.Services.Default.DefaultTokenService.#ctor(IdentityServer3.Core.Configuration.IdentityServerOptions,IdentityServer3.Core.Services.IClaimsProvider,IdentityServer3.Core.Services.ITokenHandleStore,IdentityServer3.Core.Services.ITokenSigningService,IdentityServer3.Core.Services.IEventService,IdentityServer3.Core.Services.OwinEnvironmentService)">
             <summary>
             Initializes a new instance of the <see cref="T:IdentityServer3.Core.Services.Default.DefaultTokenService"/> class.
             </summary>
@@ -9240,8 +8294,7 @@
             <param name="claimsProvider">The claims provider.</param>
             <param name="tokenHandles">The token handles.</param>
             <param name="signingService">The signing service.</param>
-            <param name="events">The OWIN environment service.</param>
-            <param name="owinEnvironmentService">The events service.</param>
+            <param name="events">The events service.</param>
         </member>
         <member name="M:IdentityServer3.Core.Services.Default.DefaultTokenService.CreateIdentityTokenAsync(IdentityServer3.Core.Models.TokenCreationRequest)">
             <summary>
@@ -9371,26 +8424,6 @@
             <param name="claims">The claims.</param>
             <returns></returns>
         </member>
-        <member name="T:IdentityServer3.Core.Services.ICustomGrantValidator">
-            <summary>
-            Handles validation of token requests using custom grant types
-            </summary>
-        </member>
-        <member name="M:IdentityServer3.Core.Services.ICustomGrantValidator.ValidateAsync(IdentityServer3.Core.Validation.ValidatedTokenRequest)">
-            <summary>
-            Validates the custom grant request.
-            </summary>
-            <param name="request">The validated token request.</param>
-            <returns>A principal</returns>
-        </member>
-        <member name="P:IdentityServer3.Core.Services.ICustomGrantValidator.GrantType">
-            <summary>
-            Returns the grant type this validator can deal with
-            </summary>
-            <value>
-            The type of the grant.
-            </value>
-        </member>
         <member name="T:IdentityServer3.Core.Validation.TokenValidationResult">
             <summary>
             Modles the validation result of access tokens and id tokens.
@@ -9448,148 +8481,6 @@
             <value>
             The access token.
             </value>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.StandardScopes.OpenId">
-            <summary>REQUIRED. Informs the Authorization Server that the Client is making an OpenID Connect request. If the <c>openid</c> scope value is not present, the behavior is entirely unspecified.</summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.StandardScopes.Profile">
-            <summary>OPTIONAL. This scope value requests access to the End-User's default profile Claims, which are: <c>name</c>, <c>family_name</c>, <c>given_name</c>, <c>middle_name</c>, <c>nickname</c>, <c>preferred_username</c>, <c>profile</c>, <c>picture</c>, <c>website</c>, <c>gender</c>, <c>birthdate</c>, <c>zoneinfo</c>, <c>locale</c>, and <c>updated_at</c>.</summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.StandardScopes.Email">
-            <summary>OPTIONAL. This scope value requests access to the <c>email</c> and <c>email_verified</c> Claims.</summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.StandardScopes.Address">
-            <summary>OPTIONAL. This scope value requests access to the <c>address</c> Claim.</summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.StandardScopes.Phone">
-            <summary>OPTIONAL. This scope value requests access to the <c>phone_number</c> and <c>phone_number_verified</c> Claims.</summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.StandardScopes.OfflineAccess">
-            <summary>This scope value MUST NOT be used with the OpenID Connect Implicit Client Implementer's Guide 1.0. See the OpenID Connect Basic Client Implementer's Guide 1.0 (http://openid.net/specs/openid-connect-implicit-1_0.html#OpenID.Basic) for its usage in that subset of OpenID Connect.</summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.ClaimTypes.Subject">
-            <summary>Unique Identifier for the End-User at the Issuer.</summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.ClaimTypes.Name">
-            <summary>End-User's full name in displayable form including all name parts, possibly including titles and suffixes, ordered according to the End-User's locale and preferences.</summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.ClaimTypes.GivenName">
-            <summary>Given name(s) or first name(s) of the End-User. Note that in some cultures, people can have multiple given names; all can be present, with the names being separated by space characters.</summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.ClaimTypes.FamilyName">
-            <summary>Surname(s) or last name(s) of the End-User. Note that in some cultures, people can have multiple family names or no family name; all can be present, with the names being separated by space characters.</summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.ClaimTypes.MiddleName">
-            <summary>Middle name(s) of the End-User. Note that in some cultures, people can have multiple middle names; all can be present, with the names being separated by space characters. Also note that in some cultures, middle names are not used.</summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.ClaimTypes.NickName">
-            <summary>Casual name of the End-User that may or may not be the same as the given_name. For instance, a nickname value of Mike might be returned alongside a given_name value of Michael.</summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.ClaimTypes.PreferredUserName">
-            <summary>Shorthand name by which the End-User wishes to be referred to at the RP, such as janedoe or j.doe. This value MAY be any valid JSON string including special characters such as @, /, or whitespace. The relying party MUST NOT rely upon this value being unique</summary>
-            <remarks>The RP MUST NOT rely upon this value being unique, as discussed in http://openid.net/specs/openid-connect-basic-1_0-32.html#ClaimStability </remarks>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.ClaimTypes.Profile">
-            <summary>URL of the End-User's profile page. The contents of this Web page SHOULD be about the End-User.</summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.ClaimTypes.Picture">
-            <summary>URL of the End-User's profile picture. This URL MUST refer to an image file (for example, a PNG, JPEG, or GIF image file), rather than to a Web page containing an image.</summary>
-            <remarks>Note that this URL SHOULD specifically reference a profile photo of the End-User suitable for displaying when describing the End-User, rather than an arbitrary photo taken by the End-User.</remarks>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.ClaimTypes.WebSite">
-            <summary>URL of the End-User's Web page or blog. This Web page SHOULD contain information published by the End-User or an organization that the End-User is affiliated with.</summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.ClaimTypes.Email">
-            <summary>End-User's preferred e-mail address. Its value MUST conform to the RFC 5322 [RFC5322] addr-spec syntax. The relying party MUST NOT rely upon this value being unique</summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.ClaimTypes.EmailVerified">
-            <summary>"true" if the End-User's e-mail address has been verified; otherwise "false".</summary>
-             <remarks>When this Claim Value is "true", this means that the OP took affirmative steps to ensure that this e-mail address was controlled by the End-User at the time the verification was performed. The means by which an e-mail address is verified is context-specific, and dependent upon the trust framework or contractual agreements within which the parties are operating.</remarks>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.ClaimTypes.Gender">
-            <summary>End-User's gender. Values defined by this specification are "female" and "male". Other values MAY be used when neither of the defined values are applicable.</summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.ClaimTypes.BirthDate">
-            <summary>End-User's birthday, represented as an ISO 8601:2004 [ISO8601‑2004] YYYY-MM-DD format. The year MAY be 0000, indicating that it is omitted. To represent only the year, YYYY format is allowed. Note that depending on the underlying platform's date related function, providing just year can result in varying month and day, so the implementers need to take this factor into account to correctly process the dates.</summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.ClaimTypes.ZoneInfo">
-            <summary>String from the time zone database (http://www.twinsun.com/tz/tz-link.htm) representing the End-User's time zone. For example, Europe/Paris or America/Los_Angeles.</summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.ClaimTypes.Locale">
-            <summary>End-User's locale, represented as a BCP47 [RFC5646] language tag. This is typically an ISO 639-1 Alpha-2 [ISO639‑1] language code in lowercase and an ISO 3166-1 Alpha-2 [ISO3166‑1] country code in uppercase, separated by a dash. For example, en-US or fr-CA. As a compatibility note, some implementations have used an underscore as the separator rather than a dash, for example, en_US; Relying Parties MAY choose to accept this locale syntax as well.</summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.ClaimTypes.PhoneNumber">
-            <summary>End-User's preferred telephone number. E.164 (https://www.itu.int/rec/T-REC-E.164/e) is RECOMMENDED as the format of this Claim, for example, +1 (425) 555-1212 or +56 (2) 687 2400. If the phone number contains an extension, it is RECOMMENDED that the extension be represented using the RFC 3966 [RFC3966] extension syntax, for example, +1 (604) 555-1234;ext=5678.</summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.ClaimTypes.PhoneNumberVerified">
-            <summary>True if the End-User's phone number has been verified; otherwise false. When this Claim Value is true, this means that the OP took affirmative steps to ensure that this phone number was controlled by the End-User at the time the verification was performed.</summary>
-            <remarks>The means by which a phone number is verified is context-specific, and dependent upon the trust framework or contractual agreements within which the parties are operating. When true, the phone_number Claim MUST be in E.164 format and any extensions MUST be represented in RFC 3966 format.</remarks>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.ClaimTypes.Address">
-            <summary>End-User's preferred postal address. The value of the address member is a JSON structure containing some or all of the members defined in http://openid.net/specs/openid-connect-basic-1_0-32.html#AddressClaim </summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.ClaimTypes.Audience">
-            <summary>Audience(s) that this ID Token is intended for. It MUST contain the OAuth 2.0 client_id of the Relying Party as an audience value. It MAY also contain identifiers for other audiences. In the general case, the aud value is an array of case sensitive strings. In the common special case when there is one audience, the aud value MAY be a single case sensitive string.</summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.ClaimTypes.Issuer">
-            <summary>Issuer Identifier for the Issuer of the response. The iss value is a case sensitive URL using the https scheme that contains scheme, host, and optionally, port number and path components and no query or fragment components.</summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.ClaimTypes.NotBefore">
-            <summary>The time before which the JWT MUST NOT be accepted for processing, specified as the number of seconds from 1970-01-01T0:0:0Z</summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.ClaimTypes.Expiration">
-            <summary>The exp (expiration time) claim identifies the expiration time on or after which the token MUST NOT be accepted for processing, specified as the number of seconds from 1970-01-01T0:0:0Z</summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.ClaimTypes.UpdatedAt">
-            <summary>Time the End-User's information was last updated. Its value is a JSON number representing the number of seconds from 1970-01-01T0:0:0Z as measured in UTC until the date/time.</summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.ClaimTypes.IssuedAt">
-            <summary>The iat (issued at) claim identifies the time at which the JWT was issued, , specified as the number of seconds from 1970-01-01T0:0:0Z</summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.ClaimTypes.AuthenticationMethod">
-            <summary>Authentication Methods References. JSON array of strings that are identifiers for authentication methods used in the authentication.</summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.ClaimTypes.SessionId">
-            <summary>Session identifier. This represents a Session of an OP at an RP to a User Agent or device for a logged-in End-User. Its contents are unique to the OP and opaque to the RP.</summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.ClaimTypes.AuthenticationContextClassReference">
-            <summary>
-            Authentication Context Class Reference. String specifying an Authentication Context Class Reference value that identifies the Authentication Context Class that the authentication performed satisfied. 
-            The value "0" indicates the End-User authentication did not meet the requirements of ISO/IEC 29115 level 1. 
-            Authentication using a long-lived browser cookie, for instance, is one example where the use of "level 0" is appropriate. 
-            Authentications with level 0 SHOULD NOT be used to authorize access to any resource of any monetary value.
-             (This corresponds to the OpenID 2.0 PAPE nist_auth_level 0.) 
-            An absolute URI or an RFC 6711 registered name SHOULD be used as the acr value; registered names MUST NOT be used with a different meaning than that which is registered. 
-            Parties using this claim will need to agree upon the meanings of the values used, which may be context-specific. 
-            The acr value is a case sensitive string.
-            </summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.ClaimTypes.AuthenticationTime">
-            <summary>Time when the End-User authentication occurred. Its value is a JSON number representing the number of seconds from 1970-01-01T0:0:0Z as measured in UTC until the date/time. When a max_age request is made or when auth_time is requested as an Essential Claim, then this Claim is REQUIRED; otherwise, its inclusion is OPTIONAL.</summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.ClaimTypes.AuthorizedParty">
-            <summary>The party to which the ID Token was issued. If present, it MUST contain the OAuth 2.0 Client ID of this party. This Claim is only needed when the ID Token has a single audience value and that audience is different than the authorized party. It MAY be included even when the authorized party is the same as the sole audience. The azp value is a case sensitive string containing a StringOrURI value.</summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.ClaimTypes.AccessTokenHash">
-            <summary> Access Token hash value. Its value is the base64url encoding of the left-most half of the hash of the octets of the ASCII representation of the access_token value, where the hash algorithm used is the hash algorithm used in the alg Header Parameter of the ID Token's JOSE Header. For instance, if the alg is RS256, hash the access_token value with SHA-256, then take the left-most 128 bits and base64url encode them. The at_hash value is a case sensitive string.</summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.ClaimTypes.AuthorizationCodeHash">
-            <summary>Code hash value. Its value is the base64url encoding of the left-most half of the hash of the octets of the ASCII representation of the code value, where the hash algorithm used is the hash algorithm used in the alg Header Parameter of the ID Token's JOSE Header. For instance, if the alg is HS512, hash the code value with SHA-512, then take the left-most 256 bits and base64url encode them. The c_hash value is a case sensitive string.</summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.ClaimTypes.Nonce">
-            <summary>String value used to associate a Client session with an ID Token, and to mitigate replay attacks. The value is passed through unmodified from the Authentication Request to the ID Token. If present in the ID Token, Clients MUST verify that the nonce Claim Value is equal to the value of the nonce parameter sent in the Authentication Request. If present in the Authentication Request, Authorization Servers MUST include a nonce Claim in the ID Token with the Claim Value being the nonce value sent in the Authentication Request. Authorization Servers SHOULD perform no other processing on nonce values used. The nonce value is a case sensitive string.</summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.ClaimTypes.JwtId">
-            <summary>JWT ID. A unique identifier for the token, which can be used to prevent reuse of the token. These tokens MUST only be used once, unless conditions for reuse were negotiated between the parties; any such negotiation is beyond the scope of this specification.</summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.ClaimTypes.Confirmation">
-            <summary> Proof key confirmation </summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.ClaimTypes.ClientId">
-            <summary>OAuth 2.0 Client Identifier valid at the Authorization Server.</summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Constants.ClaimTypes.Scope">
-            <summary>OpenID Connect requests MUST contain the "openid" scope value. If the openid scope value is not present, the behavior is entirely unspecified. Other scope values MAY be present. Scope values used that are not understood by an implementation SHOULD be ignored.</summary>
         </member>
         <member name="T:IdentityServer3.Core.Extensions.IDataProtectorExtensions">
             <summary>
@@ -9691,16 +8582,6 @@
         <member name="F:IdentityServer3.Core.Models.Flows.Custom">
             <summary>
             custom grant
-            </summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Models.Flows.AuthorizationCodeWithProofKey">
-            <summary>
-            authorization code with proof key flow
-            </summary>
-        </member>
-        <member name="F:IdentityServer3.Core.Models.Flows.HybridWithProofKey">
-            <summary>
-            hybrid flow with proof key
             </summary>
         </member>
         <member name="T:IdentityServer3.Core.Models.SubjectTypes">
@@ -9863,13 +8744,6 @@
             <param name="principal">The principal.</param>
             <returns></returns>
         </member>
-        <member name="M:IdentityServer3.Core.Extensions.PrincipalExtensions.GetAuthenticationMethods(System.Security.Principal.IPrincipal)">
-            <summary>
-            Gets the authentication method claims.
-            </summary>
-            <param name="principal">The principal.</param>
-            <returns></returns>
-        </member>
         <member name="M:IdentityServer3.Core.Extensions.PrincipalExtensions.GetAuthenticationMethod(System.Security.Principal.IIdentity)">
             <summary>
             Gets the authentication method.
@@ -9877,13 +8751,6 @@
             <param name="identity">The identity.</param>
             <returns></returns>
             <exception cref="T:System.InvalidOperationException">amr claim is missing</exception>
-        </member>
-        <member name="M:IdentityServer3.Core.Extensions.PrincipalExtensions.GetAuthenticationMethods(System.Security.Principal.IIdentity)">
-            <summary>
-            Gets the authentication method claims.
-            </summary>
-            <param name="identity">The identity.</param>
-            <returns></returns>
         </member>
         <member name="M:IdentityServer3.Core.Extensions.PrincipalExtensions.GetIdentityProvider(System.Security.Principal.IPrincipal)">
             <summary>
@@ -9899,47 +8766,6 @@
             <param name="identity">The identity.</param>
             <returns></returns>
             <exception cref="T:System.InvalidOperationException">idp claim is missing</exception>
-        </member>
-        <member name="T:IdentityServer3.Core.IdentityServerPrincipal">
-            <summary>
-            Helps creating valid identityserver principals (contain the required claims like sub, auth_time, amr, ...)
-            </summary>
-        </member>
-        <member name="M:IdentityServer3.Core.IdentityServerPrincipal.Create(System.String,System.String,System.String,System.String,System.String,System.Int64)">
-            <summary>
-            Creates an identityserver principal by specifying the required claims
-            </summary>
-            <param name="subject">Subject ID</param>
-            <param name="displayName">Display name</param>
-            <param name="authenticationMethod">Authentication method</param>
-            <param name="idp">IdP name</param>
-            <param name="authenticationType">Authentication type</param>
-            <param name="authenticationTime">Authentication time</param>
-            <returns>ClaimsPrincipal</returns>
-        </member>
-        <member name="M:IdentityServer3.Core.IdentityServerPrincipal.CreateFromPrincipal(System.Security.Claims.ClaimsPrincipal,System.String)">
-            <summary>
-            Derives an identityserver principal from another principal
-            </summary>
-            <param name="principal">The other principal</param>
-            <param name="authenticationType">Authentication type</param>
-            <returns>ClaimsPrincipal</returns>
-        </member>
-        <member name="M:IdentityServer3.Core.IdentityServerPrincipal.FromSubjectId(System.String,System.Collections.Generic.IEnumerable{System.Security.Claims.Claim})">
-            <summary>
-            Creates a principal from the subject id and additional claims
-            </summary>
-            <param name="subjectId">Subject ID</param>
-            <param name="additionalClaims">Additional claims</param>
-            <returns>ClaimsPrincipal</returns>
-        </member>
-        <member name="M:IdentityServer3.Core.IdentityServerPrincipal.FromClaims(System.Collections.Generic.IEnumerable{System.Security.Claims.Claim},System.Boolean)">
-            <summary>
-            Creates a principal from a list of claims
-            </summary>
-            <param name="claims">The claims</param>
-            <param name="allowMissing">Specifies whether required claims must be present</param>
-            <returns>ClaimsPrincipal</returns>
         </member>
         <member name="T:IdentityServer3.Core.Models.Client">
             <summary>
@@ -10013,21 +8839,6 @@
         <member name="P:IdentityServer3.Core.Models.Client.PostLogoutRedirectUris">
             <summary>
             Specifies allowed URIs to redirect to after logout
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Models.Client.LogoutUri">
-            <summary>
-            Specifies logout URI at client for HTTP based logout.
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Models.Client.LogoutSessionRequired">
-            <summary>
-            Specifies if the user's session id should be sent to the LogoutUri. Defaults to true.
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Models.Client.RequireSignOutPrompt">
-            <summary>
-            Specifies if the client will always show a confirmation page for sign-out. Defaults to false.
             </summary>
         </member>
         <member name="P:IdentityServer3.Core.Models.Client.AllowAccessToAllScopes">
@@ -10164,21 +8975,12 @@
             The allowed CORS origins.
             </value>
         </member>
-        <member name="P:IdentityServer3.Core.Models.Client.AllowAccessTokensViaBrowser">
-            <summary>
-            Controls whether access tokens are transmitted via the browser for this client (defaults to true).
-            This can prevent accidental leakage of access tokens when multiple response types are allowed.
-            </summary>
-            <value>
-            <c>true</c> if access tokens can be transmitted via the browser; otherwise, <c>false</c>.
-            </value>
-        </member>
         <member name="T:IdentityServer3.Core.Endpoints.AuthorizeEndpointController">
             <summary>
             OAuth2/OpenID Connect authorize endpoint
             </summary>
         </member>
-        <member name="M:IdentityServer3.Core.Endpoints.AuthorizeEndpointController.#ctor(IdentityServer3.Core.Services.IViewService,IdentityServer3.Core.Validation.AuthorizeRequestValidator,IdentityServer3.Core.ResponseHandling.AuthorizeResponseGenerator,IdentityServer3.Core.ResponseHandling.AuthorizeInteractionResponseGenerator,IdentityServer3.Core.Configuration.IdentityServerOptions,IdentityServer3.Core.Services.ILocalizationService,IdentityServer3.Core.Services.IEventService,IdentityServer3.Core.Configuration.Hosting.AntiForgeryToken,IdentityServer3.Core.Configuration.Hosting.ClientListCookie)">
+        <member name="M:IdentityServer3.Core.Endpoints.AuthorizeEndpointController.#ctor(IdentityServer3.Core.Services.IViewService,IdentityServer3.Core.Validation.AuthorizeRequestValidator,IdentityServer3.Core.ResponseHandling.AuthorizeResponseGenerator,IdentityServer3.Core.ResponseHandling.AuthorizeInteractionResponseGenerator,IdentityServer3.Core.Configuration.IdentityServerOptions,IdentityServer3.Core.Services.ILocalizationService,IdentityServer3.Core.Services.IEventService,IdentityServer3.Core.Configuration.Hosting.AntiForgeryToken)">
             <summary>
             Initializes a new instance of the <see cref="T:IdentityServer3.Core.Endpoints.AuthorizeEndpointController"/> class.
             </summary>
@@ -10190,7 +8992,6 @@
             <param name="localizationService">The localization service.</param>
             <param name="events">The event service.</param>
             <param name="antiForgeryToken">The anti forgery token.</param>
-            <param name="clientListCookie">The client list cookie.</param>
         </member>
         <member name="M:IdentityServer3.Core.Endpoints.AuthorizeEndpointController.Get(System.Net.Http.HttpRequestMessage)">
             <summary>
@@ -10776,19 +9577,6 @@
             Specifies whether this scope is shown in the discovery document. Defaults to true.
             </summary>
         </member>
-        <member name="P:IdentityServer3.Core.Models.Scope.ScopeSecrets">
-            <summary>
-            Gets or sets the scope secrets.
-            </summary>
-            <value>
-            The scope secrets.
-            </value>
-        </member>
-        <member name="P:IdentityServer3.Core.Models.Scope.AllowUnrestrictedIntrospection">
-            <summary>
-            Specifies whether this scope is allowed to see other scopes when using the introspection endpoint
-            </summary>
-        </member>
         <member name="T:IdentityServer3.Core.Models.ScopeClaim">
             <summary>
             Models a claim that should be emitted in a token
@@ -11079,20 +9867,12 @@
             The login hint.
             </value>
         </member>
-        <member name="P:IdentityServer3.Core.Validation.ValidatedAuthorizeRequest.CodeChallenge">
+        <member name="P:IdentityServer3.Core.Validation.ValidatedAuthorizeRequest.SessionId">
             <summary>
-            Gets or sets the code challenge
+            Gets or sets the session identifier.
             </summary>
             <value>
-            The code challenge
-            </value>
-        </member>
-        <member name="P:IdentityServer3.Core.Validation.ValidatedAuthorizeRequest.CodeChallengeMethod">
-            <summary>
-            Gets or sets the code challenge method
-            </summary>
-            <value>
-            The code challenge method
+            The session identifier.
             </value>
         </member>
         <member name="P:IdentityServer3.Core.Validation.ValidatedAuthorizeRequest.AccessTokenRequested">
@@ -11107,19 +9887,6 @@
             <summary>
             Models a validated request to the token endpoint.
             </summary>
-        </member>
-        <member name="M:IdentityServer3.Core.Validation.ValidatedTokenRequest.#ctor">
-            <summary>
-            Initializes the validated request with default values.
-            </summary>
-        </member>
-        <member name="P:IdentityServer3.Core.Validation.ValidatedTokenRequest.RequestedTokenType">
-            <summary>
-            Gets or sets the requested token type.
-            </summary>
-            <value>
-            The requested token type.
-            </value>
         </member>
         <member name="P:IdentityServer3.Core.Validation.ValidatedTokenRequest.Client">
             <summary>
@@ -11191,30 +9958,6 @@
             </summary>
             <value>
             The authorization code handle.
-            </value>
-        </member>
-        <member name="P:IdentityServer3.Core.Validation.ValidatedTokenRequest.CodeVerifier">
-            <summary>
-            Gets or sets the code verifier.
-            </summary>
-            <value>
-            The code verifier.
-            </value>
-        </member>
-        <member name="P:IdentityServer3.Core.Validation.ValidatedTokenRequest.ProofKeyAlgorithm">
-            <summary>
-            Gets or sets the algorithm used for the proof key
-            </summary>
-            <value>
-            The algorithm name.
-            </value>
-        </member>
-        <member name="P:IdentityServer3.Core.Validation.ValidatedTokenRequest.ProofKey">
-            <summary>
-            Gets or sets the proof key
-            </summary>
-            <value>
-            The proof key.
             </value>
         </member>
         <member name="T:IdentityServer3.Core.Models.SignInMessage">

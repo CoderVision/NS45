@@ -12,6 +12,9 @@ namespace NtccSteward.IdentityServer.Config
         {
             return new List<Scope>
             {
+                StandardScopes.OpenId,
+                 StandardScopes.ProfileAlwaysInclude,
+                 StandardScopes.Address,
                 new Scope
                 {
                     Name="ApplicationAccess",
@@ -23,3 +26,4 @@ namespace NtccSteward.IdentityServer.Config
         }
     }
 }
+

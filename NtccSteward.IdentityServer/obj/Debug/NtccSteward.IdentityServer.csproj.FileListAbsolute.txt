@@ -11,7 +11,6 @@ C:\Source\Repos\NS45\NtccSteward.IdentityServer\bin\IdentityServer3.xml
 C:\Source\Repos\NS45\NtccSteward.IdentityServer\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
 C:\Source\Repos\NS45\NtccSteward.IdentityServer\bin\Microsoft.Owin.xml
 C:\Source\Repos\NS45\NtccSteward.IdentityServer\bin\Microsoft.Owin.Host.SystemWeb.xml
-C:\Source\Repos\NS45\NtccSteward.IdentityServer\obj\Debug\NtccSteward.IdentityServer.csprojResolveAssemblyReference.cache
 C:\Source\Repos\NS45\NtccSteward.IdentityServer\obj\Debug\NtccSteward.IdentityServer.csproj.CoreCompileInputs.cache
 C:\Source\Repos\NS45\NtccSteward.IdentityServer\obj\Debug\NtccSteward.IdentityServer.dll
 C:\Source\Repos\NS45\NtccSteward.IdentityServer\obj\Debug\NtccSteward.IdentityServer.pdb
