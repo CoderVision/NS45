@@ -240,6 +240,7 @@
     <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\TeamController.cs" />
     <Compile Include="Framework\ErrorHelper.cs" />
+    <Compile Include="Framework\TokenIdentityHelper.cs" />
     <Compile Include="Framework\VersionConstraint.cs" />
     <Compile Include="Framework\VersionedRoute.cs" />
     <Compile Include="Global.asax.cs">

@@ -52,6 +52,10 @@ namespace NtccSteward.Api.Controllers
         {
             try
             {
+                // example of how to get the user's id
+                var userId = TokenIdentityHelper.GetOwnerIdFromToken();
+
+
                 if (churchId == 0)
                     return BadRequest();
 
