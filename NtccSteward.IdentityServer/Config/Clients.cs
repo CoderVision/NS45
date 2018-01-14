@@ -20,6 +20,11 @@ namespace NtccSteward.IdentityServer.Config
                     AllowAccessToAllScopes = true,
                     RedirectUris = new List<string>{
                         ConfigurationManager.AppSettings["NtccStewardAngularApp"] 
+                    },
+                    IdentityTokenLifetime = 300, // 5 minutes,
+                    AccessTokenLifetime = 3600, // 1 hour
+                    PostLogoutRedirectUris = new List<string>{
+                        ConfigurationManager.AppSettings["NtccStewardAngularApp"].TrimEnd('/')  + "?logout=true" // have to think about this carefully, because redirecting to the app may cause it to redirect to the token service
                     }
                 }
             };

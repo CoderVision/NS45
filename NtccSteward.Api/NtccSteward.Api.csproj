@@ -234,6 +234,7 @@
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\ChurchController.cs" />
     <Compile Include="Controllers\MembersController.cs" />
     <Compile Include="Controllers\MessageController.cs" />
