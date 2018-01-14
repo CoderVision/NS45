@@ -19,7 +19,8 @@ namespace NtccSteward.IdentityServer.Config
                     Flow = Flows.Implicit,
                     AllowAccessToAllScopes = true,
                     RedirectUris = new List<string>{
-                        ConfigurationManager.AppSettings["NtccStewardAngularApp"] 
+                        ConfigurationManager.AppSettings["NtccStewardAngularApp"],
+                        ConfigurationManager.AppSettings["NtccStewardAngularApp"] + "silentRefresh.html"
                     },
                     IdentityTokenLifetime = 300, // 5 minutes,
                     AccessTokenLifetime = 3600, // 1 hour
