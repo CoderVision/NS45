@@ -1,4 +1,5 @@
 ﻿
+using IdentityServer3.Core;
 using NtccSteward.Core.Framework;
 using NtccSteward.Core.Models.Account;
 using NtccSteward.Repository.Framework;
@@ -15,20 +16,21 @@ namespace NtccSteward.Repository
     {
         int CreateAccountRequest(AccountRequest accountRequest);
         string GetAccountRequestStatus(int accountRequestId);
-        Session Login(string email, string password, int churchId);
+        User Login(string email, string password);
         bool ChangePassword(AccountPasswordChange accountRequest);
+        User GetUserProfile(int userId);
     }
 
 
     public class AccountRepository : NtccSteward.Repository.Repository, IAccountRepository
     {
-        private readonly string _pepper;
+        private readonly string pepper;
 
         //public AccountRepository(IAppConfigProvider appConfigProvider)
         public AccountRepository(string connectionString, string pepper)
         {
             ConnectionString = connectionString;
-            _pepper = pepper;
+            this.pepper = pepper;
         }
 
         /// <summary>
@@ -131,7 +133,7 @@ namespace NtccSteward.Repository
 
         private string CreatePasswordHash(string password, string salt)
         {
-            var saltPepper = string.Concat(salt, _pepper);
+            var saltPepper = string.Concat(salt, this.pepper);
             var passwordHash = CryptoHashProvider.ComputeHash(password, saltPepper);
             return passwordHash;
         }
@@ -170,16 +172,15 @@ namespace NtccSteward.Repository
         /// <param name="personIdentityID"></param>
         /// <param name="passwordHash"></param>
         /// <returns>Login</returns>
-        public Session Login(string email, string password, int churchId)
+        public User Login(string email, string password)
         {
+            User user = null;
             var spice = GetUserLoginSpice(email);
 
             if (spice == null)
                 return null;
 
             var passwordHash = CreatePasswordHash(password, spice.Salt);
-
-            var session = new Session();
 
             var proc = "[Security].[Login]";
 
@@ -190,7 +191,6 @@ namespace NtccSteward.Repository
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.Add(new SqlParameter("personIdentityID", spice.PersonIdentityID));
                     cmd.Parameters.Add(new SqlParameter("passwordHash", passwordHash));
-                    cmd.Parameters.Add(new SqlParameter("churchId", churchId));
 
                     cn.Open();
 
@@ -199,41 +199,99 @@ namespace NtccSteward.Repository
                         if (!reader.HasRows)
                             return null;
 
+                        user = new User();
+
                         // user info (only 1 row)
                         reader.Read();
 
-                        session.UserId = (int)reader["PersonId"];
-                        session.SessionId = reader["SessionID"].ToString();
-                        session.ChurchId = (int)reader["ChurchId"];
-                        session.ChurchName = reader["ChurchName"].ToString();
+                        user.Subject = (int)reader["PersonId"] + "";
+                        user.UserName = reader["UserName"].ToString();
+                        user.IsActive = bool.Parse(reader["Active"].ToString());
+
+                        user.UserClaims.Add(new UserClaim() { Id = "1", Subject = user.Subject, ClaimType = Constants.ClaimTypes.GivenName, ClaimValue = reader["FirstName"].ToString() });
+                        user.UserClaims.Add(new UserClaim() { Id = "2", Subject = user.Subject, ClaimType = Constants.ClaimTypes.FamilyName, ClaimValue = reader["LastName"].ToString() });
 
                         reader.NextResult();
 
                         // roles & permissions
+                        Role role = null;
                         while (reader.Read())
                         {
-                            var roleId = (int)reader["RoleID"];
-
-                            var role = session.Roles.FirstOrDefault(r => r.RoleID == roleId);
                             if (role == null)
                             {
                                 role = new Role();
                                 role.RoleID = (int)reader["RoleID"];
                                 role.RoleDesc = reader["RoleDesc"].ToString();
-                                session.Roles.Add(role);
+
+                                user.UserClaims.Add(new UserClaim() { Id = role.RoleID.ToString(), Subject = user.Subject, ClaimType = Constants.ClaimTypes.Role, ClaimValue = role.RoleDesc });
                             }
 
-                            var permission = new Permission();
-                            permission.PermissionID = reader.ValueOrDefault<int>("PermissionID", 0);
-                            permission.PermissionDesc = reader.ValueOrDefault<string>("PermissionDesc", "");
-                            permission.Value = reader.ValueOrDefault<int>("PermissionValueID", 0);
-                            role.Permissions.Add(permission);
+                            //var permission = new Permission();
+                            //permission.PermissionID = reader.ValueOrDefault<int>("PermissionID", 0);
+                            //permission.PermissionDesc = reader.ValueOrDefault<string>("PermissionDesc", "");
+                            //permission.Value = reader.ValueOrDefault<int>("PermissionValueID", 0);
+                            //role.Permissions.Add(permission);
                         }
                     }
                 }
             }
 
-            return session;
+            return user;
+        }
+
+
+        public User GetUserProfile(int userId)
+        {
+            User user = null;
+
+            var proc = "[Security].[GetUser]";
+
+            using (var cn = new SqlConnection(ConnectionString))
+            {
+                using (var cmd = new SqlCommand(proc, cn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add(new SqlParameter("personIdentityID", userId));
+
+                    cn.Open();
+                    
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (!reader.HasRows)
+                            return null;
+
+                        user = new User();
+
+                        // user info (only 1 row)
+                        reader.Read();
+
+                        user.Subject = (int)reader["PersonId"] + "";
+                        user.UserName = reader["UserName"].ToString();
+                        user.IsActive = bool.Parse(reader["Active"].ToString());
+
+                        user.UserClaims.Add(new UserClaim() { Id = "1", Subject = user.Subject, ClaimType = Constants.ClaimTypes.GivenName, ClaimValue = reader["FirstName"].ToString() });
+                        user.UserClaims.Add(new UserClaim() { Id = "2", Subject = user.Subject, ClaimType = Constants.ClaimTypes.FamilyName, ClaimValue = reader["LastName"].ToString() });
+
+                        reader.NextResult();
+
+                        // roles & permissions
+                        Role role = null;
+                        while (reader.Read())
+                        {
+                            if (role == null)
+                            {
+                                role = new Role();
+                                role.RoleID = (int)reader["RoleID"];
+                                role.RoleDesc = reader["RoleDesc"].ToString();
+
+                                user.UserClaims.Add(new UserClaim() { Id = role.RoleID.ToString(), Subject = user.Subject, ClaimType = Constants.ClaimTypes.Role, ClaimValue = role.RoleDesc });
+                            }
+                        }
+                    }
+                }
+            }
+
+            return user;
         }
     }
 }

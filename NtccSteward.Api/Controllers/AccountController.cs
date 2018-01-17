@@ -82,26 +82,26 @@ namespace NtccSteward.Api.Controllers
         }
 
 
-        [Route("account/login")]
-        [HttpPost]
-        public IHttpActionResult Login([FromBody] Login login)
-        {
-            try
-            {
-                // Create a new session and return it
-                var session = _repository.Login(login.Email, login.Password, login.ChurchId);
+        //[Route("account/login")]
+        //[HttpPost]
+        //public IHttpActionResult Login([FromBody] Login login)
+        //{
+        //    try
+        //    {
+        //        // Create a new session and return it
+        //        var session = _repository.Login(login.Email, login.Password, login.ChurchId);
 
-                if (session == null)
-                    return NotFound();
-                else
-                    return Ok(session);
-            }
-            catch (Exception ex)
-            {
-                ErrorHelper.ProcessError(_logger, ex, nameof(Login));
+        //        if (session == null)
+        //            return NotFound();
+        //        else
+        //            return Ok(session);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ErrorHelper.ProcessError(_logger, ex, nameof(Login));
 
-                return InternalServerError();
-            }
-        }
+        //        return InternalServerError();
+        //    }
+        //}
     }
 }
