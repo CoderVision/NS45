@@ -13,6 +13,7 @@ using System.Web.Http;
 namespace NtccSteward.Repository.Controllers
 {
     [Route("Teams")]
+    [Authorize]
     public class TeamController : ApiController
     {
         private readonly ILogger _logger;

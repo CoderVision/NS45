@@ -14,3 +14,5 @@
 /NtccSteward/obj
 /NtccSteward.Repository/obj/Release
 /NtccSteward.IdSvr/obj/Debug
+/NtccSteward.IdentityServer/obj/Debug
+/NtccSteward.IdentityServer/bin

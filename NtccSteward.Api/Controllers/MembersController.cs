@@ -24,6 +24,7 @@ namespace NtccSteward.Api.Controllers
     // this can be added to the WebApiConfig, or to a class specifically.
     //  you can enter specific domains separated by a comma, or a * for all
     //[RoutePrefix("api")]
+    [Authorize]
     public class MembersController : ApiController
     {
         private readonly ILogger _logger;
@@ -51,6 +52,10 @@ namespace NtccSteward.Api.Controllers
         {
             try
             {
+                // example of how to get the user's id
+                var userId = TokenIdentityHelper.GetOwnerIdFromToken();
+
+
                 if (churchId == 0)
                     return BadRequest();
 
