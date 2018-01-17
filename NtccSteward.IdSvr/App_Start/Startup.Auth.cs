@@ -6,6 +6,10 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
 using Owin;
 using NtccSteward.IdSvr.Models;
+using IdentityServer3.Core.Configuration;
+using NtccSteward.IdSvr.Config;
+using System.Configuration;
+using System.Security.Cryptography.X509Certificates;
 
 namespace NtccSteward.IdSvr
 {
@@ -14,6 +18,25 @@ namespace NtccSteward.IdSvr
         // For more information on configuring authentication, please visit http://go.microsoft.com/fwlink/?LinkId=301864
         public void ConfigureAuth(IAppBuilder app)
         {
+            //app.Map("/identity", idSvrApp => {
+            //    var idServerServiceFactory = new IdentityServerServiceFactory()
+            //        .UseInMemoryClients(Clients.Get())
+            //        .UseInMemoryUsers(Users.Get())
+            //        .UseInMemoryScopes(Scopes.Get());
+
+            //    var options = new IdentityServerOptions
+            //    {
+            //        Factory = idServerServiceFactory,
+            //        SiteName = "NtccSteward Security Token Service",
+            //        IssuerUri = ConfigurationManager.AppSettings["NtccStewardIssuerUri"],
+            //        PublicOrigin = ConfigurationManager.AppSettings["NtccStewardStsOrigin"],
+            //        SigningCertificate = LoadCertificate()
+            //    };
+
+            //    idSvrApp.UseIdentityServer(options);
+            //});
+
+            /*
             // Configure the db context, user manager and signin manager to use a single instance per request
             app.CreatePerOwinContext(ApplicationDbContext.Create);
             app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
@@ -63,6 +86,13 @@ namespace NtccSteward.IdSvr
             //    ClientId = "",
             //    ClientSecret = ""
             //});
+            */
+        }
+
+        private X509Certificate2 LoadCertificate()
+        {
+            return new X509Certificate2(
+                $@"{AppDomain.CurrentDomain.BaseDirectory}\certificates\localhost.pfx", "idServer");
         }
     }
 }
