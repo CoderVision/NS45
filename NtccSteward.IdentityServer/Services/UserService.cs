@@ -5,25 +5,66 @@ using System.Linq;
 using System.Web;
 using IdentityServer3.Core.Models;
 using System.Threading.Tasks;
+using NtccSteward.Repository;
+using static IdentityServer3.Core.Constants;
+using IdentityServer3.Core.Extensions;
+using System.Security.Claims;
+using IdentityServer3.Core;
+using NtccSteward.Core.Models.Account;
 
 namespace NtccSteward.IdentityServer.Services
 {
     public class UserService : UserServiceBase
     {
+        private readonly IAccountRepository accountRepository;
+
+        public UserService(IAccountRepository accountRepository)
+        {
+            this.accountRepository = accountRepository;
+        }
+
         public override Task AuthenticateLocalAsync(LocalAuthenticationContext context)
         {
-            var userName = context.UserName;
-            var password = context.Password;
-
             // *** Here is where you hash the password before sending it to the database.
 
             // use the repository to get the user.
+            var user = this.accountRepository.Login(context.UserName, context.Password);
 
+            if (user == null)
+            {
+                context.AuthenticateResult = new AuthenticateResult("Invalid user name or password");
+                return Task.FromResult(0);
+            }
 
-            /// Finish the Custom User Store with Kevin:
-            /// // https://app.pluralsight.com/player?course=oauth2-openid-connect-angular-aspdotnet&author=kevin-dockx&name=oauth2-openid-connect-angular-aspdotnet-m08&clip=1&mode=live
+            context.AuthenticateResult = new AuthenticateResult(user.Subject,
+                user.UserClaims.First(c => c.ClaimType == Constants.ClaimTypes.GivenName).ClaimValue);
 
             return base.AuthenticateLocalAsync(context);
+        }
+
+        public override Task GetProfileDataAsync(ProfileDataRequestContext context)
+        {
+            var subjectId = context.Subject.GetSubjectId();
+            int userId = 0;
+            if (!int.TryParse(subjectId, out userId))
+                return null;
+
+            var user = this.accountRepository.GetUserProfile(userId);
+
+            var claims = new List<Claim> {
+                new Claim(Constants.ClaimTypes.Subject, user.Subject)
+            };
+
+            claims.AddRange(user.UserClaims.Select<UserClaim, Claim>(uc => new Claim(uc.ClaimType, uc.ClaimValue)));
+
+            if (!context.AllClaimsRequested)
+            {
+                claims = claims.Where(c => context.RequestedClaimTypes.Contains(c.Type]).ToList();
+            }
+
+            context.IssuedClaims = claims;
+
+            return Task.FromResult(0);
         }
     }
 }

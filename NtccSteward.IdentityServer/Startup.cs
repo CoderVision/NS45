@@ -9,6 +9,9 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Web;
 using Microsoft.Owin.StaticFiles;
+using NtccSteward.Repository;
+using NtccSteward.IdentityServer.Services;
+using IdentityServer3.Core.Services;
 
 namespace NtccSteward.IdentityServer
 {
@@ -39,6 +42,12 @@ namespace NtccSteward.IdentityServer
 
                 idServerServiceFactory.CorsPolicyService = new
                     Registration<IdentityServer3.Core.Services.ICorsPolicyService>(corsPolicyService);
+
+                var cnString = ConfigurationManager.ConnectionStrings["Login"].ConnectionString;
+                var pepper = ConfigurationManager.AppSettings["Pepper"];
+                var accountRepo = new AccountRepository(cnString, pepper);
+                var userService = new UserService(accountRepo);
+                idServerServiceFactory.UserService = new Registration<IUserService>(resolver => userService);
 
                 var options = new IdentityServerOptions
                 {

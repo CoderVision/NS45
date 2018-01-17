@@ -24,10 +24,6 @@ namespace NtccSteward.Api
             //http://stackoverflow.com/questions/24254189/make-sure-that-the-controller-has-a-parameterless-public-constructor-error
 
             // register repositories
-            var loginConnectionString = ConfigurationManager.ConnectionStrings["Login"].ConnectionString;
-            var pepper = ConfigurationManager.AppSettings["Pepper"].ToString();
-            container.RegisterInstance<IAccountRepository>(new AccountRepository(loginConnectionString, pepper));
-
             var defaultConnectionString = ConfigurationManager.ConnectionStrings["Default"].ConnectionString;
             container.RegisterInstance<ICommonRepository>(new CommonRepository(defaultConnectionString));
             container.RegisterInstance<ITeamRepository>(new TeamRepository(defaultConnectionString));
