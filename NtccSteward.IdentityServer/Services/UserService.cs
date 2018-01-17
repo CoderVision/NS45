@@ -44,10 +44,14 @@ namespace NtccSteward.IdentityServer.Services
 
         public override Task GetProfileDataAsync(ProfileDataRequestContext context)
         {
+            if (context.Subject == null)
+                throw new ArgumentException("Subject");
+
             var subjectId = context.Subject.GetSubjectId();
+
             int userId = 0;
             if (!int.TryParse(subjectId, out userId))
-                return null;
+                throw new ArgumentException("Subject");
 
             var user = this.accountRepository.GetUserProfile(userId);
 
@@ -59,10 +63,28 @@ namespace NtccSteward.IdentityServer.Services
 
             if (!context.AllClaimsRequested)
             {
-                claims = claims.Where(c => context.RequestedClaimTypes.Contains(c.Type]).ToList();
+                claims = claims.Where(c => context.RequestedClaimTypes.Contains(c.Type)).ToList();
             }
 
             context.IssuedClaims = claims;
+
+            return Task.FromResult(0);
+        }
+
+        public override Task IsActiveAsync(IsActiveContext context)
+        {
+            if (context.Subject == null)
+                throw new ArgumentException("Subject");
+
+            var subjectId = context.Subject.GetSubjectId();
+
+            int userId = 0;
+            if (!int.TryParse(subjectId, out userId))
+                throw new ArgumentException("Subject");
+
+            var user = this.accountRepository.GetUserProfile(userId);
+
+            context.IsActive = (user != null) && user.IsActive;
 
             return Task.FromResult(0);
         }

@@ -37,8 +37,8 @@ namespace NtccSteward.IdentityServer
 
                 var idServerServiceFactory = new IdentityServerServiceFactory()
                     .UseInMemoryClients(Clients.Get())
-                    .UseInMemoryUsers(Users.Get())
                     .UseInMemoryScopes(Scopes.Get());
+                // .UseInMemoryUsers(Users.Get()) // for dev/testing
 
                 idServerServiceFactory.CorsPolicyService = new
                     Registration<IdentityServer3.Core.Services.ICorsPolicyService>(corsPolicyService);

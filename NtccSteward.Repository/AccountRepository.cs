@@ -182,8 +182,6 @@ namespace NtccSteward.Repository
 
             var passwordHash = CreatePasswordHash(password, spice.Salt);
 
-            var session = new Session();
-
             var proc = "[Security].[Login]";
 
             using (var cn = new SqlConnection(ConnectionString))
