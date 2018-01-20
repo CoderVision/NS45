@@ -4,12 +4,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>{siteName}</title>
 
-    <!--<link href="/Content/libs/bootstrap/bootstrap.min.css" rel="stylesheet" />-->
     <link href="/Content/angular-material.css" rel="stylesheet" />
     <link href="/Content/angular-material.layout-attributes.css" rel="stylesheet" />
     <link href="/Content/angular-material.layouts.css" rel="stylesheet" />
 
-    <!--<link href="/content/app/app.css" rel="stylesheet">-->
     <link href="/content/app/app2.css" rel="stylesheet">
 </head>
 <body lang="en" layout="row">
@@ -38,8 +36,6 @@
                         <h3 >I Have An Account</h3>
 
                         <div class="form-group">
-                            <!--<label for="username">Username</label>
-                        <input required name="username" autofocus id="username" type="text" class="form-control" placeholder="Username" ng-model="model.username" maxlength="100">-->
 
                             <md-input-container class="logInControlContainer">
                                 <label>Email Address</label>
@@ -54,8 +50,6 @@
                             </md-input-container>
                         </div>
                         <div class="form-group">
-                            <!--<label for="password">Password</label>
-                        <input required id="password" name="password" type="password" class="form-control" placeholder="Password" ng-model="model.password" maxlength="100" autocomplete="off">-->
 
                             <md-input-container class="logInControlContainer">
                                 <label>Password</label>
@@ -68,17 +62,11 @@
 
                         </div>
                         <div class="form-group login-remember" ng-show="model.allowRememberMe">
-                            <!--<label for="rememberMe">
-                            <input type="checkbox" id="rememberMe" name="rememberMe" ng-model="model.rememberMe" value="true">
-                            <strong>Remember My Login</strong>
-                        </label>-->
-
                             <md-switch class="md-primary" name="rememberMe" id="rememberMe" ng-model="model.rememberMe">
                                 <span ng-if="!model.rememberMe">Do Not </span>Remember My Login
                             </md-switch>
                         </div>
                         <div class="form-group">
-                            <!--<button class="btn btn-primary" ng-disabled="form.$invalid">Login</button>-->
                             <md-button type="submit" ng-disabled="form.$invalid">Login</md-button>
                         </div>
 
@@ -122,91 +110,13 @@
         </div>
 
     </div>
-        <!--<div class="navbar navbar-inverse navbar-fixed-top">
-            <div class="navbar-header">
-                <span class="navbar-brand">{siteName}</span>
-            </div>
-            <ul class="nav navbar-nav" ng-show="model.currentUser" ng-cloak>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{model.currentUser}} <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="{{model.logoutUrl}}">Logout</a></li>
-                        <li class="divider" ng-show="model.loginWithDifferentAccountUrl"></li>
-                        <li><a href="{{model.loginWithDifferentAccountUrl}}" ng-show="model.loginWithDifferentAccountUrl">Login With Different Account</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>-->
-        <!--<div class="container">
-            <div class="page-header">
-                <h1>
-                    This is a custom view on the log in page
-                    <small ng-show="clientName"><strong>{clientName}</strong> is asking you to login</small>
-                </h1>
-            </div>
-        </div>-->
-        <!--<div class='container page-login' ng-cloak>
-            <div class="page-header">
-                <h1>Login</h1>
-            </div>
-
-            <div class="row" ng-show="model.errorMessage">
-                <div class="col-md-12 col-sm-12">
-                    <div class="alert alert-danger">
-                        <strong>Error:</strong>
-                        {{model.errorMessage}}
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6 col-sm-6" ng-show="model.loginUrl">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Local Login</h3>
-                        </div>
-                        <div class="panel-body">
-                            <form name="form" method="post" action="{{model.loginUrl}}">
-                                <anti-forgery-token token="model.antiForgery"></anti-forgery-token>
-
-                                <fieldset>
-                                    <div class="form-group">
-                                        <label for="username">Username</label>
-                                        <input required name="username" autofocus id="username" type="text" class="form-control" placeholder="Username" ng-model="model.username" maxlength="100">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="password">Password</label>
-                                        <input required id="password" name="password" type="password" class="form-control" placeholder="Password" ng-model="model.password" maxlength="100" autocomplete="off">
-                                    </div>
-                                    <div class="form-group login-remember" ng-show="model.allowRememberMe">
-                                        <label for="rememberMe">
-                                            <input type="checkbox" id="rememberMe" name="rememberMe" ng-model="model.rememberMe" value="true">
-                                            <strong>Remember My Login</strong>
-                                        </label>
-                                    </div>
-                                    <div class="form-group">
-                                        <button class="btn btn-primary" ng-disabled="form.$invalid">Login</button>
-                                    </div>
-                                </fieldset>
-                            </form>
-                        </div>
-                        <ul class="list-unstyled">
-                            <li ng-repeat="link in model.additionalLinks"><a ng-href="{{link.href}}">{{link.text}}</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-            </div>
-        </div>-->
 
         <script id='modelJson' type='application/json'>
             {model}
         </script>
 
-    <!--</form>-->
 
         <script src="/Content/libs/jquery/jquery-1.11.0.min.js"></script>
-        <!--<script src="/Content/libs/bootstrap/bootstrap.min.js"></script>-->
         <script src="/Content/libs/encoder/encoder.min.js"></script>
 
         <script src="/Content/libs/angular/angular.min.js"></script>
