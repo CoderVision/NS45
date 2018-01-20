@@ -17,11 +17,11 @@
     <div layout="column" flex id="wrapper">
         <div ng-include="'/Content/app/toolbarHeader.html'"></div>
 
-        <div class="page-header">
+        <div class="loginContainer">
             <h1>Logout</h1>
         </div>
 
-        <div class="row">
+        <div class="loginContainer">
             <p>Would you like to logout of {{model.siteName}}?</p>
             <form name="form" method="post" action="{{model.logoutUrl}}">
                 <anti-forgery-token token="model.antiForgery"></anti-forgery-token>
@@ -32,28 +32,6 @@
                     </div>
                 </fieldset>
             </form>
-        </div>
-    </div>
-
-
-    <div class='container page-logout' ng-cloak>
-        <div class="page-header">
-            <h1>Logout</h1>
-        </div>
-
-        <div class="row">
-            <div class="col-md-6 col-sm-6">
-                <p>Would you like to logout of {{model.siteName}}?</p>
-                <form name="form" method="post" action="{{model.logoutUrl}}">
-                    <anti-forgery-token token="model.antiForgery"></anti-forgery-token>
-
-                    <fieldset>
-                        <div class="form-group">
-                            <button class="btn btn-primary">Yes</button>
-                        </div>
-                    </fieldset>
-                </form>
-            </div>
         </div>
     </div>
 
