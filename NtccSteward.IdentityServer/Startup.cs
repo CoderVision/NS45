@@ -40,6 +40,9 @@ namespace NtccSteward.IdentityServer
                     .UseInMemoryScopes(Scopes.Get());
                 // .UseInMemoryUsers(Users.Get()) // for dev/testing
 
+                // To completely customze the login screen, go here:
+                //https://identityserver.github.io/Documentation/docsv2/advanced/customizingViews.html
+
                 idServerServiceFactory.CorsPolicyService = new
                     Registration<IdentityServer3.Core.Services.ICorsPolicyService>(corsPolicyService);
 
@@ -49,6 +52,8 @@ namespace NtccSteward.IdentityServer
                 var userService = new UserService(accountRepo);
                 idServerServiceFactory.UserService = new Registration<IUserService>(resolver => userService);
 
+                idServerServiceFactory.ViewService = new Registration<IViewService, ViewService>();
+
                 var options = new IdentityServerOptions
                 {
                     Factory = idServerServiceFactory,
@@ -56,9 +61,20 @@ namespace NtccSteward.IdentityServer
                     IssuerUri = ConfigurationManager.AppSettings["NtccStewardIssuerUri"],  // does not have to be an existing uri
                     PublicOrigin = ConfigurationManager.AppSettings["NtccStewardStsOrigin"],
                     SigningCertificate = LoadCertificate(),  // certificate that is used for encrpting token, not ssl
-                    AuthenticationOptions = new AuthenticationOptions()
+                    //AuthenticationOptions = new AuthenticationOptions()
+                    //{
+                    //    EnablePostSignOutAutoRedirect = true,
+                    //    LoginPageLinks = new List<LoginPageLink>() {
+                    //        new LoginPageLink(){
+                    //            Type="createAccount",
+                    //            Text = "Create a new account",
+                    //            Href="~/createuseraccount"
+                    //        }
+                    //    }
+                    //},
+                    CspOptions = new CspOptions
                     {
-                        EnablePostSignOutAutoRedirect = true
+                        Enabled = false
                     }
                 };
 
