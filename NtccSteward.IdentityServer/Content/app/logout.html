@@ -1,0 +1,75 @@
+﻿
+log out page
+
+<!DOCTYPE html>
+<html ng-app="app" ng-controller="LayoutCtrl">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>{siteName}</title>
+    <link href="/content/libs/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/content/app/app.css" rel="stylesheet">
+</head>
+<body lang="en">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar-header">
+            <span class="navbar-brand">{siteName}</span>
+        </div>
+        <ul class="nav navbar-nav" ng-show="model.currentUser" ng-cloak>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{model.currentUser}} <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="{{model.logoutUrl}}">Logout</a></li>
+                    <li class="divider" ng-show="model.loginWithDifferentAccountUrl"></li>
+                    <li><a href="{{model.loginWithDifferentAccountUrl}}" ng-show="model.loginWithDifferentAccountUrl">Login With Different Account</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>This is a custom view</h1>
+        </div>
+    </div>
+
+
+    <div class='container page-logout' ng-cloak>
+        <div class="page-header">
+            <h1>Logout</h1>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 col-sm-6">
+                <p>Would you like to logout of {{model.siteName}}?</p>
+                <form name="form" method="post" action="{{model.logoutUrl}}">
+                    <anti-forgery-token token="model.antiForgery"></anti-forgery-token>
+
+                    <fieldset>
+                        <div class="form-group">
+                            <button class="btn btn-primary">Yes</button>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script id='modelJson' type='application/json'>
+        {model}
+    </script>
+
+    <script src="../../Scripts/jquery-1.11.0.min.js"></script>
+    <script src="../../Scripts/bootstrap.min.js"></script>
+    <script src="../../Scripts/encoder.min.js"></script>
+
+    <script src="Scripts/angular.min.js"></script>
+    <script src="Scripts/angular-animate.min.js"></script>
+    <script src="Scripts/angular-aria.min.js"></script>
+    <script src="Scripts/angular-material.min.js"></script>
+    <script src="Scripts/angular-messages.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-material-icons/0.7.1/angular-material-icons.min.js"></script>
+
+    <script src="../app.js"></script>
+
+</body>
+</html>
