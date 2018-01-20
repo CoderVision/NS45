@@ -248,8 +248,30 @@ md-datepicker {
 .haveAnAcctContainer {
     padding-left: 14px;
     padding-right: 14px;
+    padding-top: 5.6px;
 }
 
+.permissionsContainer {
+    padding: 16px 16px 16px 40px;
+}
+.permissionsListItem {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-left:16px;
+    max-height: 20px;
+}
+.consentRememberContainer {
+    padding: 0px 16px 16px 30px;
+}
+.scopeDescription {
+    padding-left: 8px;
+}
+.scopeRequired {
+    padding-left: 8px;
+}
+.consentButtons{
+    padding-left:16px;
+}
 h3.title {
     margin-bottom: 0px;
 }

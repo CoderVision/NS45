@@ -1,117 +1,116 @@
-﻿
-
-consent page
-
-<!--<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html ng-app="app" ng-controller="LayoutCtrl">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>{siteName}</title>
-    <link href="/content/libs/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/content/app/app.css" rel="stylesheet">
+
+    <link href="/Content/angular-material.css" rel="stylesheet" />
+    <link href="/Content/angular-material.layout-attributes.css" rel="stylesheet" />
+    <link href="/Content/angular-material.layouts.css" rel="stylesheet" />
+
+    <link href="/content/app/app2.css" rel="stylesheet">
 </head>
-<body lang="en">
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="navbar-header">
-            <span class="navbar-brand">{siteName}</span>
-        </div>
-        <ul class="nav navbar-nav" ng-show="model.currentUser" ng-cloak>
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{model.currentUser}} <b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                    <li><a href="{{model.logoutUrl}}">Logout</a></li>
-                    <li class="divider" ng-show="model.loginWithDifferentAccountUrl"></li>
-                    <li><a href="{{model.loginWithDifferentAccountUrl}}" ng-show="model.loginWithDifferentAccountUrl">Login With Different Account</a></li>
-                </ul>
-            </li>
-        </ul>
-    </div>
+<body lang="en" layout="row">
+    <div layout="column" flex id="wrapper">
+        <div ng-include="'/Content/app/toolbarHeader.html'"></div>
 
-    <div class="container">
-        <div class="page-header">
-            <h1>This is a custom view</h1>
-        </div>
-    </div>
-
-    <div class='container page-consent' ng-cloak>
-        <div class="row page-header">
-            <div class="col-sm-10">
-                <div class="client-logo" ng-show="model.clientLogoUrl"><img ng-src="{{model.clientLogoUrl}}"></div>
-                <h1>
-                    {{model.clientName}}
-                    <small>is requesting your permission</small>
-                </h1>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-sm-8">
-                <div ng-show="model.errorMessage" class="alert alert-danger">
-                    <strong>Error:</strong>
-                    {{model.errorMessage}}
-                </div>
-                <form name="form" method="post" action="{{model.consentUrl}}" class="consent-form">
-                    <anti-forgery-token token="model.antiForgery"></anti-forgery-token>
-
-                    <div>Uncheck the permissions you do not wish to grant.</div>
-
+        <div class='container page-consent' ng-cloak flex>
+            <div class="row">
+                <div class="col-sm-8">
                     <div class="panel panel-default consent-buttons" ng-show="model.identityScopes">
-                        <div class="panel-heading">
-                            <span class="glyphicon glyphicon-user"></span>
-                            Personal Information
-                        </div>
-                        <ul class="list-group">
-                            <li ng-repeat="scope in model.identityScopes" class="list-group-item">
-                                <label>
-                                    <input class="consent-scopecheck" type="checkbox" name="scopes" id="scopes_{{scope.name}}" value="{{scope.name}}" ng-model="scope.selected" ng-disabled="scope.required" />
-                                    <strong>{{scope.displayName}}</strong>
-                                    <span ng-show="scope.emphasize" class="glyphicon glyphicon-exclamation-sign"></span>
-                                </label>
-                                <span ng-show="scope.required"><em>(required)</em></span>
-                                <div class="consent-description" ng-show="scope.description">
-                                    <label for="scopes_{{scope.name}}">{{scope.description}}</label>
+                        <md-toolbar layout="row" md-colors="::{background: 'default-accent-500-1'}">
+                            <div class="md-toolbar-tools">
+                                <span>Terms of Use</span>
+                            </div>
+                        </md-toolbar>
+
+                        <md-content class="permissionsContainer">
+                            This website is for use by New Testament Christian Church pastors, associated ministers, and designated members.
+                        <md-content>
+                    </div>
+
+
+                    <div ng-show="model.errorMessage" class="alert alert-danger">
+                        <strong>Error:</strong>
+                        {{model.errorMessage}}
+                    </div>
+                    <form name="form" method="post" action="{{model.consentUrl}}" class="consent-form">
+                        <anti-forgery-token token="model.antiForgery"></anti-forgery-token>
+
+                        <div class="panel panel-default consent-buttons" ng-show="model.identityScopes">
+                            <md-toolbar layout="row" md-colors="::{background: 'default-accent-500-1'}">
+                                <div class="md-toolbar-tools">
+                                    <span>Personal Information</span>
                                 </div>
-                            </li>
-                        </ul>
-                    </div>
+                            </md-toolbar>
 
-                    <div class="panel panel-default" ng-show="model.resourceScopes">
-                        <div class="panel-heading">
-                            <span class="glyphicon glyphicon-tasks"></span>
-                            Application Access
+                            <md-content>
+                                <md-list flex>
+                                    <md-list-item class="permissionsListItem" ng-repeat="scope in model.identityScopes" ng-click="null">
+
+                                        <md-switch class="md-primary" style="min-height:20px;"
+                                                   name="scopes" id="scopes_{{scope.name}}" value="{{scope.name}}" ng-model="scope.selected" ng-disabled="true">
+                                            {{scope.displayName}}
+                                        </md-switch>
+
+                                        <span ng-show="scope.required" class="scopeRequired"><em>(required)</em></span>
+                                        <div ng-show="scope.description" class="scopeDescription">
+                                            <label for="scopes_{{scope.name}}">{{scope.description}}</label>
+                                        </div>                                     
+
+                                    </md-list-item>
+                                    <md-divider></md-divider>
+                                </md-list>
+                            </md-content>
                         </div>
-                        <ul class="list-group">
-                            <li ng-repeat="scope in model.resourceScopes" class="list-group-item">
-                                <label>
-                                    <input class="consent-scopecheck" type="checkbox" name="scopes" value="{{scope.name}}" ng-model="scope.selected" ng-disabled="scope.required" />
-                                    <strong>{{scope.displayName}}</strong>
-                                    <span ng-show="scope.emphasize" class="glyphicon glyphicon-exclamation-sign"></span>
-                                </label>
-                                <span ng-show="scope.required"><em>(required)</em></span>
-                                <div class="consent-description" ng-show="scope.description">
-                                    <span ng-show="scope.required"><em>(required)</em></span>
-                                    <label for="scopes_{{scope.name}}">{{scope.description}}</label>
+
+                        <div class="panel panel-default" ng-show="model.resourceScopes" ng-hide="true">
+                           
+                            <md-toolbar layout="row" md-colors="::{background: 'default-accent-500-1'}">
+                                <div class="md-toolbar-tools">
+                                    <span>Application Access</span>
                                 </div>
-                            </li>
-                        </ul>
-                    </div>
+                            </md-toolbar>
 
-                    <div class="consent-remember" ng-show="model.allowRememberConsent">
-                        <label>
-                            <input class="consent-scopecheck" type="checkbox" name="RememberConsent" value="true" ng-model="model.rememberConsent" />
-                            <strong>Remember My Decision</strong>
-                        </label>
-                    </div>
 
-                    <div class="consent-buttons">
-                        <button name="button" value="yes" class="btn btn-primary" autofocus>Yes, Allow</button>
-                        <button name="button" value="no" class="btn">No, Do Not Allow</button>
-                        <a class="pull-right btn btn-default" target="_blank" ng-show="model.clientUrl" ng-href="{{model.clientUrl}}">
-                            <span class="glyphicon glyphicon-info-sign"></span>
-                            <strong>{{model.clientName}}</strong>
-                        </a>
-                    </div>
-                </form>
+
+                            <md-cont
+
+                                <md-content>
+                                    <md-list flex>
+                                        <md-list-item class="permissionsListItem" ng-repeat="scope in model.resourceScopes" ng-click="null">
+
+                                            <md-switch class="md-primary"
+                                                       name="scopes" id="scopes_{{scope.name}}" value="{{scope.name}}" ng-model="scope.selected" ng-disabled="scope.required">
+                                                {{scope.displayName}}
+                                            </md-switch>
+
+                                            <span ng-show="scope.required" class="scopeRequired"><em>(required)</em></span>
+                                            <div ng-show="scope.description" class="scopeDescription">
+                                                <label for="scopes_{{scope.name}}">{{scope.description}}</label>
+                                            </div>
+                                        </md-list-item>
+                                        <md-divider></md-divider>
+                                    </md-list>
+                                </md-content>
+                        </div>
+
+                        <div class="consentRememberContainer" ng-show="model.allowRememberConsent">
+                            <md-switch class="md-primary" name="RememberConsent" value="true" ng-model="model.rememberConsent">
+                                <span ng-if="!model.rememberConsent">Do Not </span>Remember My Decision
+                            </md-switch>
+                        </div>
+
+
+                        <div class="consentButtons">
+                            <md-button type="submit" name="button" value="yes" md-autofocus>Yes, Allow</md-button>
+                            <md-button type="submit" name="button" value="no">No, Do Not Allow</md-button>
+                            <a class="pull-right btn btn-default" target="_blank" ng-show="model.clientUrl" ng-href="{{model.clientUrl}}">
+                                <strong>{{model.clientName}}</strong>
+                            </a>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -120,18 +119,18 @@ consent page
         {model}
     </script>
 
-    <script src="../../Scripts/jquery-1.11.0.min.js"></script>
-    <script src="../../Scripts/bootstrap.min.js"></script>
-    <script src="../../Scripts/encoder.min.js"></script>
 
-    <script src="Scripts/angular.min.js"></script>
-    <script src="Scripts/angular-animate.min.js"></script>
-    <script src="Scripts/angular-aria.min.js"></script>
-    <script src="Scripts/angular-material.min.js"></script>
-    <script src="Scripts/angular-messages.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-material-icons/0.7.1/angular-material-icons.min.js"></script>
+    <script src="/Content/libs/jquery/jquery-1.11.0.min.js"></script>
+    <script src="/Content/libs/encoder/encoder.min.js"></script>
 
-    <script src="../app.js"></script>
+    <script src="/Content/libs/angular/angular.min.js"></script>
+    <script src="/Content/libs/angular/angular-animate.min.js"></script>
+    <script src="/Content/libs/angular/angular-aria.min.js"></script>
+    <script src="/Content/libs/angular/angular-material.min.js"></script>
+    <script src="/Content/libs/angular/angular-messages.min.js"></script>
+    <script src="/Content/libs/angular/angular-material-icons.min.js"></script>
+
+    <script src="/content/app/app.js"></script>
 
 </body>
-</html>-->
+</html>
