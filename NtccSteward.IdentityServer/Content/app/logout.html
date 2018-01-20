@@ -1,34 +1,37 @@
 ﻿
-log out page
 
 <!DOCTYPE html>
 <html ng-app="app" ng-controller="LayoutCtrl">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>{siteName}</title>
-    <link href="/content/libs/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/content/app/app.css" rel="stylesheet">
-</head>
-<body lang="en">
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="navbar-header">
-            <span class="navbar-brand">{siteName}</span>
-        </div>
-        <ul class="nav navbar-nav" ng-show="model.currentUser" ng-cloak>
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{model.currentUser}} <b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                    <li><a href="{{model.logoutUrl}}">Logout</a></li>
-                    <li class="divider" ng-show="model.loginWithDifferentAccountUrl"></li>
-                    <li><a href="{{model.loginWithDifferentAccountUrl}}" ng-show="model.loginWithDifferentAccountUrl">Login With Different Account</a></li>
-                </ul>
-            </li>
-        </ul>
-    </div>
 
-    <div class="container">
+    <link href="/Content/angular-material.css" rel="stylesheet" />
+    <link href="/Content/angular-material.layout-attributes.css" rel="stylesheet" />
+    <link href="/Content/angular-material.layouts.css" rel="stylesheet" />
+
+    <link href="/content/app/app2.css" rel="stylesheet">
+
+</head>
+<body lang="en" layout="row" ng-cloak>
+    <div layout="column" flex id="wrapper">
+        <div ng-include="'/Content/app/toolbarHeader.html'"></div>
+
         <div class="page-header">
-            <h1>This is a custom view</h1>
+            <h1>Logout</h1>
+        </div>
+
+        <div class="row">
+            <p>Would you like to logout of {{model.siteName}}?</p>
+            <form name="form" method="post" action="{{model.logoutUrl}}">
+                <anti-forgery-token token="model.antiForgery"></anti-forgery-token>
+
+                <fieldset>
+                    <div class="form-group">
+                        <md-button type="submit">Yes</md-button>
+                    </div>
+                </fieldset>
+            </form>
         </div>
     </div>
 
@@ -58,18 +61,17 @@ log out page
         {model}
     </script>
 
-    <script src="../../Scripts/jquery-1.11.0.min.js"></script>
-    <script src="../../Scripts/bootstrap.min.js"></script>
-    <script src="../../Scripts/encoder.min.js"></script>
+    <script src="/Content/libs/jquery/jquery-1.11.0.min.js"></script>
+    <script src="/Content/libs/encoder/encoder.min.js"></script>
 
-    <script src="Scripts/angular.min.js"></script>
-    <script src="Scripts/angular-animate.min.js"></script>
-    <script src="Scripts/angular-aria.min.js"></script>
-    <script src="Scripts/angular-material.min.js"></script>
-    <script src="Scripts/angular-messages.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-material-icons/0.7.1/angular-material-icons.min.js"></script>
+    <script src="/Content/libs/angular/angular.min.js"></script>
+    <script src="/Content/libs/angular/angular-animate.min.js"></script>
+    <script src="/Content/libs/angular/angular-aria.min.js"></script>
+    <script src="/Content/libs/angular/angular-material.min.js"></script>
+    <script src="/Content/libs/angular/angular-messages.min.js"></script>
+    <script src="/Content/libs/angular/angular-material-icons.min.js"></script>
 
-    <script src="../app.js"></script>
+    <script src="/content/app/app.js"></script>
 
 </body>
 </html>
