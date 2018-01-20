@@ -15,7 +15,7 @@ namespace NtccSteward.IdentityServer.Config
                 new  Client
                 {
                     ClientId="NtccStewardImplicit",
-                    ClientName="Ntcc Steward Log-in Service",
+                    ClientName="Ntcc Steward Login",
                     Flow = Flows.Implicit,
                     AllowAccessToAllScopes = true,
                     RedirectUris = new List<string>{

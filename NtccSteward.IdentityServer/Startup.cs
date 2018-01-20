@@ -57,7 +57,7 @@ namespace NtccSteward.IdentityServer
                 var options = new IdentityServerOptions
                 {
                     Factory = idServerServiceFactory,
-                    SiteName = "NtccSteward Security Token Service",
+                    SiteName = "Ntcc Steward Security Service",
                     IssuerUri = ConfigurationManager.AppSettings["NtccStewardIssuerUri"],  // does not have to be an existing uri
                     PublicOrigin = ConfigurationManager.AppSettings["NtccStewardStsOrigin"],
                     SigningCertificate = LoadCertificate(),  // certificate that is used for encrpting token, not ssl
@@ -76,6 +76,8 @@ namespace NtccSteward.IdentityServer
                     {
                         Enabled = false
                     }
+                    //ProtocolLogoutUrls= new List<string>() {
+                    //}
                 };
 
                 idSvrApp.UseIdentityServer(options);
