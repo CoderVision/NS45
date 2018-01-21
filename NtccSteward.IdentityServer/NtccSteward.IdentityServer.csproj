@@ -156,13 +156,14 @@
     <Content Include="Content\libs\angular\angular-messages.js" />
     <Content Include="Content\libs\angular\angular-messages.min.js" />
     <Content Include="Content\libs\angular\angular-mocks.js" />
+    <Content Include="Content\libs\angular\angular-route.min.js" />
     <Content Include="Content\libs\angular\angular.js" />
     <Content Include="Content\libs\angular\angular.min.js" />
-    <Content Include="Content\libs\bootstrap\bootstrap-theme.css" />
-    <Content Include="Content\libs\bootstrap\bootstrap-theme.min.css" />
-    <Content Include="Content\libs\bootstrap\bootstrap.css" />
-    <Content Include="Content\libs\bootstrap\bootstrap.min.css" />
-    <Content Include="Content\libs\bootstrap\bootstrap.min.js" />
+    <Content Include="Content\libs\bootstrap\css\bootstrap-theme.css" />
+    <Content Include="Content\libs\bootstrap\css\bootstrap-theme.min.css" />
+    <Content Include="Content\libs\bootstrap\css\bootstrap.css" />
+    <Content Include="Content\libs\bootstrap\css\bootstrap.min.css" />
+    <Content Include="Content\libs\bootstrap\js\bootstrap.min.js" />
     <Content Include="Content\libs\encoder\encoder.min.js" />
     <None Include="Content\libs\jquery\jquery-1.11.0.intellisense.js" />
     <Content Include="Content\libs\jquery\jquery-1.11.0.js" />
@@ -189,6 +190,8 @@
     <Content Include="Scripts\angular-messages.js" />
     <Content Include="Scripts\angular-messages.min.js" />
     <Content Include="Scripts\angular-mocks.js" />
+    <Content Include="Scripts\angular-route.js" />
+    <Content Include="Scripts\angular-route.min.js" />
     <Content Include="Scripts\angular.js" />
     <Content Include="Scripts\angular.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -197,6 +200,7 @@
     <Content Include="Scripts\angular-aria.min.js.map" />
     <Content Include="Scripts\angular.min.js.map" />
     <Content Include="Scripts\angular-messages.min.js.map" />
+    <Content Include="Scripts\angular-route.min.js.map" />
     <None Include="Scripts\jquery-1.11.0.intellisense.js" />
     <Content Include="Scripts\encoder.min.js" />
     <Content Include="Scripts\jquery-1.11.0.js" />
