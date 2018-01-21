@@ -122,7 +122,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\app\app.css" />
+    <Content Include="appAcct\acctRequestController.js" />
+    <Content Include="appAcct\appAcct.js" />
+    <Content Include="appAcct\config.js" />
+    <Content Include="appAcct\toolbarHeader.html" />
     <Content Include="Content\app\app.js" />
     <Content Include="Content\app\app2.css" />
     <Content Include="Content\app\consent.html" />
@@ -212,6 +215,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Views\Account\request.html" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />

@@ -28,10 +28,7 @@
                 <form name="form" method="post" action="{{model.loginUrl}}" class="maxWidth">
                     <anti-forgery-token token="model.antiForgery"></anti-forgery-token>
 
-                    <!--<div ng-hide="true">
-                    {{ model.rememberMe = true; }}
-                </div>-->
-
+   
                     <fieldset class="maxWidth">
                         <h3 >I Have An Account</h3>
 
@@ -79,8 +76,6 @@
                     </fieldset>
                 </form>
 
-
-
             </div>
 
             <!-- right panel -->
@@ -89,7 +84,8 @@
 
                 <div class="maxWidth">
                     <h3>I Have An Account</h3>
-                    <md-button>Request an Account</md-button>
+                    <!--<md-button>Request an Account</md-button>-->
+                    <md-button ng-href="{{link.href}}" ng-repeat="link in model.additionalLinks | filter: { 'type' : 'createAccount'}">{{link.text}}</md-button>
 
                     <p style="margin-top:30px;">
                         Request a new account today to start enjoying the benefits of using a website that is designed to help you run your church effectively!
