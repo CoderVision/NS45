@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿
+
+<!DOCTYPE html>
 <html ng-app="app" ng-controller="LayoutCtrl">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -34,6 +36,7 @@
                         <strong>Error:</strong>
                         {{model.errorMessage}}
                     </div>
+
                     <form name="form" method="post" action="{{model.consentUrl}}" class="consent-form">
                         <anti-forgery-token token="model.antiForgery"></anti-forgery-token>
 
@@ -48,8 +51,9 @@
                                 <md-list flex>
                                     <md-list-item class="permissionsListItem" ng-repeat="scope in model.identityScopes" ng-click="null">
 
-                                        <md-switch class="md-primary" style="min-height:20px;"
-                                                   name="scopes" id="scopes_{{scope.name}}" value="{{scope.name}}" ng-model="scope.selected" ng-disabled="true">
+                                        <input class="consent-scopecheck" type="checkbox" name="scopes" id="scopes_{{scope.name}}" value="{{scope.name}}" ng-model="scope.selected" ng-disabled="scope.required" ng-hide="true"/>
+
+                                        <md-switch class="md-primary" style="min-height:20px;" value="{{scope.name}}" ng-model="scope.selected" ng-disabled="true">
                                             {{scope.displayName}}
                                         </md-switch>
 
@@ -64,7 +68,7 @@
                             </md-content>
                         </div>
 
-                        <div class="panel panel-default" ng-show="model.resourceScopes" ng-hide="true">
+                        <div class="panel panel-default" ng-show="model.resourceScopes" ng-hide="false">
                            
                             <md-toolbar layout="row" md-colors="::{background: 'default-accent-500-1'}">
                                 <div class="md-toolbar-tools">
@@ -73,15 +77,13 @@
                             </md-toolbar>
 
 
-
-                            <md-cont
-
                                 <md-content>
                                     <md-list flex>
                                         <md-list-item class="permissionsListItem" ng-repeat="scope in model.resourceScopes" ng-click="null">
 
-                                            <md-switch class="md-primary"
-                                                       name="scopes" id="scopes_{{scope.name}}" value="{{scope.name}}" ng-model="scope.selected" ng-disabled="scope.required">
+                                            <input class="consent-scopecheck" type="checkbox" name="scopes" value="{{scope.name}}" ng-model="scope.selected" ng-disabled="scope.required" ng-hide="true"/>
+
+                                            <md-switch class="md-primary" value="{{scope.name}}" ng-model="scope.selected" ng-disabled="true">
                                                 {{scope.displayName}}
                                             </md-switch>
 
@@ -96,7 +98,9 @@
                         </div>
 
                         <div class="consentRememberContainer" ng-show="model.allowRememberConsent">
-                            <md-switch class="md-primary" name="RememberConsent" value="true" ng-model="model.rememberConsent">
+                            <input class="consent-scopecheck" type="checkbox" name="RememberConsent" value="true" ng-model="model.rememberConsent" ng-hide="true" />
+
+                            <md-switch class="md-primary" ng-value="true" ng-model="model.rememberConsent">
                                 <span ng-if="!model.rememberConsent">Do Not </span>Remember My Decision
                             </md-switch>
                         </div>
@@ -107,6 +111,7 @@
                             <md-button type="submit" name="button" value="no">No, Do Not Allow</md-button>
                             <!--<button name="button" value="yes" class="btn btn-primary" autofocus>Yes, Allow</button>
                             <button name="button" value="no" class="btn">No, Do Not Allow</button>-->
+
                             <a class="pull-right btn btn-default" target="_blank" ng-show="model.clientUrl" ng-href="{{model.clientUrl}}">
                                 <strong>{{model.clientName}}</strong>
                             </a>

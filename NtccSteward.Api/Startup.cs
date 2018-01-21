@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Owin;
+using Microsoft.Owin.Cors;
 using Owin;
 using IdentityServer3.AccessTokenValidation;
 using System.Configuration;
@@ -17,6 +18,8 @@ namespace NtccSteward.Api
         {
             JwtSecurityTokenHandler.InboundClaimTypeMap = new Dictionary<string, string>();
 
+            //app.UseCors(CorsOptions.AllowAll);
+            
             // left off with #3 "Authorizing Access to the API", "Client Credentials Flow"
             //https://app.pluralsight.com/player?course=oauth2-openid-connect-angular-aspdotnet&author=kevin-dockx&name=oauth2-openid-connect-angular-aspdotnet-m03&clip=0&mode=live
             app.UseIdentityServerBearerTokenAuthentication(
