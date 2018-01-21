@@ -20,22 +20,21 @@ namespace NtccSteward.IdentityServer.Controllers
             this.accountRepository = new AccountRepository(cnString, pepper);
         }
         // GET: Account
-        [Route("login")]
         [HttpGet]
         public ActionResult Index(string signin)
         {
             return View("RequestAccount", new AccountRequest());
         }
 
-        [Route("login")]
-        [HttpGet]
-        public ActionResult Index2(string signin, Login login)  // AccountRequest accountRequest
+        [HttpPost]
+        public ActionResult Index(string signin, Login login)  // AccountRequest accountRequest
         {
             if (ModelState.IsValid)
             {
-                return View("RequestAccount", new AccountRequest());
+                //return View("RequestAccount", new AccountRequest());
+                return Redirect("~/identity/login?signin=" + signin);  // must return to the signin parameter to maintain the user's session
             }
-            return View("RequestAccount", new AccountRequest());
+            return View();
         }
     }
 }

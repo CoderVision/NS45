@@ -61,17 +61,17 @@ namespace NtccSteward.IdentityServer
                     IssuerUri = ConfigurationManager.AppSettings["NtccStewardIssuerUri"],  // does not have to be an existing uri
                     PublicOrigin = ConfigurationManager.AppSettings["NtccStewardStsOrigin"],
                     SigningCertificate = LoadCertificate(),  // certificate that is used for encrpting token, not ssl
-                    //AuthenticationOptions = new AuthenticationOptions()
-                    //{
-                    //    EnablePostSignOutAutoRedirect = true,
-                    //    LoginPageLinks = new List<LoginPageLink>() {
-                    //        new LoginPageLink(){
-                    //            Type="createAccount",
-                    //            Text = "Create a new account",
-                    //            Href="~/createuseraccount"
-                    //        }
-                    //    }
-                    //},
+                    AuthenticationOptions = new AuthenticationOptions()
+                    {
+                        EnablePostSignOutAutoRedirect = true,
+                        LoginPageLinks = new List<LoginPageLink>() {
+                            new LoginPageLink(){
+                                Type="createAccount",
+                                Text = "Request an Account",
+                                Href="~/Account"
+                            }
+                        }
+                    },
                     CspOptions = new CspOptions
                     {
                         Enabled = false
