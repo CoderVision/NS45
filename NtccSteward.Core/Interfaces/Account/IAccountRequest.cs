@@ -13,5 +13,7 @@
         string PastorName { get; set; }
         string State { get; set; }
         int RequestId { get; set; }
+        string Line1 { get; set; }
+        string Zip { get; set; }
     }
 }

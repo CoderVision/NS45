@@ -25,6 +25,8 @@ namespace NtccSteward.Core.Models.Account
             City = ar.City;
             State = ar.State;
             Comments = ar.Comments;
+            Line1 = ar.Line1;
+            Zip = ar.Zip;
         }
 
         public string FirstName { get; set; }
@@ -34,8 +36,10 @@ namespace NtccSteward.Core.Models.Account
         public string PastorName { get; set; }
         public int ChurchId { get; set; }
         public string ChurchName { get; set; }
+        public string Line1 { get; set; }
         public string City { get; set; }
         public string State { get; set; }
+        public string Zip { get; set; }
         public string Comments { get; set; }
 
         public int RequestId { get; set; }

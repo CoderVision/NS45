@@ -12,12 +12,16 @@ namespace NtccSteward.IdentityServer.Controllers
     public class AccountController : Controller
     {
         private readonly IAccountRepository accountRepository;
+        private readonly IChurchRepository churchRepository;
 
         public AccountController()
         {
             var cnString = ConfigurationManager.ConnectionStrings["Login"].ConnectionString;
             var pepper = ConfigurationManager.AppSettings["Pepper"];
             this.accountRepository = new AccountRepository(cnString, pepper);
+
+            var cnDefault = ConfigurationManager.ConnectionStrings["Default"].ConnectionString;
+            this.churchRepository = new ChurchRepository(cnDefault);
         }
         // GET: Account
         [HttpGet]
@@ -26,15 +30,28 @@ namespace NtccSteward.IdentityServer.Controllers
             return View("RequestAccount", new AccountRequest());
         }
 
+        [Route("account/getconfig")]
+        [HttpGet]
+        public ActionResult GetConfig()
+        {
+            var churchList = this.churchRepository.GetList(false);
+
+            return Json(new { churchList = churchList }, JsonRequestBehavior.AllowGet);
+        }
+
+
         [HttpPost]
-        public ActionResult Index(string signin, Login login)  // AccountRequest accountRequest
+        public ActionResult Index(string signin, NtccSteward.Core.Models.Account.AccountRequest acctRequest)  // AccountRequest accountRequest
         {
             if (ModelState.IsValid)
             {
-                //return View("RequestAccount", new AccountRequest());
-                return Redirect("~/identity/login?signin=" + signin);  // must return to the signin parameter to maintain the user's session
+                this.accountRepository.CreateAccountRequest(acctRequest);
+
+                return View("RequestSuccess");
+                //return Redirect("~/identity/login?signin=" + signin);  // must return to the signin parameter to maintain the user's session
             }
-            return View();
+            else
+                return Redirect("~/identity/error");  
         }
     }
 }
