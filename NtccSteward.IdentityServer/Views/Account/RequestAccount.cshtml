@@ -1,5 +1,5 @@
 ﻿
-@{ 
+@{
     Layout = "";
 }
 
@@ -22,7 +22,7 @@
 
         <div class="content">
 
-            <form name="requestForm" >
+            <form name="requestForm" method="post" action="{{arc.getPostUrl()}}" class="maxWidth">
                 <div layout="column">
                     <md-input-container class="md-block">
                         <label>First Name</label>
@@ -109,11 +109,11 @@
                         <md-select ng-model="arc.user.churchId"
                                    placeholder="Select a church"
                                    required
-                                   name="church">
+                                   name="churchId">
                             <md-option>Select a church</md-option>
-                            <md-option ng-repeat="item in mc.churchList" ng-value="{{item.id}}">{{item.desc}}</md-option>
+                            <md-option ng-repeat="item in arc.config.churchList" ng-value="{{item.id}}">{{item.Name}}</md-option>
                         </md-select>
-                        <div ng-messages="requestForm.church.$error">
+                        <div ng-messages="requestForm.churchId.$error">
                             <div ng-message="required">Church is required</div>
                         </div>
                     </md-input-container>
@@ -122,6 +122,16 @@
                         <label>Comments</label>
                         <textarea class="fixedTextArea" ng-model="arc.user.comments" rows="6" md-select-on-focus></textarea>
                     </md-input-container>
+
+                    <div layout="row">
+                        <md-button ng-click="arc.reset(requestForm)" class="md-cancel-button">
+                            Cancel
+                        </md-button>
+                        <md-button type="submit" class="md-primary md-confirm-button"
+                                   ng-disabled="requestForm.$invalid">
+                            Submit
+                        </md-button>
+                    </div>
                 </div>
             </form>
         </div>

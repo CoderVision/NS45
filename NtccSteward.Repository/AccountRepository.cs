@@ -51,8 +51,9 @@ namespace NtccSteward.Repository
             paramz.Add(new SqlParameter("email", accountRequest.Email));
             paramz.Add(new SqlParameter("salt", salt));
             paramz.Add(new SqlParameter("passwordHash", passwordHash));
-            paramz.Add(new SqlParameter("pastorName", accountRequest.PastorName));
+            //paramz.Add(new SqlParameter("pastorName", accountRequest.PastorName));
             paramz.Add(new SqlParameter("churchId", accountRequest.ChurchId));
+            paramz.Add(new SqlParameter("line1", accountRequest.Line1));
             paramz.Add(new SqlParameter("city", accountRequest.City));
             paramz.Add(new SqlParameter("state", accountRequest.State));
             paramz.Add(new SqlParameter("comments", accountRequest.Comments));

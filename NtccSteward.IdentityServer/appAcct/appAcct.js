@@ -13,8 +13,12 @@ var app = angular.module("appAcct", ['ngMaterial', 'ngMdIcons', 'ngMessages']);
 
 //app.constant('config', config);
 
-app.config(function ($mdThemingProvider, $mdIconProvider) {
+app.config(function ($mdThemingProvider, $mdIconProvider, $locationProvider) {
 
+    $locationProvider.html5Mode({
+        enabled: true,
+        requireBase: false
+    });
 
     $mdThemingProvider.definePalette('green', {
         '50': 'eaf0ec',
