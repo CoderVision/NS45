@@ -1,16 +1,16 @@
 ﻿
+using NtccSteward.Core.Interfaces.Common.Address;
 using NtccSteward.Core.Models.Church;
+using NtccSteward.Core.Models.Common.Address;
+using NtccSteward.Core.Models.Common.Enums;
+using NtccSteward.Core.Models.Team;
 using NtccSteward.Repository.Framework;
+using NtccSteward.Repository.Ordinals;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Threading.Tasks;
-using NtccSteward.Core.Models.Common.Enums;
-using System.Data;
-using NtccSteward.Core.Models.Common.Address;
-using NtccSteward.Repository.Ordinals;
-using NtccSteward.Core.Interfaces.Common.Address;
 
 namespace NtccSteward.Repository
 {
@@ -21,18 +21,20 @@ namespace NtccSteward.Repository
         List<Church> GetList(bool showAll);
         RepositoryActionResult<ChurchProfile> SaveProfile(ChurchProfile profile);
         RepositoryActionResult<Church> Delete(int id, int entityType);
-        List<AppEnum> GetProfileMetadata();
+        ChurchProfileMetadata GetProfileMetadata(int churchId);
     }
 
     public class ChurchRepository : NtccSteward.Repository.Repository, IChurchRepository
     {
         private readonly SqlCmdExecutor _executor;
+        private readonly ICommonRepository commonRepository;
 
         public ChurchRepository(string connectionString)
         {
             this.ConnectionString = connectionString;
 
             _executor = new SqlCmdExecutor(connectionString);
+            commonRepository = new CommonRepository(connectionString);
         }
 
 
@@ -50,7 +52,7 @@ namespace NtccSteward.Repository
             paramz.Add(new SqlParameter("zip", church.Zip.ToSqlString()));
             paramz.Add(new SqlParameter("phone", church.Phone.ToSqlString()));
             paramz.Add(new SqlParameter("email", church.Email.ToSqlString()));
-            
+            paramz.Add(new SqlParameter("timeZoneOffset", church.TimeZoneOffset.ToSqlString()));
 
             Func<SqlDataReader, int> readFx = (reader) =>
             {
@@ -140,6 +142,12 @@ namespace NtccSteward.Repository
                         church.StatusId = reader.ValueOrDefault<int>("StatusId", 0);
                         church.StatusDesc = reader.ValueOrDefault("StatusDesc", string.Empty);
                         church.Comment = reader.ValueOrDefault("Comment", string.Empty);
+                        church.TimeZoneOffset = reader.ValueOrDefault("TimeZoneOffset", string.Empty);
+                        church.SmsAccountSID = reader.ValueOrDefault("AccountSid", string.Empty);
+                        church.SmsAccountToken = reader.ValueOrDefault("AccountToken", string.Empty);
+                        church.EmailConfigProfileId = reader.ValueOrDefault<int>("EmailConfigProfileId");
+                        church.EmailConfigUsername = reader.ValueOrDefault<string>("EmailConfigUsername");
+                        church.EmailConfigPassword = reader.ValueOrDefault<string>("EmailConfigPassword");
 
                         // address info
                         reader.NextResult();
@@ -192,6 +200,34 @@ namespace NtccSteward.Repository
                             church.EmailList.Add(addy);
                         }
 
+                        // Pastoral Team members
+                        reader.NextResult();
+                        while (reader.Read())
+                        {
+                            Team pt = church.PastoralTeam;
+                            if (pt == null)
+                            {
+                                pt = new Team();
+                                pt.Id = reader.ValueOrDefault<int>("TeamId");
+                                pt.ChurchId = church.Id;
+                                pt.Name = reader.ValueOrDefault<string>("TeamName");
+                                pt.Desc = reader.ValueOrDefault<string>("TeamDesc");
+                                pt.TeamTypeEnumId = reader.ValueOrDefault<int>("TeamTypeEnumId");
+
+                                church.PastoralTeam = pt;
+                            }
+
+                            var teammate = new Teammate();
+                            teammate.Id = reader.ValueOrDefault<int>("TeammateId");
+                            teammate.TeamId = reader.ValueOrDefault<int>("TeamId");
+                            teammate.MemberId = reader.ValueOrDefault<int>("MemberId");
+                            teammate.Name = reader.ValueOrDefault<string>("MemberName");
+                            teammate.TeamPositionEnumId = reader.ValueOrDefault<int>("TeamPositionEnumId");
+                            teammate.TeamPositionEnumDesc = reader.ValueOrDefault<string>("Position");
+
+                            pt.Teammates.Add(teammate);
+                        }
+
                         // attributes
                         //reader.NextResult();
                         //while (reader.Read())
@@ -217,24 +253,67 @@ namespace NtccSteward.Repository
         }
 
 
-        public List<AppEnum> GetProfileMetadata()
+        public ChurchProfileMetadata GetProfileMetadata(int churchId)
         {
-            var paramz = new List<SqlParameter>();
+            var metadata = new ChurchProfileMetadata();
 
-            Func<SqlDataReader, AppEnum> readFx = (reader) =>
+            //var paramz = new List<SqlParameter>();
+            //paramz.Add(new SqlParameter("churchId", churchId));
+
+            //Func<SqlDataReader, AppEnum> readFx = (reader) =>
+            //{
+            //    var appEnum = new AppEnum();
+            //    appEnum.ID = reader.ValueOrDefault<int>("EnumID");
+            //    appEnum.Desc = reader.ValueOrDefault<string>("EnumDesc");
+            //    appEnum.AppEnumTypeID = reader.ValueOrDefault<int>("EnumTypeID");
+            //    appEnum.AppEnumTypeName = reader.ValueOrDefault<string>("EnumTypeName");
+
+            //    return appEnum;
+            //};
+
+            //var list = _executor.ExecuteSql<AppEnum>("GetChurchProfileMetadata", CommandType.StoredProcedure, paramz, readFx);
+
+            using (var cn = new SqlConnection(_executor.ConnectionString))
             {
-                var appEnum = new AppEnum();
-                appEnum.ID = reader.ValueOrDefault<int>("EnumID");
-                appEnum.Desc = reader.ValueOrDefault<string>("EnumDesc");
-                appEnum.AppEnumTypeID = reader.ValueOrDefault<int>("EnumTypeID");
-                appEnum.AppEnumTypeName = reader.ValueOrDefault<string>("EnumTypeName");
+                using (var cmd = new SqlCommand("GetChurchProfileMetadata", cn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add(new SqlParameter("churchId", churchId));
+                    cn.Open();
 
-                return appEnum;
-            };
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                var appEnum = new AppEnum();
+                                appEnum.ID = reader.ValueOrDefault<int>("EnumID");
+                                appEnum.Desc = reader.ValueOrDefault<string>("EnumDesc");
+                                appEnum.AppEnumTypeID = reader.ValueOrDefault<int>("EnumTypeID");
+                                appEnum.AppEnumTypeName = reader.ValueOrDefault<string>("EnumTypeName");
 
-            var list = _executor.ExecuteSql<AppEnum>("GetChurchProfileMetadata", CommandType.StoredProcedure, paramz, readFx);
+                                metadata.Enums.Add(appEnum);
+                            }
 
-            return list;
+                            reader.NextResult();
+
+                            while (reader.Read())
+                            {
+                                var emailProvider = new EmailProvider();
+                                emailProvider.Id = reader.ValueOrDefault<int>("Id");
+                                emailProvider.Name = reader.ValueOrDefault<string>("Name");
+                                emailProvider.Server = reader.ValueOrDefault<string>("Server");
+                                emailProvider.Port = reader.ValueOrDefault<int>("Port");
+
+                                metadata.EmailProviders.Add(emailProvider);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return metadata;
         }
 
 
@@ -245,8 +324,14 @@ namespace NtccSteward.Repository
             paramz.Add(new SqlParameter("name", profile.Name.ToSqlString()));
             paramz.Add(new SqlParameter("statusEnumId", profile.StatusId));
             paramz.Add(new SqlParameter("comments", profile.Comment.ToSqlString()));
+            paramz.Add(new SqlParameter("timeZoneOffset", profile.TimeZoneOffset.ToSqlString()));
+            paramz.Add(new SqlParameter("smsAccoundSid", profile.SmsAccountSID.ToSqlString()));
+            paramz.Add(new SqlParameter("smsAccountToken", profile.SmsAccountToken.ToSqlString()));
+            paramz.Add(new SqlParameter("emailConfigProfileId", profile.EmailConfigProfileId));
+            paramz.Add(new SqlParameter("emailConfigUserName", profile.EmailConfigUsername.ToSqlString()));
+            paramz.Add(new SqlParameter("emailConfigPassword", profile.EmailConfigPassword.ToSqlString()));
 
-            Func<SqlDataReader, int> readFx = (reader) =>
+            Func <SqlDataReader, int> readFx = (reader) =>
             {
                 return (int)reader["ChurchId"];
             };
@@ -262,38 +347,17 @@ namespace NtccSteward.Repository
 
             foreach (var addy in profile.AddressList)
             {
-                var ciParamz = CreateAddressInfoParams(addy);
-                ciParamz.Add(new SqlParameter("line1", addy.Line1.ToSqlString()));
-                ciParamz.Add(new SqlParameter("line2", addy.Line2.ToSqlString()));
-                ciParamz.Add(new SqlParameter("line3", addy.Line3.ToSqlString()));
-                ciParamz.Add(new SqlParameter("city", addy.City.ToSqlString()));
-                ciParamz.Add(new SqlParameter("state", addy.State.ToSqlString()));
-                ciParamz.Add(new SqlParameter("zip", addy.Zip.ToSqlString()));
-
-                var list = _executor.ExecuteSql<int>("SaveAddress", CommandType.StoredProcedure, ciParamz, ciReadFx);
-
-                addy.ContactInfoId = list.First();
+                commonRepository.MergeAddress(addy);
             }
 
             foreach (var addy in profile.PhoneList)
             {
-                var ciParamz = CreateAddressInfoParams(addy);
-                ciParamz.Add(new SqlParameter("@number", addy.PhoneNumber.ToSqlString()));
-                ciParamz.Add(new SqlParameter("@phoneType", addy.PhoneType));
-
-                var list = _executor.ExecuteSql<int>("SavePhone", CommandType.StoredProcedure, ciParamz, ciReadFx);
-
-                addy.ContactInfoId = list.First();
+                commonRepository.MergePhone(addy);
             }
 
             foreach (var addy in profile.EmailList)
             {
-                var ciParamz = CreateAddressInfoParams(addy);
-                ciParamz.Add(new SqlParameter("@email", addy.EmailAddress.ToSqlString()));
-
-                var list = _executor.ExecuteSql<int>("SaveEmail", CommandType.StoredProcedure, ciParamz, ciReadFx);
-
-                addy.ContactInfoId = list.First();
+                commonRepository.MergeEmail(addy);
             }
 
             if (profile.PastoralTeam != null)
@@ -323,7 +387,7 @@ namespace NtccSteward.Repository
                     paramz.Clear();
                     paramz.Add(new SqlParameter("@teammateId", teamMate.Id));
                     paramz.Add(new SqlParameter("@teamId", teamMate.TeamId));
-                    paramz.Add(new SqlParameter("@personId", teamMate.PersonId));
+                    paramz.Add(new SqlParameter("@personId", teamMate.MemberId));
                     paramz.Add(new SqlParameter("@teamPositionEnumId", teamMate.TeamPositionEnumId));
 
                     var teammateIds = _executor.ExecuteSql<int>("SaveTeammate", CommandType.StoredProcedure, paramz, readFx);

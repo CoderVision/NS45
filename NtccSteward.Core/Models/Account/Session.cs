@@ -16,9 +16,11 @@ namespace NtccSteward.Core.Models.Account
 
         public int UserId { get; set; }
 
-        public int ChurchId { get; set; }
+        public string FirstName { get; set; }
 
-        public string ChurchName { get; set; }
+        public string LastName { get; set; }
+
+        public bool Active { get; set; }
 
         public string SessionId { get; set; }
 

@@ -1,0 +1,153 @@
+﻿
+@{
+    Layout = "";
+}
+
+<!DOCTYPE html>
+<html ng-app="appAcct" ng-controller="acctRequestController as arc">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Request Account</title>
+
+    <link href="/Content/angular-material.css" rel="stylesheet" />
+    <link href="/Content/angular-material.layout-attributes.css" rel="stylesheet" />
+    <link href="/Content/angular-material.layouts.css" rel="stylesheet" />
+
+    <link href="/content/app/app2.css" rel="stylesheet">
+</head>
+<body lang="en" layout="row" ng-init="arc.init()" ng-cloak>
+
+    <div layout="column" flex id="wrapper">
+        <div ng-include="'/appAcct/toolbarHeader.html'"></div>
+
+        <div class="content">
+
+            <form name="requestForm" method="post" action="{{arc.getPostUrl()}}" class="maxWidth">
+                <div layout="column">
+                    <md-input-container class="md-block">
+                        <label>First Name</label>
+                        <input name="firstName" ng-model="arc.user.firstName" ng-maxlength="50" ng-minlength="2" required md-autofocus />
+                        <div ng-messages="requestForm.firstName.$error">
+                            <div ng-message="required">First name is required</div>
+                            <div ng-message="minlength">At least 2 characters required</div>
+                            <div ng-message="maxlength">No more that 50 characters</div>
+                        </div>
+                    </md-input-container>
+
+                    <md-input-container class="md-block" flex>
+                        <label>Last Name</label>
+                        <input name="lastName" ng-model="arc.user.lastName" ng-maxlength="50" ng-minlength="2" required />
+                        <div ng-messages="requestForm.lastName.$error">
+                            <div ng-message="required">Last name is required</div>
+                            <div ng-message="minlength">At least 2 characters required</div>
+                            <div ng-message="maxlength">No more that 50 characters</div>
+                        </div>
+                    </md-input-container>
+
+                    <md-input-container class="md-block" flex>
+                        <label>Line 1</label>
+                        <input type="text" ng-model="arc.user.line1" name="line1" min="0" ng-maxlength="50" />
+                        <div ng-messages="requestForm.line1.$error">
+                            <div ng-message="maxlength">50 characters max</div>
+                        </div>
+                    </md-input-container>
+
+                    <div layout="row">
+                        <md-input-container flex>
+                            <label>City</label>
+                            <input type="text" ng-model="arc.user.city" name="city" min="0" ng-maxlength="50" />
+                            <div ng-messages="requestForm.city.$error">
+                                <div ng-message="maxlength">50 characters max</div>
+                            </div>
+                        </md-input-container>
+
+                        <md-input-container flex="15">
+                            <label>State</label>
+                            <input type="text" ng-model="arc.user.state" name="state" min="0" ng-maxlength="2"
+                                   mask="AA" clean="true" restrict="reject" />
+                            <div ng-messages="requestForm.state.$error">
+                                <div ng-message="maxlength">2 characters max</div>
+                            </div>
+                        </md-input-container>
+
+                        <md-input-container flex="30">
+                            <label>Zip Code</label>
+                            <input type="text" ng-model="arc.user.zip" name="zip" min="0" ng-maxlength="10" ng-pattern="/^(\d{5}-\d{4}|\d{5})$/" />
+                            <div class="hint" ng-show="showHints">99999-9999</div>
+                            <div ng-messages="requestForm.zip.$error">
+                                <div ng-message="maxlength">10 characters max</div>
+                                <div ng-message="pattern">Invalid zip code (99999-9999)</div>
+                            </div>
+                        </md-input-container>
+                    </div>
+
+                    <md-input-container>
+                        <label>Email Address</label>
+                        <input type="email" ng-model="arc.user.emailAddress" name="email" min="0" ng-maxlength="50" required
+                               ng-pattern="/^[A-Za-z0-9._%+-]+@("@")[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/" />
+
+                        <div class="hint" ng-show="showHints">user@email.com</div>
+                        <div ng-messages="requestForm.email.$error">
+                            <div ng-message="required">Email is required</div>
+                            <div ng-message="maxlength">50 characters max</div>
+                            <div ng-message="pattern">Invalid email address</div>
+                        </div>
+                    </md-input-container>
+
+                    <md-input-container>
+                        <label>Password</label>
+                        <input type="password" ng-model="arc.user.password" name="password" id="password" min="1" ng-maxlength="50" required />
+                        <div ng-messages="requestForm.password.$error">
+                            <div ng-message="required">Password is required</div>
+                            <div ng-message="minlength">At least 1 character is required</div>
+                            <div ng-message="maxlength">50 characters max</div>
+                        </div>
+                    </md-input-container>
+
+                    <md-input-container flex>
+                        <label>Church</label>
+                        <md-select ng-model="arc.user.churchId"
+                                   placeholder="Select a church"
+                                   required
+                                   name="churchId">
+                            <md-option>Select a church</md-option>
+                            <md-option ng-repeat="item in arc.config.churchList" ng-value="{{item.id}}">{{item.Name}}</md-option>
+                        </md-select>
+                        <div ng-messages="requestForm.churchId.$error">
+                            <div ng-message="required">Church is required</div>
+                        </div>
+                    </md-input-container>
+
+                    <md-input-container class="md-block">
+                        <label>Comments</label>
+                        <textarea class="fixedTextArea" ng-model="arc.user.comments" rows="6" md-select-on-focus></textarea>
+                    </md-input-container>
+
+                    <div layout="row">
+                        <md-button ng-click="arc.reset(requestForm)" class="md-cancel-button">
+                            Cancel
+                        </md-button>
+                        <md-button type="submit" class="md-primary md-confirm-button"
+                                   ng-disabled="requestForm.$invalid">
+                            Submit
+                        </md-button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/Content/libs/jquery/jquery-1.11.0.min.js"></script>
+    <script src="/Content/libs/encoder/encoder.min.js"></script>
+
+    <script src="/Content/libs/angular/angular.min.js"></script>
+    <script src="/Content/libs/angular/angular-animate.min.js"></script>
+    <script src="/Content/libs/angular/angular-aria.min.js"></script>
+    <script src="/Content/libs/angular/angular-material.min.js"></script>
+    <script src="/Content/libs/angular/angular-messages.min.js"></script>
+    <script src="/Content/libs/angular/angular-material-icons.min.js"></script>
+
+    <script src="/appAcct/appAcct.js"></script>
+    <script src="/appAcct/acctRequestController.js"></script>
+</body>
+</html>

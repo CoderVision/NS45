@@ -16,22 +16,26 @@ using Newtonsoft.Json;
 using System.Web.Http.Cors;
 using NtccSteward.Repository.Framework;
 using NtccSteward.Repository;
+using Marvin.JsonPatch;
+using NtccSteward.Core.Models.Common.Address;
 
 namespace NtccSteward.Api.Controllers
 {
     // this can be added to the WebApiConfig, or to a class specifically.
     //  you can enter specific domains separated by a comma, or a * for all
-    [EnableCors("*", "*", "*")]
     //[RoutePrefix("api")]
+    [Authorize]
     public class MembersController : ApiController
     {
         private readonly ILogger _logger;
         private readonly IMemberRepository _repository = null;
+        private readonly ICommonRepository _commonRepository = null;
 
-        public MembersController(IMemberRepository memberRepository, ILogger logger)
+        public MembersController(IMemberRepository memberRepository, ICommonRepository commonRepository, ILogger logger)
         {
             _repository = memberRepository;
             _logger = logger;
+            _commonRepository = commonRepository;
         }
 
         /// <summary>
@@ -48,6 +52,10 @@ namespace NtccSteward.Api.Controllers
         {
             try
             {
+                // example of how to get the user's id
+                var userId = TokenIdentityHelper.GetOwnerIdFromToken();
+
+
                 if (churchId == 0)
                     return BadRequest();
 
@@ -104,11 +112,28 @@ namespace NtccSteward.Api.Controllers
         }
 
 
-        [Route("members/metadata")]
+        [Route("members/metadata/{churchId}")]
         [HttpGet]
         public IHttpActionResult GetProfileMetadata(int churchId)
         {
-            return Ok(_repository.GetProfileMetadata(churchId));
+            var list = _repository.GetProfileMetadata(churchId);
+
+            var ret = new
+            {
+                ChurchList = list.Where(i => i.AppEnumTypeName == "Churches").ToArray(),
+                MemberList = list.Where(i => i.AppEnumTypeName == "Members").ToArray(),
+                TeamList = list.Where(i => i.AppEnumTypeName == "Teams").ToArray(),
+                ContactInfoTypeList = list.Where(i => i.AppEnumTypeName == "ContactInfoType").ToArray(),
+                ContactInfoLocationTypeList = list.Where(i => i.AppEnumTypeName == "ContactInfoLocationType").ToArray(),
+                PhoneTypeList = list.Where(i => i.AppEnumTypeName == "PhoneType").ToArray(),
+                MemberStatusChangeTypeList = list.Where(i => i.AppEnumTypeName == "MemberStatusChangeType").ToArray(),
+                MemberStatusList = list.Where(i => i.AppEnumTypeName == "MemberStatus").ToArray(),
+                MemberTypeList = list.Where(i => i.AppEnumTypeName == "MemberType").ToArray(),
+                ActivityTypeList = list.Where(i => i.AppEnumTypeName == "ActivityType").ToArray(),
+                ActivityResponseType = list.Where(i => i.AppEnumTypeName == "ActivityResponseType").ToArray()
+            };
+
+            return Ok(ret);
         }
 
 
@@ -116,7 +141,7 @@ namespace NtccSteward.Api.Controllers
         //[Route("members/{id}/profile")]
         //could also have:  [Route("members/{id}/history")] for history, etc.
         [HttpGet]
-        public IHttpActionResult Get(int id)
+        public IHttpActionResult Get(int id, int churchId)
         //public IHttpActionResult GetProfile([FromBody] ItemByID identity)
         {
             try
@@ -124,7 +149,7 @@ namespace NtccSteward.Api.Controllers
                 if (id <= 0)
                     return BadRequest();
 
-                var memberProfile = _repository.Get(id);
+                var memberProfile = _repository.GetProfile(id, churchId);
                 if (memberProfile == null)
                 {
                     return NotFound();
@@ -144,50 +169,6 @@ namespace NtccSteward.Api.Controllers
         }
 
 
-        //http://localhost:62428/api/member/GetContacts
-        [Route("members/GetContactList")]
-        [HttpGet]
-        public IHttpActionResult GetContactList()
-        {
-            //var list = repository.GetByStatus(status.ChurchID, status.StatusID);
-            var list = new List<Member>();
-            list.Add(CreateMemberTemp("Curtis", "Morgan", 1));
-            list.Add(CreateMemberTemp("Mike", "Tickler", 2));
-            list.Add(CreateMemberTemp("John", "Conner", 3));
-            list.Add(CreateMemberTemp("Dave", "Bean", 4));
-            list.Add(CreateMemberTemp("Kurt", "Anderson", 5));
-
-            return Ok(list);
-        }
-
-
-        private Member CreateMemberTemp(string firstName, string lastName, int id)
-        {
-            var m = new Member();
-
-            m.id = id;
-            m.FirstName = firstName;
-            m.LastName = lastName;
-            m.Status = "Active";
-            m.StatusChangeType = "Changed";
-
-            return m;
-        }
-
-
-        /*
-        POST http://localhost:58648/api/members/GetById
-
-        User-Agent: Fiddler
-        Host: localhost:58648
-        Content-Length: 8
-        Content-Type: application/json
-
-        { ID:4 }    
-        */
-
-
-
 
         // Create Member
         [HttpPost]
@@ -202,7 +183,12 @@ namespace NtccSteward.Api.Controllers
 
                 if (result.Status == RepositoryActionStatus.Created)
                 {
-                    return Created(Request.RequestUri + "/" + member.id, member);
+                    // get member from church list
+                    var statusIds = new List<int>() { 49 }; // 49 = Active
+                    var list = _repository.GetList(member.ChurchId, statusIds);
+                    var ret = list.FirstOrDefault(m => m.id.Equals(result.Entity.id));
+
+                    return Created(Request.RequestUri + "/" + ret.id, ret);
                 }
                 else if (result.Status == RepositoryActionStatus.NotFound)
                 {
@@ -275,6 +261,182 @@ namespace NtccSteward.Api.Controllers
             catch (Exception ex)
             {
                 ErrorHelper.ProcessError(_logger, ex, nameof(Delete));
+
+                return InternalServerError();
+            }
+        }
+
+        [HttpPatch]
+        public IHttpActionResult Patch(int id, int churchId, [FromBody]JsonPatchDocument<MemberProfile> doc)
+        {
+            if (doc == null)
+                return BadRequest();
+
+            try
+            {
+                var profile = _repository.GetProfile(id, churchId);
+
+                if (profile == null)
+                    return NotFound();
+
+                doc.ApplyTo(profile);
+
+                _repository.SaveProfile(profile);
+
+                return Ok(profile);
+            }
+            catch(Exception ex)
+            {
+                ErrorHelper.ProcessError(_logger, ex, nameof(Patch));
+
+                return InternalServerError();
+            }
+        }
+
+
+        [Route("members/activity")]
+        [HttpPost]
+        public IHttpActionResult PostActivity([FromBody] Activity activity)
+        {
+            try
+            {
+                if (activity == null)
+                    return BadRequest();
+
+                var result = _repository.SaveActivity(activity);
+
+                if (result.Status == RepositoryActionStatus.Created)
+                {
+                    return Ok(activity);
+                }
+                else if (result.Status == RepositoryActionStatus.NotFound)
+                {
+                    return NotFound();
+                }
+
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                ErrorHelper.ProcessError(_logger, ex, nameof(Post));
+
+                return InternalServerError();
+            }
+        }
+
+
+        [Route("Members/{memberId}/email")]
+        [HttpPost]
+        public IHttpActionResult MergeEmail(int memberId, Email email)
+        {
+            if (email == null)
+                return BadRequest();
+
+            try
+            {
+                email.IdentityId = memberId;
+
+                var result = this._commonRepository.MergeEmail(email);
+
+                if (result.Status == RepositoryActionStatus.Ok
+                    || result.Status == RepositoryActionStatus.Created)
+                {
+                    return Ok(result.Entity);
+                }
+                else
+                    return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                ErrorHelper.ProcessError(_logger, ex, nameof(MergeEmail));
+
+                return InternalServerError();
+            }
+        }
+
+        [Route("Members/{memberId}/phone")]
+        [HttpPost]
+        public IHttpActionResult MergePhone(int memberId, Phone phone)
+        {
+            if (phone == null)
+                return BadRequest();
+
+            try
+            {
+                phone.IdentityId = memberId;
+
+                var result = this._commonRepository.MergePhone(phone);
+
+                if (result.Status == RepositoryActionStatus.Ok
+                    || result.Status == RepositoryActionStatus.Created)
+                {
+                    return Ok(result.Entity);
+                }
+                else
+                    return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                ErrorHelper.ProcessError(_logger, ex, nameof(MergePhone));
+
+                return InternalServerError();
+            }
+        }
+
+        [Route("Members/{memberId}/address")]
+        [HttpPost]
+        public IHttpActionResult MergeAddress(int memberId, Address address)
+        {
+            if (address == null)
+                return BadRequest();
+
+            try
+            {
+                address.IdentityId = memberId;
+
+                var result = this._commonRepository.MergeAddress(address);
+
+                if (result.Status == RepositoryActionStatus.Ok
+                    || result.Status == RepositoryActionStatus.Created)
+                {
+                    return Ok(result.Entity);
+                }
+                else
+                    return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                ErrorHelper.ProcessError(_logger, ex, nameof(MergeAddress));
+
+                return InternalServerError();
+            }
+        }
+
+        [Route("Members/{memberId}/{contactInfoId}")]
+        [HttpDelete]
+        public IHttpActionResult DeleteContactInfo(int memberId, int contactInfoId)
+        {
+            try
+            {
+                //EnumTypeId=12:  56 person, 61 ContactInfo
+                var result = this._repository.Delete(contactInfoId, 61);
+
+                if (result.Status == RepositoryActionStatus.Deleted)
+                    return Ok();
+                else if (result.Status == RepositoryActionStatus.NotFound)
+                    return NotFound();
+                else if (result.Status == RepositoryActionStatus.Error)
+                {
+                    ErrorHelper.ProcessError(_logger, result.Exception, nameof(DeleteContactInfo));
+
+                    return InternalServerError();
+                }
+                else
+                    return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                ErrorHelper.ProcessError(_logger, ex, nameof(DeleteContactInfo));
 
                 return InternalServerError();
             }

@@ -6,21 +6,24 @@
 
     <title>@ViewBag.Title</title>
 
-    @*<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">*@
-
-    
-    @*<link href="~/Content/bootstrap.min.css" rel="stylesheet" />*@
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
-
-    @*<link href="~/Content/bootstrap.css" rel="stylesheet" />*@
-    <link href="~/Content/Site.css" rel="stylesheet" />
+    <link href="//fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 
     @Scripts.Render("~/bundles/modernizr")
+    @*@Scripts.Render("~/bundles/angular")*@
+
+    @Styles.Render("~/Content/bscss")
+    @Styles.Render("~/Content/sitecss")
    
 </head>
 
 @* Added the padding-top, but this will mess things up...  It needs to compensate for the top-fixed navbar, may need to be smaller than 80px *@
-<body>
+@*ng-app="App"*@
+<body >
+
+    @*initialize appService*@
+    @*ng-controller="appController"*@
+    <div ></div>
+
         <header style="margin-top:0px;">
             @*banner style="margin-top:0px;"*@
             <nav class="navbar navbar-inverse navbar-fixed-top banner" role="navigation" >
@@ -70,20 +73,12 @@
             @RenderBody()
         </div>
 
-
-
-    @*<script src="~/Scripts/jquery-3.1.1.min.js"></script>*@
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-
-    @*<script src="~/Scripts/jquery.validate.min.js"></script>*@
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.11.1/jquery.validate.min.js"></script>
-
-    @*<script src="~/Scripts/bootstrap.min.js"></script>*@
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.1/knockout-min.js"></script>
-
-    <script src="~/Scripts/site.js"></script>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/respond")
+    @Scripts.Render("~/bundles/site")
 
     @RenderSection("scripts", required: false)
 

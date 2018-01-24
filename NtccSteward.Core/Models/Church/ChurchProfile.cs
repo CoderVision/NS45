@@ -19,12 +19,15 @@ namespace NtccSteward.Core.Models.Church
             PhoneList = new List<Phone>();
             CustomAttributeList = new List<CustomAttribute>();
             MetaDataList = new List<AppEnum>();
+            //PastoralTeamMembers = new List<Teammate>();
         }
         public List<Address> AddressList { get; set; }
 
         public List<Email> EmailList { get; set; }
 
         public List<Phone> PhoneList { get; set; }
+
+       // public List<Teammate> PastoralTeamMembers { get; set; }
 
         public List<CustomAttribute> CustomAttributeList { get; set; }
 
@@ -41,5 +44,19 @@ namespace NtccSteward.Core.Models.Church
         public string Comment { get; set; }
 
         public Team.Team PastoralTeam { get; set; }
+
+        public string TimeZoneOffset { get; set; }
+
+        public int EmailConfigId { get; set; }
+
+        public int EmailConfigProfileId { get; set; }
+
+        public string EmailConfigUsername { get; set; }
+
+        public string EmailConfigPassword { get; set; }
+
+        public string SmsAccountSID { get; set; }
+
+        public string SmsAccountToken { get; set; }
     }
 }

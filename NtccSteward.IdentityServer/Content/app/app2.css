@@ -1,0 +1,313 @@
+﻿
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+    display: none !important;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+/* hide the progress bar that is built in to md-autocomplete because it causes a phantom line to appear.  Add a md-progress-linear above the md-autocomplete instead. */
+md-autocomplete > md-autocomplete-wrap > md-progress-linear {
+    display: none;
+}
+
+md-toolbar {
+    padding: 8px;
+}
+
+    md-toolbar > div > a {
+        padding: 0px !important;
+    }
+
+md-dialog > md-toolbar {
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+#churchCommTabs md-tab-content {
+    overflow: hidden;
+}
+
+.logInControlContainer {
+    width: 95%;
+    padding-right: 18px;
+}
+
+.wrapLayout {
+    -webkit-flex-wrap: wrap; /* Safari 6.1+ */
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.terms {
+    margin-top:15px;
+}
+
+.activeGuestListRptDiag {
+    width: 500px;
+}
+
+.dialogContent {
+    padding: 8px;
+    overflow: hidden;
+}
+
+md-sidenav > md-content > div > .md-button {
+    height: 50px;
+}
+
+.reportCard {
+    width: 250px;
+}
+
+    .reportCard md-card-title {
+        padding-top: 16px;
+    }
+
+    .reportCard md-card-content {
+        padding-top: 16px;
+        word-wrap: break-word;
+    }
+
+    .reportCard md-card-title span {
+        font-size: 18px;
+    }
+
+.md-toast-content {
+    background-color: #4a7a5a !important;
+}
+
+.messageDiag {
+    width: 600px;
+}
+
+.addMemberDiag {
+    width: 600px;
+}
+
+.addTeamDiag {
+    width: 600px;
+}
+
+.addChurchDiag {
+    width: 600px;
+}
+
+.addTeamMemberDiag {
+    width: 400px;
+}
+
+.activityContent {
+    margin-top: 15px;
+}
+/*.md-on{
+    background-color:#4a7a5a!important;
+}*/
+
+/*md-radio-button.md-checked ._md-off{
+      border-color: green;
+    }
+    md-radio-button.md-checked ._md-on{
+      background-color: red;
+    }*/
+
+md-radio-button.md-default-theme .md-off, md-radio-button .md-on {
+    border-color: rgba(0,0,0,0.54) !important;
+    background-color: rgba(0,0,0,0.54) !important;
+}
+
+md-radio-button.md-default-theme.md-checked .md-off, md-radio-button.md-checked .md-off {
+    border-color: rgba(0,0,0,0.54) !important;
+}
+
+.md-datepicker-button {
+    display: none;
+}
+
+._md-datepicker-floating-label._md-datepicker-has-calendar-icon > label:not(.md-no-float):not(.md-container-ignore) {
+    right: 0px;
+    left: 0px;
+    width: calc(100% - 0px);
+}
+
+.md-button.md-fab.md-fab-bottom-right {
+    top: auto;
+    right: 20px;
+    bottom: 20px;
+    left: auto;
+    position: fixed;
+    background-color: #4a7a5a !important;
+    /*line-height:3px;*/
+    color: white !important;
+    fill: white !important;
+}
+
+.md-button.md-fab.md-fab-bottom-center {
+    top: auto;
+    /*right: 20px;*/
+    bottom: 20px;
+    left: auto;
+    right: auto;
+    position: fixed;
+    background-color: #4a7a5a !important;
+    /*line-height:3px;*/
+    color: white !important;
+    fill: white !important;
+}
+
+.maxWidth {
+    width: 100%;
+}
+
+.md-fab {
+    fill: white;
+}
+
+button.md-fab.md-mini {
+    line-height: 0px !important;
+}
+
+th {
+    text-align: left;
+}
+
+.content {
+    padding: 15px;
+}
+
+tr {
+    line-height: 24px;
+}
+
+svg {
+    fill: #4a7a5a;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.pastoralTeamContainer {
+    margin: 18px 0 18px 0;
+}
+
+.teamMembersContainer {
+    margin: 18px 0 18px 0;
+}
+
+
+.fixedTextArea {
+    overflow-y: scroll !important;
+    height: 125px !important;
+    resize: none !important;
+}
+
+
+.profileLeftPanel {
+    margin-right: 15px;
+}
+
+.menuIcon > svg {
+    fill: white;
+}
+
+md-icon {
+    cursor: pointer;
+}
+
+    md-icon[md-svg-icon="content:remove"] > svg {
+        fill: red !important;
+    }
+
+md-subheader > div > span > md-icon[md-svg-icon="content:add"] {
+    cursor: pointer;
+}
+
+button.addFab > ng-md-icon > svg {
+    fill: white;
+}
+
+md-datepicker {
+    position: relative;
+    left: -16px;
+}
+
+.md-datepicker-input-container {
+    margin-left: 1px;
+    width: 100%;
+}
+
+.md-datepicker-button.md-icon-button {
+    margin-right: 0;
+}
+
+.md-datepicker-input {
+    width: 100%;
+    max-width: 1000px;
+    margin-left: 2px;
+}
+.haveAnAcctContainer {
+    padding-left: 14px;
+    padding-right: 14px;
+    padding-top: 5.6px;
+}
+
+.permissionsContainer {
+    padding: 16px 16px 16px 40px;
+}
+.permissionsListItem {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-left:16px;
+    max-height: 20px;
+}
+.consentRememberContainer {
+    padding: 0px 16px 16px 30px;
+}
+.scopeDescription {
+    padding-left: 8px;
+}
+.scopeRequired {
+    padding-left: 8px;
+}
+.consentButtons{
+    padding-left:16px;
+}
+.loginContainer{
+    padding-left:16px;
+}
+h3.title {
+    margin-bottom: 0px;
+}
+fieldset {
+    border: none;
+}
+.addressContainer {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+@media(max-width: 600px) {
+    .profileLeftPanel {
+        margin-right: 0px !important;
+    }
+}
+
+@media(max-width: 961px) {
+    .showMobileOnly {
+        display: normal;
+    }
+
+    .showDesktopOnly {
+        display: none;
+    }
+}
+
+@media(min-width: 962px) {
+    .showDesktopOnly {
+        display: normal;
+    }
+
+    .showMobileOnly {
+        display: none;
+    }
+}
