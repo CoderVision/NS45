@@ -192,8 +192,8 @@ namespace NtccSteward.Controllers
             foreach (var attr in mp.CustomAttributeList)
                 mpVm.CustomAttributeList.Add(attr);
 
-            foreach (var meta in mp.MetaDataList)
-                mpVm.MetaDataList.Add(meta);
+            //foreach (var meta in mp.MetaDataList)
+            //    mpVm.MetaDataList.Add(meta);
 
             return mpVm;
         }

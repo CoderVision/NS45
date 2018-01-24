@@ -18,6 +18,7 @@ namespace NtccSteward.Framework
         Task<string> DeleteItemAsync(string relativeUrl, string queryString = null, string version = null);
         string SerializeJson<T>(T item);
         HttpClient CreateHttpClient(string version = null);
+        string Uri { get; set; }
     }
 
     public class ApiProvider : IApiProvider
@@ -26,7 +27,10 @@ namespace NtccSteward.Framework
         public ApiProvider(string webApiUri)
         {
             _webApiUri = webApiUri;
+            this.Uri = webApiUri;
         }
+
+        public string Uri { get; set; }
 
         //NOTE:  NEED TO ADD GetItemAsync, As well as PutItemAsync
         //http://stackoverflow.com/questions/22505022/httpclient-getasync-post-object

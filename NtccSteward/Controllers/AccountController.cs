@@ -29,6 +29,11 @@ namespace NtccSteward.Controllers
             _appRoleManager = appRoleManager;
         }
 
+        public ActionResult GetApiUrl()
+        {
+            return Content(_apiProvider.Uri);
+        }
+
         public async Task<ActionResult> Index()
         {
             try

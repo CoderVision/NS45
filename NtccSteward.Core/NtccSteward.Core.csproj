@@ -25,6 +25,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -49,6 +50,9 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -81,10 +85,13 @@
     <Compile Include="Factories\AddressInfoFactory.cs" />
     <Compile Include="Factories\MemberFactory.cs" />
     <Compile Include="Factories\TeamFactory.cs" />
+    <Compile Include="Framework\TeamPositionTypes.cs" />
     <Compile Include="Framework\AppConfigProvider.cs" />
+    <Compile Include="Framework\EnumTypes.cs" />
     <Compile Include="Framework\LogLevel.cs" />
     <Compile Include="Framework\MessageDirection.cs" />
     <Compile Include="Framework\MessageType.cs" />
+    <Compile Include="Framework\TeamTypes.cs" />
     <Compile Include="Interfaces\Account\IAccountPasswordChange.cs" />
     <Compile Include="Interfaces\Account\IAccountRequest.cs" />
     <Compile Include="Interfaces\Account\ILogin.cs" />
@@ -111,34 +118,48 @@
     <Compile Include="Models\Account\Permission.cs" />
     <Compile Include="Models\Account\Role.cs" />
     <Compile Include="Models\Account\Session.cs" />
+    <Compile Include="Models\Account\User.cs" />
+    <Compile Include="Models\Account\UserClaim.cs" />
     <Compile Include="Models\Church\Church.cs" />
     <Compile Include="Models\Church\ChurchProfile.cs" />
     <Compile Include="Interfaces\Church\IChurchProfile.cs" />
+    <Compile Include="Models\Church\ChurchProfileMetadata.cs" />
     <Compile Include="Models\Common\Address\Address.cs" />
     <Compile Include="Models\Common\Address\AddressInfo.cs" />
     <Compile Include="Models\Common\Address\Email.cs" />
+    <Compile Include="Models\Common\Address\EmailProvider.cs" />
     <Compile Include="Models\Common\Address\Phone.cs" />
     <Compile Include="Models\Common\CustomAttributes\CustomAttribute.cs" />
     <Compile Include="Models\Common\CustomAttributes\CustomAttributeDef.cs" />
     <Compile Include="Models\Common\Enums\AppEnum.cs" />
     <Compile Include="Models\Common\Enums\AppEnumType.cs" />
+    <Compile Include="Models\Common\Misc\Item.cs" />
     <Compile Include="Models\Common\Parameters\GetCorrespondenceParameter.cs" />
     <Compile Include="Models\Common\Parameters\GetMessagesParameter.cs" />
     <Compile Include="Models\Common\Parameters\ItemByID.cs" />
     <Compile Include="Interfaces\Members\IMember.cs" />
+    <Compile Include="Models\Members\Activity.cs" />
     <Compile Include="Models\Members\Member.cs" />
     <Compile Include="Models\Members\MemberProfile.cs" />
     <Compile Include="Models\Members\MembersByStatus.cs" />
     <Compile Include="Models\Members\NewMember.cs" />
+    <Compile Include="Models\Members\Sponsor.cs" />
+    <Compile Include="Models\Members\Team.cs" />
     <Compile Include="Models\Message\ICorrespondence.cs" />
     <Compile Include="Models\Message\Message.cs" />
     <Compile Include="Models\Message\Recipient.cs" />
     <Compile Include="Models\Message\RecipientGroup.cs" />
+    <Compile Include="Models\Report\ActiveGuestListReportData.cs" />
+    <Compile Include="Models\Report\IReportData.cs" />
+    <Compile Include="Models\Report\ReportMetadata.cs" />
+    <Compile Include="Models\Report\ReportTypes.cs" />
     <Compile Include="Models\Services\SmsSettings.cs" />
     <Compile Include="Interfaces\Team\ITeam.cs" />
     <Compile Include="Interfaces\Team\ITeammate.cs" />
     <Compile Include="Models\Team\Team.cs" />
+    <Compile Include="Models\Team\TeamInfo.cs" />
     <Compile Include="Models\Team\Teammate.cs" />
+    <Compile Include="Models\Team\TeamMetadata.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

@@ -9,7 +9,7 @@ namespace NtccSteward.Core.Models.Members
     {
         public int id { get; set; }
 
-        public DateTime DateCame { get; set; }
+        public DateTimeOffset DateCame { get; set; }
 
         public bool IsGroup { get; set; }
 
@@ -33,7 +33,7 @@ namespace NtccSteward.Core.Models.Members
 
         public string Email { get; set; }
 
-        public int SponsorId { get; set; }
+        public List<Sponsor> SponsorList { get; set; }
 
         public int CreatedByUserId { get; set; }
 

@@ -12,6 +12,7 @@ using NtccSteward.Core.Interfaces.Common.Address;
 using NtccSteward.Core.Models.Common.CustomAttributes;
 using NtccSteward.Core.Models.Common.Enums;
 using NtccSteward.Repository.Ordinals;
+using NtccSteward.Core.Models.Team;
 
 namespace NtccSteward.Repository
 {
@@ -21,22 +22,27 @@ namespace NtccSteward.Repository
         List<Member> GetList(int churchId, IEnumerable<int> statusEnumId);
         List<AppEnum> GetProfileMetadata(int churchId);
 
-        MemberProfile Get(int id);
+        MemberProfile GetProfile(int id, int churchId);
 
         RepositoryActionResult<MemberProfile> SaveProfile(MemberProfile memberProfile);
 
         RepositoryActionResult<Member> Delete(int id, int entityType);
+
+        RepositoryActionResult<Activity> SaveActivity(Activity activity);
     }
 
     public class MemberRepository : NtccSteward.Repository.Repository, IMemberRepository
     {
         private readonly SqlCmdExecutor _executor;
+        private readonly ICommonRepository commonRepository;
 
         public MemberRepository(string connectionString)
         {
             this.ConnectionString = connectionString;
 
             _executor = new SqlCmdExecutor(connectionString);
+
+            commonRepository = new CommonRepository(connectionString);
         }
 
         /// <summary>
@@ -55,7 +61,7 @@ namespace NtccSteward.Repository
             paramz.Add(new SqlParameter("createdByUserId", member.CreatedByUserId));
             paramz.Add(new SqlParameter("firstName", member.FirstName.ToSqlString()));
             paramz.Add(new SqlParameter("lastName", member.LastName.ToSqlString()));
-            paramz.Add(new SqlParameter("dateCame", member.DateCame.ToSqlDateTime()));
+            paramz.Add(new SqlParameter("dateCame", member.DateCame));
             paramz.Add(new SqlParameter("isGroup", member.IsGroup));
             paramz.Add(new SqlParameter("prayed", member.Prayed));
             paramz.Add(new SqlParameter("line1", member.Line1.ToSqlString()));
@@ -65,7 +71,11 @@ namespace NtccSteward.Repository
             paramz.Add(new SqlParameter("phone", member.Phone.ToSqlString()));
             paramz.Add(new SqlParameter("phone2", member.Phone2.ToSqlString()));
             paramz.Add(new SqlParameter("email", member.Email.ToSqlString()));
-            paramz.Add(new SqlParameter("sponsorId", member.SponsorId));
+
+            var table = new DataTable();
+            table.Columns.Add("Id", typeof(int));
+            member.SponsorList.ToList().ForEach(s => table.Rows.Add(s.SponsorId));
+            paramz.Add(new SqlParameter("sponsorIds", table));
 
             Func<SqlDataReader, int> readFx = (reader) =>
             {
@@ -90,7 +100,7 @@ namespace NtccSteward.Repository
 
         public List<Member> GetList(int churchId, IEnumerable<int> statusEnumIds)
         {
-            var proc = "Membership_SelectByChurch";
+            var proc = "GetMembership";
 
             var table = new DataTable();
             table.Columns.Add("Id", typeof(int));
@@ -111,12 +121,18 @@ namespace NtccSteward.Repository
                 member.id = reader.GetInt32(o.Id);
                 member.FirstName = reader.ValueOrDefault<string>(o.FirstName, string.Empty);
                 member.LastName = reader.ValueOrDefault<string>(o.LastName, string.Empty);
+                member.StatusId = reader.ValueOrDefault<int>("StatusId");
                 member.Status = reader.ValueOrDefault<string>(o.Status, string.Empty);
+                member.StatusChangeTypeId = reader.ValueOrDefault<int>("StatusChangeTypeId");
                 member.StatusChangeType = reader.ValueOrDefault<string>(o.StatusChangeType, string.Empty);
                 member.Email = reader.ValueOrDefault<string>(o.Email, string.Empty);
                 member.Phone = reader.ValueOrDefault<string>(o.Phone, string.Empty);
                 member.Address = reader.ValueOrDefault<string>(o.Address, string.Empty);
-                member.ActivityDate = reader.ValueOrDefault<DateTime?>(o.ActivityDate, null);
+                member.ActivityDate = reader.ValueOrDefault<DateTimeOffset?>(o.ActivityDate, null);
+                member.SponsorId = reader.ValueOrDefault<int>("SponsorId");
+                member.Sponsor = reader.ValueOrDefault("Sponsor", string.Empty);
+                member.TeamId = reader.ValueOrDefault<int>("TeamId");
+                member.Team = reader.ValueOrDefault("TeamName", string.Empty);
 
                 return member;
             };
@@ -126,9 +142,7 @@ namespace NtccSteward.Repository
             return list;
         }
 
-
-
-        public MemberProfile Get(int id)
+        public MemberProfile GetProfile(int id, int churchId)
         {
             MemberProfile member = null;
 
@@ -139,6 +153,7 @@ namespace NtccSteward.Repository
             {
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("memberId", id);
+                cmd.Parameters.AddWithValue("churchId", churchId);
 
                 cn.Open();
 
@@ -224,6 +239,31 @@ namespace NtccSteward.Repository
                             member.EmailList.Add(addy);
                         }
 
+                        // Teams
+                        reader.NextResult();
+                        while (reader.Read())
+                        {
+                            var team = new Core.Models.Members.Team();
+                            team.MemberId = reader.ValueOrDefault<int>("MemberId");
+                            team.TeamId = reader.ValueOrDefault<int>("TeamId");
+                            team.TeamName = reader.ValueOrDefault<string>("TeamName");
+
+                            member.TeamList.Add(team);
+                        }
+
+                        // Sponsors
+                        reader.NextResult();
+                        while (reader.Read())
+                        {
+                            var sponsor = new Sponsor();
+                            sponsor.MemberId = reader.ValueOrDefault<int>("MemberId");
+                            sponsor.SponsorId = reader.ValueOrDefault<int>("SponsorId");
+                            sponsor.FirstName = reader.ValueOrDefault<string>("FirstName");
+                            sponsor.LastName = reader.ValueOrDefault<string>("LastName");
+
+                            member.SponsorList.Add(sponsor);
+                        }
+
                         // attributes
                         //reader.NextResult();
                         //while (reader.Read())
@@ -299,46 +339,42 @@ namespace NtccSteward.Repository
             var memberId = _executor.ExecuteSql<int>("SaveMemberProfile", CommandType.StoredProcedure, paramz, readFx);
             memberProfile.MemberId = memberId.FirstOrDefault();
 
-            Func<SqlDataReader, int> ciReadFx = (reader) =>
-            {
-                return (int)reader["ContactInfoID"];
-            };
-
+            // Save Address
             foreach (var addy in memberProfile.AddressList)
             {
-                var ciParamz = CreateAddressInfoParams(addy);
-                ciParamz.Add(new SqlParameter("line1", addy.Line1.ToSqlString()));
-                ciParamz.Add(new SqlParameter("line2", addy.Line2.ToSqlString()));
-                ciParamz.Add(new SqlParameter("line3", addy.Line3.ToSqlString()));
-                ciParamz.Add(new SqlParameter("city", addy.City.ToSqlString()));
-                ciParamz.Add(new SqlParameter("state", addy.State.ToSqlString()));
-                ciParamz.Add(new SqlParameter("zip", addy.Zip.ToSqlString()));
-
-                var list = _executor.ExecuteSql<int>("SaveAddress", CommandType.StoredProcedure, ciParamz, ciReadFx);
-
-                addy.ContactInfoId = list.First();
+                commonRepository.MergeAddress(addy);
             }
 
+            // Save Phone
             foreach (var addy in memberProfile.PhoneList)
             {
-                var ciParamz = CreateAddressInfoParams(addy);
-                ciParamz.Add(new SqlParameter("@number", addy.PhoneNumber.ToSqlString()));
-                ciParamz.Add(new SqlParameter("@phoneType", addy.PhoneType));
-
-                var list = _executor.ExecuteSql<int>("SavePhone", CommandType.StoredProcedure, ciParamz, ciReadFx);
-
-                addy.ContactInfoId = list.First();
+                commonRepository.MergePhone(addy);
             }
 
+            // Save Email
             foreach (var addy in memberProfile.EmailList)
             {
-                var ciParamz = CreateAddressInfoParams(addy);
-                ciParamz.Add(new SqlParameter("@email", addy.EmailAddress.ToSqlString()));
-
-                var list = _executor.ExecuteSql<int>("SaveEmail", CommandType.StoredProcedure, ciParamz, ciReadFx);
-
-                addy.ContactInfoId = list.First();
+                commonRepository.MergeEmail(addy);
             }
+
+            // Save Sponsors
+            var table = new DataTable();
+            table.Columns.Add("Id", typeof(int));
+            memberProfile.SponsorList.ToList().ForEach(s => table.Rows.Add(s.SponsorId));
+            var sponsorParamz = new List<SqlParameter>();
+            sponsorParamz.Add(new SqlParameter("memberId", memberProfile.MemberId));
+            sponsorParamz.Add(new SqlParameter("sponsorIds", table));
+
+            _executor.ExecuteSql<int>("SaveSponsor", CommandType.StoredProcedure, sponsorParamz, null);
+
+            // Save Teams
+            table.Rows.Clear();
+            memberProfile.TeamList.ToList().ForEach(s => table.Rows.Add(s.TeamId));
+            var teamParamz = new List<SqlParameter>();
+            teamParamz.Add(new SqlParameter("memberId", memberProfile.MemberId));
+            teamParamz.Add(new SqlParameter("teamIds", table));
+
+            _executor.ExecuteSql<int>("SaveMemberTeams", CommandType.StoredProcedure, teamParamz, null);
 
             if (memberProfile.MemberId != 0)
                 return new RepositoryActionResult<MemberProfile>(memberProfile, RepositoryActionStatus.Updated);
@@ -394,9 +430,46 @@ namespace NtccSteward.Repository
             {
                 return new RepositoryActionResult<Member>(null, RepositoryActionStatus.Error, ex);
             }
+        } 
+
+        public RepositoryActionResult<Activity> SaveActivity(Activity activity)
+        {
+            try
+            {
+                var paramz = new List<SqlParameter>();
+                paramz.Add(new SqlParameter("id", activity.Id));
+                paramz.Add(new SqlParameter("churchId", activity.ChurchId));
+                paramz.Add(new SqlParameter("sourceId", activity.SourceId));
+                paramz.Add(new SqlParameter("targetId", activity.TargetId));
+                paramz.Add(new SqlParameter("activityTypeEnumID", activity.ActivityTypeEnumID));
+                paramz.Add(new SqlParameter("activityResponseTypeEnumID", activity.ActivityResponseTypeEnumID));
+                paramz.Add(new SqlParameter("memberStatusChangeTypeEnumId", activity.MemberStatusChangeTypeEnumId));
+                paramz.Add(new SqlParameter("memberStatusEnumId", activity.MemberStatusEnumId));
+                paramz.Add(new SqlParameter("note", activity.Note));
+                paramz.Add(new SqlParameter("createdDate", activity.CreatedDate));
+                paramz.Add(new SqlParameter("activityDate", activity.ActivityDate));
+
+                Func<SqlDataReader, int> readFx = (reader) =>
+                {
+                    return (int)reader["id"];
+                };
+
+                var list = _executor.ExecuteSql<int>("SaveActivity", CommandType.StoredProcedure, paramz, readFx);
+
+                if (list != null && list.Any())
+                {
+                    activity.Id = list.First();
+
+                    return new RepositoryActionResult<Activity>(activity, RepositoryActionStatus.Created);
+                }
+                else
+                    return new RepositoryActionResult<Activity>(activity, RepositoryActionStatus.Error);
+            }
+            catch (Exception ex)
+            {
+                return new RepositoryActionResult<Activity>(activity, RepositoryActionStatus.Error, ex);
+            }
         }
-
-
     }
 }
 

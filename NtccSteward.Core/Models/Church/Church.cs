@@ -32,5 +32,7 @@ namespace NtccSteward.Core.Models.Church
         public string Pastor { get; set; }
 
         public int CreatedByUserId { get; set; }
+
+        public string TimeZoneOffset { get; set; }
     }
 }

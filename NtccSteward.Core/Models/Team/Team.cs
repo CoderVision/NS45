@@ -16,12 +16,21 @@ namespace NtccSteward.Core.Models.Team
 
         public string Name { get; set; }
 
+        public string Desc { get; set; }
+
+        public string Comment { get; set; }
+
         public int ChurchId { get; set; }
 
+        public string TeamLeader { get; set; }
+
+        public int TeammateCount { get; set; }
         /// <summary>
         /// Pastoral Team, Evangelistic Team, etc.
         /// </summary>
         public int TeamTypeEnumId { get; set; }
+
+        public string TeamTypeEnumDesc { get; set; }
 
         /// <summary>
         /// Pastor, Assoc., Minister, Helper, etc.
