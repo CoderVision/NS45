@@ -3,3 +3,23 @@
 ################################################################################
 
 /.vs
+/NtccSteward.Api/bin
+/NtccSteward/bin
+/NtccSteward/obj/Debug
+/NtccSteward.Api/obj/Release
+/NtccSteward.Core/bin
+/NtccSteward.Core/obj/Debug
+/NtccSteward.IdentityServer/bin
+/NtccSteward.Repository/obj/Release
+/NtccSteward.IdentityServer/obj/Debug
+/NtccSteward.IdSvr/obj/Release
+/NtccSteward.Repository/bin
+/NtccSteward.Core/obj/Release
+/NtccSteward/obj/Release
+/NtccSteward.Api/obj/Debug/NtccSteward.Api.csproj.CoreCompileInputs.cache
+/NtccSteward.Api/obj/Debug/NtccSteward.Api.csproj.CopyComplete
+/NtccSteward.IdSvr/obj/Debug/NtccSteward.IdSvr.csproj.CopyComplete
+/NtccSteward.IdSvr/obj/Debug/NtccSteward.IdSvr.csproj.CoreCompileInputs.cache
+/NtccSteward.Repository/obj/Debug/NtccSteward.Repository.csproj.CopyComplete
+/NtccSteward.Repository/obj/Debug/NtccSteward.Repository.csproj.CoreCompileInputs.cache
+/packages/Microsoft.Net.Compilers.2.1.0/tools/Microsoft.Build.Tasks.CodeAnalysis.dll
