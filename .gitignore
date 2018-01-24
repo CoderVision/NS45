@@ -23,3 +23,5 @@
 /NtccSteward.Repository/obj/Debug/NtccSteward.Repository.csproj.CopyComplete
 /NtccSteward.Repository/obj/Debug/NtccSteward.Repository.csproj.CoreCompileInputs.cache
 /packages/Microsoft.Net.Compilers.2.1.0/tools/Microsoft.Build.Tasks.CodeAnalysis.dll
+/NtccSteward.Api/obj/Debug
+/NtccSteward.Repository/obj/Debug
