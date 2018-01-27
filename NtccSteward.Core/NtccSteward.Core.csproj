@@ -120,6 +120,7 @@
     <Compile Include="Models\Account\Session.cs" />
     <Compile Include="Models\Account\User.cs" />
     <Compile Include="Models\Account\UserClaim.cs" />
+    <Compile Include="Models\Account\UserProfile.cs" />
     <Compile Include="Models\Church\Church.cs" />
     <Compile Include="Models\Church\ChurchProfile.cs" />
     <Compile Include="Interfaces\Church\IChurchProfile.cs" />

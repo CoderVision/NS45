@@ -19,6 +19,8 @@ namespace NtccSteward.Repository
         User Login(string email, string password);
         bool ChangePassword(AccountPasswordChange accountRequest);
         User GetUserProfile(int userId);
+        List<AccountRequest> GetAccountRequests();
+        List<UserProfile> GetUsers();
     }
 
 
@@ -92,6 +94,41 @@ namespace NtccSteward.Repository
 
             return list.First();
         }
+
+
+        /// <summary>
+        /// Get all account requests for review and approval or denial
+        /// </summary>
+        public List<AccountRequest> GetAccountRequests()
+        {
+            var proc = "[Security].[GetAccountRequests]";
+
+            Func<SqlDataReader, AccountRequest> readFx = (reader) =>
+            {
+                var acctReq = new AccountRequest {
+                    RequestId = (int)reader["AccountRequestID"],
+                    FirstName = reader["FirstName"] + "",
+                    LastName = reader["LastName"] + "",
+                    Line1 = reader["Line1"] + "",
+                    City = reader["City"] + "",
+                    State = reader["State"] + "",
+                    Zip = reader["Zip"] + "",
+                    Email = reader["Email"] + "",
+                    Comments = reader["Comments"] + "",
+                    ChurchId = (int)reader["ChurchId"],
+                    DateSubmitted = (DateTime)reader["DateSubmitted"]
+                };
+                return acctReq;
+            };
+
+            var executor = new SqlCmdExecutor(ConnectionString);
+
+            var list = executor.ExecuteSql<AccountRequest>(proc, CommandType.StoredProcedure, null, readFx);
+
+            return list;
+        }
+
+
 
 
         /// <summary>
@@ -293,6 +330,63 @@ namespace NtccSteward.Repository
             }
 
             return user;
+        }
+
+
+        public List<UserProfile> GetUsers()
+        {
+            return new List<UserProfile>();
+
+            //User user = null;
+
+            //var proc = "[Security].[GetUser]";
+
+            //using (var cn = new SqlConnection(ConnectionString))
+            //{
+            //    using (var cmd = new SqlCommand(proc, cn))
+            //    {
+            //        cmd.CommandType = CommandType.StoredProcedure;
+            //        cmd.Parameters.Add(new SqlParameter("personIdentityID", userId));
+
+            //        cn.Open();
+
+            //        using (var reader = cmd.ExecuteReader())
+            //        {
+            //            if (!reader.HasRows)
+            //                return null;
+
+            //            user = new User();
+
+            //            // user info (only 1 row)
+            //            reader.Read();
+
+            //            user.Subject = (int)reader["PersonId"] + "";
+            //            user.UserName = reader["UserName"].ToString();
+            //            user.IsActive = bool.Parse(reader["Active"].ToString());
+
+            //            user.UserClaims.Add(new UserClaim() { Id = "1", Subject = user.Subject, ClaimType = Constants.ClaimTypes.GivenName, ClaimValue = reader["FirstName"].ToString() });
+            //            user.UserClaims.Add(new UserClaim() { Id = "2", Subject = user.Subject, ClaimType = Constants.ClaimTypes.FamilyName, ClaimValue = reader["LastName"].ToString() });
+
+            //            reader.NextResult();
+
+            //            // roles & permissions
+            //            Role role = null;
+            //            while (reader.Read())
+            //            {
+            //                if (role == null)
+            //                {
+            //                    role = new Role();
+            //                    role.RoleID = (int)reader["RoleID"];
+            //                    role.RoleDesc = reader["RoleDesc"].ToString();
+
+            //                    user.UserClaims.Add(new UserClaim() { Id = role.RoleID.ToString(), Subject = user.Subject, ClaimType = Constants.ClaimTypes.Role, ClaimValue = role.RoleDesc });
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
+
+            //return user;
         }
     }
 }

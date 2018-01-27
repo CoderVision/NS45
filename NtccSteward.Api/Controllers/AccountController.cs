@@ -20,88 +20,41 @@ namespace NtccSteward.Api.Controllers
     //[RoutePrefix("api")]
     public class AccountController : ApiController
     {
-        private readonly IAccountRepository _repository = null;
-        private readonly ILogger _logger;
+        private readonly IAccountRepository repository = null;
+        private readonly ILogger logger;
+        private readonly IChurchRepository churchRepository;
 
-        public AccountController(IAccountRepository repository, ILogger logger)
+        public AccountController(IAccountRepository repository, IChurchRepository churchRepository, ILogger logger)
         {
-            _repository = repository;
-            _logger = logger;
+            this.repository = repository;
+            this.logger = logger;
+            this.churchRepository = churchRepository;
         }
-
-
-        // POST api/values
-        [Route("account/CreateAccountRequest")]
-        [HttpPost]
-        public IHttpActionResult CreateAccountRequest([FromBody] AccountRequest accountRequest)
+        
+        [Route("account/GetUsers")]
+        public IHttpActionResult GetAccountRequests()
         {
             try
             {
-                if (accountRequest == null)
-                    return BadRequest();
+                var acctRequests = this.repository.GetAccountRequests();
+                var users = this.repository.GetUsers();
+                var churches = this.churchRepository.GetList(false);
 
-                var accountRequestId = _repository.CreateAccountRequest(accountRequest);
-
-                if (accountRequestId > 0)
+                var usersInfo = new
                 {
-                    accountRequest.RequestId = accountRequestId;
+                    config = new { churches = churches },
+                    acctRequests = acctRequests,
+                    users = users,
+                };
 
-                    return Created(Request.RequestUri + "/" + accountRequestId.ToString(), accountRequest);
-                }
-              
-                return BadRequest();
+                return Ok(usersInfo);
             }
             catch (Exception ex)
             {
-                ErrorHelper.ProcessError(_logger, ex, nameof(CreateAccountRequest));
+                ErrorHelper.ProcessError(this.logger, ex, nameof(GetAccountRequests));
 
-                return InternalServerError();
+                return InternalServerError(ex);
             }
         }
-
-
-        [Route("account/GetAccountRequestStatus/{accountRequestId}")]
-        public IHttpActionResult GetAccountRequestStatus(int accountRequestId)
-        {
-            try
-            {
-                var status = _repository.GetAccountRequestStatus(accountRequestId);
-
-                if (!string.IsNullOrWhiteSpace(status))
-                    return Ok(status);
-                else
-                    return BadRequest("Invalid accountRequestId");
-
-            }
-            catch (Exception ex)
-            {
-                ErrorHelper.ProcessError(_logger, ex, nameof(CreateAccountRequest));
-
-                return InternalServerError();
-            }
-        }
-
-
-        //[Route("account/login")]
-        //[HttpPost]
-        //public IHttpActionResult Login([FromBody] Login login)
-        //{
-        //    try
-        //    {
-        //        // Create a new session and return it
-        //        var session = _repository.Login(login.Email, login.Password, login.ChurchId);
-
-        //        if (session == null)
-        //            return NotFound();
-        //        else
-        //            return Ok(session);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        ErrorHelper.ProcessError(_logger, ex, nameof(Login));
-
-        //        return InternalServerError();
-        //    }
-        //}
     }
 }

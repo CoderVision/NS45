@@ -41,7 +41,7 @@ namespace NtccSteward.Core.Models.Account
         public string State { get; set; }
         public string Zip { get; set; }
         public string Comments { get; set; }
-
+        public DateTime DateSubmitted { get; set; }
         public int RequestId { get; set; }
     }
 }
