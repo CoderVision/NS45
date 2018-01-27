@@ -43,5 +43,8 @@ namespace NtccSteward.Core.Models.Account
         public string Comments { get; set; }
         public DateTime DateSubmitted { get; set; }
         public int RequestId { get; set; }
+        public int RoleId { get; set; }
+        public bool IsApproved { get; set; }
+        public int ReviewerUserId { get; set; }
     }
 }
