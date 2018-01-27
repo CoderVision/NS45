@@ -85,6 +85,8 @@
     <Compile Include="Factories\AddressInfoFactory.cs" />
     <Compile Include="Factories\MemberFactory.cs" />
     <Compile Include="Factories\TeamFactory.cs" />
+    <Compile Include="Framework\MemberType.cs" />
+    <Compile Include="Framework\Roles.cs" />
     <Compile Include="Framework\TeamPositionTypes.cs" />
     <Compile Include="Framework\AppConfigProvider.cs" />
     <Compile Include="Framework\EnumTypes.cs" />

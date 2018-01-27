@@ -30,24 +30,50 @@ namespace NtccSteward.Api.Controllers
             this.logger = logger;
             this.churchRepository = churchRepository;
         }
-        
+
+
         [Route("account/GetUsers")]
+        [HttpGet]
         public IHttpActionResult GetAccountRequests()
         {
             try
             {
                 var acctRequests = this.repository.GetAccountRequests();
+                var roles = this.repository.GetRoles();
                 var users = this.repository.GetUsers();
                 var churches = this.churchRepository.GetList(false);
 
                 var usersInfo = new
                 {
-                    config = new { churches = churches },
+                    config = new { churches = churches, roles = roles },
                     acctRequests = acctRequests,
                     users = users,
                 };
 
                 return Ok(usersInfo);
+            }
+            catch (Exception ex)
+            {
+                ErrorHelper.ProcessError(this.logger, ex, nameof(GetAccountRequests));
+
+                return InternalServerError(ex);
+            }
+        }
+
+        [Route("account/processAccountRequest")]
+        [HttpPost]
+        public IHttpActionResult ProcessAccountRequest(AccountRequest accountRequest)
+        {
+            try
+            {
+                // example of how to get the user's id
+                var userId = TokenIdentityHelper.GetOwnerIdFromToken();
+
+                accountRequest.ReviewerUserId = userId;
+
+                var result = this.repository.ProcessAccountRequest(accountRequest);
+
+                return Ok(result);
             }
             catch (Exception ex)
             {
