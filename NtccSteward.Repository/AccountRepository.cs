@@ -20,7 +20,7 @@ namespace NtccSteward.Repository
         bool ChangePassword(AccountPasswordChange accountRequest);
         User GetUserProfile(int userId);
         List<AccountRequest> GetAccountRequests();
-        List<UserProfile> GetUsers();
+        List<UserProfile> GetUsers(bool active);
         List<Role> GetRoles();
         string ProcessAccountRequest(AccountRequest accountRequest);
     }
@@ -389,60 +389,56 @@ namespace NtccSteward.Repository
             return list;
         }
 
-        public List<UserProfile> GetUsers()
+        public List<UserProfile> GetUsers(bool active)
         {
-            return new List<UserProfile>();
+            var users = new List<UserProfile>();
 
-            //User user = null;
+            var proc = "[Security].[GetUsers]";
 
-            //var proc = "[Security].[GetUser]";
+            using (var cn = new SqlConnection(ConnectionString))
+            {
+                using (var cmd = new SqlCommand(proc, cn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add(new SqlParameter("active", active));
 
-            //using (var cn = new SqlConnection(ConnectionString))
-            //{
-            //    using (var cmd = new SqlCommand(proc, cn))
-            //    {
-            //        cmd.CommandType = CommandType.StoredProcedure;
-            //        cmd.Parameters.Add(new SqlParameter("personIdentityID", userId));
+                    cn.Open();
 
-            //        cn.Open();
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (!reader.HasRows)
+                            return users;
 
-            //        using (var reader = cmd.ExecuteReader())
-            //        {
-            //            if (!reader.HasRows)
-            //                return null;
+                        var userProfile = new UserProfile();
+                        while (reader.Read())
+                        {
+                            var userId = int.Parse(reader["PersonId"].ToString());
 
-            //            user = new User();
+                            if (userProfile.UserId != userId)
+                            {
+                                userProfile = new UserProfile();
+                                userProfile.UserId = userId;
+                                userProfile.FirstName = reader["FirstName"].ToString();
+                                userProfile.LastName = reader["LastName"].ToString();
+                                userProfile.Email = reader["UserName"].ToString();
+                                userProfile.RoleId = (int)reader["RoleID"];
+                                userProfile.RoleDesc = reader["RoleDesc"].ToString();
+                                userProfile.Active = bool.Parse(reader["Active"].ToString());
 
-            //            // user info (only 1 row)
-            //            reader.Read();
+                                users.Add(userProfile);
+                            }
 
-            //            user.Subject = (int)reader["PersonId"] + "";
-            //            user.UserName = reader["UserName"].ToString();
-            //            user.IsActive = bool.Parse(reader["Active"].ToString());
+                            var churchId = reader["ChurchId"];
+                            if (churchId != DBNull.Value)
+                            {
+                                userProfile.ChurchIds.Add((int)churchId);
+                            }
+                        }
+                    }
+                }
+            }
 
-            //            user.UserClaims.Add(new UserClaim() { Id = "1", Subject = user.Subject, ClaimType = Constants.ClaimTypes.GivenName, ClaimValue = reader["FirstName"].ToString() });
-            //            user.UserClaims.Add(new UserClaim() { Id = "2", Subject = user.Subject, ClaimType = Constants.ClaimTypes.FamilyName, ClaimValue = reader["LastName"].ToString() });
-
-            //            reader.NextResult();
-
-            //            // roles & permissions
-            //            Role role = null;
-            //            while (reader.Read())
-            //            {
-            //                if (role == null)
-            //                {
-            //                    role = new Role();
-            //                    role.RoleID = (int)reader["RoleID"];
-            //                    role.RoleDesc = reader["RoleDesc"].ToString();
-
-            //                    user.UserClaims.Add(new UserClaim() { Id = role.RoleID.ToString(), Subject = user.Subject, ClaimType = Constants.ClaimTypes.Role, ClaimValue = role.RoleDesc });
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
-
-            //return user;
+            return users;
         }
     }
 }
