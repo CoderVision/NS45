@@ -51,7 +51,9 @@ namespace NtccSteward.Api.Controllers
         [HttpGet]
         public IHttpActionResult GetMetadata(int churchId)
         {
-            var metadata = this.repository.GetMetadata(churchId);
+            var userId = TokenIdentityHelper.GetOwnerIdFromToken();
+
+            var metadata = this.repository.GetMetadata(churchId, userId);
 
             var ret = new
             {
