@@ -7,8 +7,28 @@ namespace NtccSteward.Core.Models.Account
 {
     public class UserProfile
     {
+        public UserProfile()
+        {
+            ChurchIds = new List<int>();
+        }
+
+        public int UserId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        private string fullName;
+
+        public string FullName
+        {
+            get { return $"{FirstName} {LastName}".Trim(); }
+        }
+
+        public string Email { get; set; }
+
+        public int RoleId { get; set; }
+
+        public string RoleDesc { get; set; }
+
+        public bool Active { get; set; }
 
         public List<int> ChurchIds { get; set; }
     }

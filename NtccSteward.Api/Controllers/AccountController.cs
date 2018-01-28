@@ -32,15 +32,15 @@ namespace NtccSteward.Api.Controllers
         }
 
 
-        [Route("account/GetUsers")]
+        [Route("account/GetUsers/{active}")]
         [HttpGet]
-        public IHttpActionResult GetAccountRequests()
+        public IHttpActionResult GetAccountRequests(bool active)
         {
             try
             {
                 var acctRequests = this.repository.GetAccountRequests();
                 var roles = this.repository.GetRoles();
-                var users = this.repository.GetUsers();
+                var users = this.repository.GetUsers(active);
                 var churches = this.churchRepository.GetList(false);
 
                 var usersInfo = new
