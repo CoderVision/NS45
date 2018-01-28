@@ -116,7 +116,9 @@ namespace NtccSteward.Api.Controllers
         [HttpGet]
         public IHttpActionResult GetProfileMetadata(int churchId)
         {
-            var list = _repository.GetProfileMetadata(churchId);
+            var userId = TokenIdentityHelper.GetOwnerIdFromToken();
+
+            var list = _repository.GetProfileMetadata(churchId, userId);
 
             var ret = new
             {

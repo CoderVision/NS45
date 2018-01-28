@@ -20,7 +20,7 @@ namespace NtccSteward.Repository
     {
         RepositoryActionResult<NewMember> Add(NewMember member);
         List<Member> GetList(int churchId, IEnumerable<int> statusEnumId);
-        List<AppEnum> GetProfileMetadata(int churchId);
+        List<AppEnum> GetProfileMetadata(int churchId, int userId);
 
         MemberProfile GetProfile(int id, int churchId);
 
@@ -288,10 +288,11 @@ namespace NtccSteward.Repository
             return member;
         }
 
-        public List<AppEnum> GetProfileMetadata(int churchId)
+        public List<AppEnum> GetProfileMetadata(int churchId, int userId)
         {
             var paramz = new List<SqlParameter>();
             paramz.Add(new SqlParameter("churchId", churchId));
+            paramz.Add(new SqlParameter("userId", userId));
 
             Func<SqlDataReader, AppEnum> readFx = (reader) =>
             {
