@@ -18,11 +18,13 @@ namespace NtccSteward.Repository
         string GetAccountRequestStatus(int accountRequestId);
         User Login(string email, string password);
         bool ChangePassword(AccountPasswordChange accountRequest);
-        User GetUserProfile(int userId);
+        User GetUser(int userId);
         List<AccountRequest> GetAccountRequests();
-        List<UserProfile> GetUsers(bool active);
+        List<UserProfile> GetUserProfiles(bool active);
+        UserProfile GetUserProfile(int userId);
         List<Role> GetRoles();
         string ProcessAccountRequest(AccountRequest accountRequest);
+        UserProfile SaveUserProfile(UserProfile userProfile);
     }
 
 
@@ -316,7 +318,7 @@ namespace NtccSteward.Repository
         }
 
 
-        public User GetUserProfile(int userId)
+        public User GetUser(int userId)
         {
             User user = null;
 
@@ -389,18 +391,37 @@ namespace NtccSteward.Repository
             return list;
         }
 
-        public List<UserProfile> GetUsers(bool active)
+
+        public UserProfile GetUserProfile(int userId)
+        {
+            var proc = "[Security].[GetUserProfile]";
+            var param = new SqlParameter("userId", userId);
+
+            var users = getUserProfiles(proc, param);
+
+            return users.FirstOrDefault();
+        }
+
+        public List<UserProfile> GetUserProfiles(bool active)
+        {
+            var proc = "[Security].[GetUserProfiles]";
+            var param = new SqlParameter("active", active);
+
+            var users = getUserProfiles(proc, param);
+
+            return users;
+        }
+
+        private List<UserProfile> getUserProfiles(string proc, SqlParameter param)
         {
             var users = new List<UserProfile>();
-
-            var proc = "[Security].[GetUsers]";
 
             using (var cn = new SqlConnection(ConnectionString))
             {
                 using (var cmd = new SqlCommand(proc, cn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add(new SqlParameter("active", active));
+                    cmd.Parameters.Add(param);
 
                     cn.Open();
 
@@ -424,6 +445,10 @@ namespace NtccSteward.Repository
                                 userProfile.RoleId = (int)reader["RoleID"];
                                 userProfile.RoleDesc = reader["RoleDesc"].ToString();
                                 userProfile.Active = bool.Parse(reader["Active"].ToString());
+                                userProfile.Line1 = reader["Line1"].ToString();
+                                userProfile.City = reader["City"].ToString();
+                                userProfile.State = reader["State"].ToString();
+                                userProfile.Zip = reader["Zip"].ToString();
 
                                 users.Add(userProfile);
                             }
@@ -439,6 +464,30 @@ namespace NtccSteward.Repository
             }
 
             return users;
+        }
+
+        public UserProfile SaveUserProfile(UserProfile userProfile)
+        {
+            var proc = "[Security].[SaveUserProfile]";
+
+            var paramz = new List<SqlParameter>();
+            paramz.Add(new SqlParameter("userId", userProfile.UserId));
+            paramz.Add(new SqlParameter("roleId", userProfile.RoleId));
+
+            var table = new DataTable();
+            table.Columns.Add("Id", typeof(int));
+            userProfile.ChurchIds.ToList().ForEach(s => table.Rows.Add(s));
+            paramz.Add(new SqlParameter("@churchIds", table));
+
+            Func<SqlDataReader, string> readFx = (reader) =>
+            {
+                return reader["status"].ToString();
+            };
+
+            var executor = new SqlCmdExecutor(ConnectionString);
+            var list = executor.ExecuteSql<string>(proc, CommandType.StoredProcedure, paramz, readFx);
+
+            return userProfile;
         }
     }
 }
