@@ -22,6 +22,11 @@ namespace NtccSteward.Core.Models.Account
             get { return $"{FirstName} {LastName}".Trim(); }
         }
 
+        public string Line1 { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+
+        public string Zip { get; set; }
         public string Email { get; set; }
 
         public int RoleId { get; set; }

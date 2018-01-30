@@ -53,7 +53,7 @@ namespace NtccSteward.IdentityServer.Services
             if (!int.TryParse(subjectId, out userId))
                 throw new ArgumentException("Subject");
 
-            var user = this.accountRepository.GetUserProfile(userId);
+            var user = this.accountRepository.GetUser(userId);
 
             var claims = new List<Claim> {
                 new Claim(Constants.ClaimTypes.Subject, user.Subject)
@@ -82,7 +82,7 @@ namespace NtccSteward.IdentityServer.Services
             if (!int.TryParse(subjectId, out userId))
                 throw new ArgumentException("Subject");
 
-            var user = this.accountRepository.GetUserProfile(userId);
+            var user = this.accountRepository.GetUser(userId);
 
             context.IsActive = (user != null) && user.IsActive;
 
