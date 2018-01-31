@@ -449,6 +449,7 @@ namespace NtccSteward.Repository
                                 userProfile.City = reader["City"].ToString();
                                 userProfile.State = reader["State"].ToString();
                                 userProfile.Zip = reader["Zip"].ToString();
+                                userProfile.Church = reader["Church"].ToString();
 
                                 users.Add(userProfile);
                             }

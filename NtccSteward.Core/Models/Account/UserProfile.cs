@@ -36,5 +36,8 @@ namespace NtccSteward.Core.Models.Account
         public bool Active { get; set; }
 
         public List<int> ChurchIds { get; set; }
+
+        // this is the church they are a member of
+        public string Church { get; set; }
     }
 }

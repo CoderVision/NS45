@@ -145,6 +145,7 @@
     <Compile Include="Models\Members\Member.cs" />
     <Compile Include="Models\Members\MemberProfile.cs" />
     <Compile Include="Models\Members\MembersByStatus.cs" />
+    <Compile Include="Models\Members\MemberSearchResult.cs" />
     <Compile Include="Models\Members\NewMember.cs" />
     <Compile Include="Models\Members\Sponsor.cs" />
     <Compile Include="Models\Members\Team.cs" />

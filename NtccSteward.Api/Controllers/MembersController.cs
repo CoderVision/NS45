@@ -111,6 +111,75 @@ namespace NtccSteward.Api.Controllers
             }
         }
 
+        [Route("members/criteria/{criteria}")]
+        [HttpGet]
+        public IHttpActionResult GetListByCriteria(string criteria)
+        {
+            try
+            {
+                // example of how to get the user's id
+                var userId = TokenIdentityHelper.GetOwnerIdFromToken();
+
+
+                if (string.IsNullOrWhiteSpace(criteria))
+                    return BadRequest();
+
+                var members = _repository.SearchMembers(criteria);
+
+                return Ok(members);
+
+                //var totalCount = list.Count();
+                //var totalPages = (int)Math.Ceiling((decimal)totalCount / pageSize);
+
+                //// add pagination infor to the response header
+                //var urlHelper = new UrlHelper(Request);
+                //var prevLink = page > 1 ? urlHelper.Link("Get"
+                //    , new
+                //    {
+                //        churchId = churchId
+                //        ,
+                //        statusIds = statusIds
+                //        ,
+                //        page = page - 1
+                //        ,
+                //        pageSize = pageSize
+                //    }) : "";
+                //var nextLink = page < totalPages ? urlHelper.Link("Get"
+                //    , new
+                //    {
+                //        churchId = churchId
+                //        ,
+                //        statusIds = statusIds
+                //        ,
+                //        page = page + 1
+                //        ,
+                //        pageSize = pageSize
+                //    }) : "";
+                //var paginationHeader = new
+                //{
+                //    currentPage = page,
+                //    pageSize = pageSize,
+                //    totalCount = totalCount,
+                //    totalPages = totalPages,
+                //    previousPageLink = prevLink,
+                //    nextPageLink = nextLink
+                //};
+
+                //HttpContext.Current.Response.Headers.Add("X-Pagination"
+                //    , JsonConvert.SerializeObject(paginationHeader));
+
+                //return Ok(list
+                //    .Skip(pageSize * (page - 1))
+                //    .Take(pageSize));
+            }
+            catch (Exception ex)
+            {
+                ErrorHelper.ProcessError(_logger, ex, nameof(Get));
+
+                return InternalServerError();
+            }
+        }
+
 
         [Route("members/metadata/{churchId}")]
         [HttpGet]
