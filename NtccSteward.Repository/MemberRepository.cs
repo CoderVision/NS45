@@ -21,6 +21,7 @@ namespace NtccSteward.Repository
         RepositoryActionResult<NewMember> Add(NewMember member);
         List<Member> GetList(int churchId, IEnumerable<int> statusEnumId);
         List<AppEnum> GetProfileMetadata(int churchId, int userId);
+        List<MemberSearchResult> SearchMembers(string criteria);
 
         MemberProfile GetProfile(int id, int churchId);
 
@@ -98,6 +99,31 @@ namespace NtccSteward.Repository
         }
 
 
+        public List<MemberSearchResult> SearchMembers(string criteria)
+        {
+            var proc = "SearchMembersByName";
+
+            var paramz = new List<SqlParameter>();
+            paramz.Add(new SqlParameter("criteria", criteria));
+
+            MemberListOrdinals o = null;
+
+            Func<SqlDataReader, MemberSearchResult> readFx = (reader) =>
+            {
+                var member = new MemberSearchResult();
+                member.MemberId = (int)reader["MemberId"];
+                member.FirstName = reader["FirstName"].ToString();
+                member.LastName = reader["LastName"].ToString();
+                member.ChurchId = (int)reader["ChurchId"];
+                member.ChurchName = reader["ChurchName"].ToString();
+
+                return member;
+            };
+
+            var list = _executor.ExecuteSql<MemberSearchResult>(proc, CommandType.StoredProcedure, paramz, readFx);
+
+            return list;
+        }
         public List<Member> GetList(int churchId, IEnumerable<int> statusEnumIds)
         {
             var proc = "GetMembership";
