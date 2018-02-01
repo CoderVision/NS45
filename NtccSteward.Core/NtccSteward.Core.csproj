@@ -143,6 +143,7 @@
     <Compile Include="Interfaces\Members\IMember.cs" />
     <Compile Include="Models\Members\Activity.cs" />
     <Compile Include="Models\Members\Member.cs" />
+    <Compile Include="Models\Members\MemberMerge.cs" />
     <Compile Include="Models\Members\MemberProfile.cs" />
     <Compile Include="Models\Members\MembersByStatus.cs" />
     <Compile Include="Models\Members\MemberSearchResult.cs" />

@@ -25,6 +25,8 @@ namespace NtccSteward.Repository
 
         MemberProfile GetProfile(int id, int churchId);
 
+        RepositoryActionResult<MemberMerge> MergeMembers(MemberMerge memberMerge);
+
         RepositoryActionResult<MemberProfile> SaveProfile(MemberProfile memberProfile);
 
         RepositoryActionResult<Member> Delete(int id, int entityType);
@@ -124,6 +126,8 @@ namespace NtccSteward.Repository
 
             return list;
         }
+
+
         public List<Member> GetList(int churchId, IEnumerable<int> statusEnumIds)
         {
             var proc = "GetMembership";
@@ -167,6 +171,7 @@ namespace NtccSteward.Repository
 
             return list;
         }
+
 
         public MemberProfile GetProfile(int id, int churchId)
         {
@@ -314,6 +319,7 @@ namespace NtccSteward.Repository
             return member;
         }
 
+
         public List<AppEnum> GetProfileMetadata(int churchId, int userId)
         {
             var paramz = new List<SqlParameter>();
@@ -335,6 +341,36 @@ namespace NtccSteward.Repository
 
             return list;
         }
+
+
+        public RepositoryActionResult<MemberMerge> MergeMembers(MemberMerge memberMerge) {
+            try
+            {
+                var paramz = new List<SqlParameter>();
+                paramz.Add(new SqlParameter("sourceMemberId", memberMerge.SourceMemberId));
+                paramz.Add(new SqlParameter("targetMemberId", memberMerge.TargetMemberId));
+
+
+                Func<SqlDataReader, int> readFx = (reader) =>
+                {
+                    return (int)reader["success"];
+                };
+
+                var success = _executor.ExecuteSql<int>("MergeMembers", CommandType.StoredProcedure, paramz, readFx);
+
+                if (success.FirstOrDefault() > 0)
+                {
+                    return new RepositoryActionResult<MemberMerge>(memberMerge, RepositoryActionStatus.Ok);
+                }
+                else
+                    return new RepositoryActionResult<MemberMerge>(memberMerge, RepositoryActionStatus.Error);
+            }
+            catch (Exception ex)
+            {
+                return new RepositoryActionResult<MemberMerge>(memberMerge, RepositoryActionStatus.Error, ex);
+            }
+        }
+
 
         public RepositoryActionResult<MemberProfile> SaveProfile(MemberProfile memberProfile)
         {

@@ -61,6 +61,30 @@ namespace NtccSteward.Api.Controllers
             }
         }
 
+        [Route("account")]
+        [HttpPost]
+        public IHttpActionResult PostUser(UserProfile userProfile)
+        {
+            if (userProfile == null)
+                return BadRequest();
+
+            try
+            {
+                var profile = this.repository.SaveUserProfile(userProfile);
+
+                if (profile == null)
+                    return NotFound();
+
+                return Ok(profile);
+            }
+            catch (Exception ex)
+            {
+                ErrorHelper.ProcessError(this.logger, ex, nameof(PostUser));
+
+                return InternalServerError();
+            }
+        }
+
         [Route("account/processAccountRequest")]
         [HttpPost]
         public IHttpActionResult ProcessAccountRequest(AccountRequest accountRequest)

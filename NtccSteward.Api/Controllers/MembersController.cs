@@ -127,54 +127,10 @@ namespace NtccSteward.Api.Controllers
                 var members = _repository.SearchMembers(criteria);
 
                 return Ok(members);
-
-                //var totalCount = list.Count();
-                //var totalPages = (int)Math.Ceiling((decimal)totalCount / pageSize);
-
-                //// add pagination infor to the response header
-                //var urlHelper = new UrlHelper(Request);
-                //var prevLink = page > 1 ? urlHelper.Link("Get"
-                //    , new
-                //    {
-                //        churchId = churchId
-                //        ,
-                //        statusIds = statusIds
-                //        ,
-                //        page = page - 1
-                //        ,
-                //        pageSize = pageSize
-                //    }) : "";
-                //var nextLink = page < totalPages ? urlHelper.Link("Get"
-                //    , new
-                //    {
-                //        churchId = churchId
-                //        ,
-                //        statusIds = statusIds
-                //        ,
-                //        page = page + 1
-                //        ,
-                //        pageSize = pageSize
-                //    }) : "";
-                //var paginationHeader = new
-                //{
-                //    currentPage = page,
-                //    pageSize = pageSize,
-                //    totalCount = totalCount,
-                //    totalPages = totalPages,
-                //    previousPageLink = prevLink,
-                //    nextPageLink = nextLink
-                //};
-
-                //HttpContext.Current.Response.Headers.Add("X-Pagination"
-                //    , JsonConvert.SerializeObject(paginationHeader));
-
-                //return Ok(list
-                //    .Skip(pageSize * (page - 1))
-                //    .Take(pageSize));
             }
             catch (Exception ex)
             {
-                ErrorHelper.ProcessError(_logger, ex, nameof(Get));
+                ErrorHelper.ProcessError(_logger, ex, nameof(GetListByCriteria));
 
                 return InternalServerError();
             }
@@ -191,6 +147,7 @@ namespace NtccSteward.Api.Controllers
 
             var ret = new
             {
+                UserChurches = list.Where(i => i.AppEnumTypeName == "UserChurches").ToArray(),
                 ChurchList = list.Where(i => i.AppEnumTypeName == "Churches").ToArray(),
                 MemberList = list.Where(i => i.AppEnumTypeName == "Members").ToArray(),
                 TeamList = list.Where(i => i.AppEnumTypeName == "Teams").ToArray(),
@@ -239,7 +196,35 @@ namespace NtccSteward.Api.Controllers
             }
         }
 
+        [Route("members/merge")]
+        [HttpPost]
+        public IHttpActionResult MergeMembers(MemberMerge memberMerge)
+        {
+            try
+            {
+                if (memberMerge == null)
+                    return BadRequest();
 
+                var result = _repository.MergeMembers(memberMerge);
+
+                if (result.Status == RepositoryActionStatus.Ok)
+                {
+                    return Ok(result.Entity);
+                }
+                else if (result.Status == RepositoryActionStatus.NotFound)
+                {
+                    return NotFound();
+                }
+
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                ErrorHelper.ProcessError(_logger, ex, nameof(Post));
+
+                return InternalServerError();
+            }
+        }
 
         // Create Member
         [HttpPost]
