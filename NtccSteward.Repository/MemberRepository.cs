@@ -108,8 +108,6 @@ namespace NtccSteward.Repository
             var paramz = new List<SqlParameter>();
             paramz.Add(new SqlParameter("criteria", criteria));
 
-            MemberListOrdinals o = null;
-
             Func<SqlDataReader, MemberSearchResult> readFx = (reader) =>
             {
                 var member = new MemberSearchResult();
