@@ -10,19 +10,25 @@ namespace NtccSteward.Api.Framework
     {
         // example of how to get the user's id
         //var userId = TokenIdentityHelper.GetOwnerIdFromToken();
-        public static string GetOwnerIdFromToken()
+        public static int GetOwnerIdFromToken()
         {
             var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
 
             if (identity == null)
-                return null;
+                return 0;
 
-            var issuerFromIdentity = identity.FindFirst("iss");
             var subFromIdentity = identity.FindFirst("sub");
-            if (issuerFromIdentity == null || subFromIdentity == null)
-                return null;
+            if (subFromIdentity == null)
+                return 0;
 
-            return issuerFromIdentity.Value + subFromIdentity.Value;
+            return int.Parse(subFromIdentity.Value);
+
+            //var issuerFromIdentity = identity.FindFirst("iss");
+            //var subFromIdentity = identity.FindFirst("sub");
+            //if (issuerFromIdentity == null || subFromIdentity == null)
+            //    return null;
+
+            //return issuerFromIdentity.Value + subFromIdentity.Value;
         }
     }
 }

@@ -7,6 +7,6 @@ namespace NtccSteward.Core.Interfaces.Account
     {
         List<Permission> Permissions { get; set; }
         string RoleDesc { get; set; }
-        int RoleID { get; set; }
+        int RoleId { get; set; }
     }
 }

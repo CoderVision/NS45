@@ -18,7 +18,13 @@ namespace NtccSteward.Repository
         string GetAccountRequestStatus(int accountRequestId);
         User Login(string email, string password);
         bool ChangePassword(AccountPasswordChange accountRequest);
-        User GetUserProfile(int userId);
+        User GetUser(int userId);
+        List<AccountRequest> GetAccountRequests();
+        List<UserProfile> GetUserProfiles(bool active);
+        UserProfile GetUserProfile(int userId);
+        List<Role> GetRoles();
+        string ProcessAccountRequest(AccountRequest accountRequest);
+        UserProfile SaveUserProfile(UserProfile userProfile);
     }
 
 
@@ -56,6 +62,7 @@ namespace NtccSteward.Repository
             paramz.Add(new SqlParameter("line1", accountRequest.Line1));
             paramz.Add(new SqlParameter("city", accountRequest.City));
             paramz.Add(new SqlParameter("state", accountRequest.State));
+            paramz.Add(new SqlParameter("zip", accountRequest.Zip));
             paramz.Add(new SqlParameter("comments", accountRequest.Comments));
 
             Func<SqlDataReader, int> readFx = (reader) =>
@@ -93,6 +100,76 @@ namespace NtccSteward.Repository
             return list.First();
         }
 
+
+        /// <summary>
+        /// Get all account requests for review and approval or denial
+        /// </summary>
+        public List<AccountRequest> GetAccountRequests()
+        {
+            var proc = "[Security].[GetAccountRequests]";
+
+            Func<SqlDataReader, AccountRequest> readFx = (reader) =>
+            {
+                var acctReq = new AccountRequest {
+                    RequestId = (int)reader["AccountRequestID"],
+                    FirstName = reader["FirstName"] + "",
+                    LastName = reader["LastName"] + "",
+                    Line1 = reader["Line1"] + "",
+                    City = reader["City"] + "",
+                    State = reader["State"] + "",
+                    Zip = reader["Zip"] + "",
+                    Email = reader["Email"] + "",
+                    Comments = reader["Comments"] + "",
+                    ChurchId = (int)reader["ChurchId"],
+                    DateSubmitted = (DateTime)reader["DateSubmitted"],
+                    RoleId = (int)Roles.User // default to user
+                };
+                return acctReq;
+            };
+
+            var executor = new SqlCmdExecutor(ConnectionString);
+
+            var list = executor.ExecuteSql<AccountRequest>(proc, CommandType.StoredProcedure, null, readFx);
+
+            return list;
+        }
+
+
+        public string ProcessAccountRequest(AccountRequest accountRequest)
+        {
+            var proc = "[Security].[ProcessAccountRequest]";
+
+            var paramz = new List<SqlParameter>();
+            paramz.Add(new SqlParameter("accountRequestId", accountRequest.RequestId));
+            paramz.Add(new SqlParameter("approved", accountRequest.IsApproved));
+            paramz.Add(new SqlParameter("denied", !accountRequest.IsApproved));
+            paramz.Add(new SqlParameter("processedByUserID", accountRequest.ReviewerUserId));
+            paramz.Add(new SqlParameter("defaultUserRoleId", Roles.User));
+            paramz.Add(new SqlParameter("memberTypeEnumId", MemberType.Member));
+            paramz.Add(new SqlParameter("roleId", accountRequest.RoleId));
+
+            paramz.Add(new SqlParameter("firstName", accountRequest.FirstName));
+            paramz.Add(new SqlParameter("lastName", accountRequest.LastName));
+            paramz.Add(new SqlParameter("line1", accountRequest.Line1));
+            paramz.Add(new SqlParameter("city", accountRequest.City));
+            paramz.Add(new SqlParameter("state", accountRequest.State));
+            paramz.Add(new SqlParameter("zip", accountRequest.Zip));
+            paramz.Add(new SqlParameter("email", accountRequest.Email));
+            paramz.Add(new SqlParameter("churchId", accountRequest.ChurchId));
+            paramz.Add(new SqlParameter("comments", accountRequest.Comments));
+
+            // pass all info as parameters
+
+            Func<SqlDataReader, string> readFx = (reader) =>
+            {
+                return reader["Status"].ToString();
+            };
+
+            var executor = new SqlCmdExecutor(ConnectionString);
+            var list = executor.ExecuteSql<string>(proc, CommandType.StoredProcedure, paramz, readFx);
+
+            return list.First();
+        }
 
         /// <summary>
         /// Change a user's password
@@ -221,10 +298,10 @@ namespace NtccSteward.Repository
                             if (role == null)
                             {
                                 role = new Role();
-                                role.RoleID = (int)reader["RoleID"];
+                                role.RoleId = (int)reader["RoleID"];
                                 role.RoleDesc = reader["RoleDesc"].ToString();
 
-                                user.UserClaims.Add(new UserClaim() { Id = role.RoleID.ToString(), Subject = user.Subject, ClaimType = Constants.ClaimTypes.Role, ClaimValue = role.RoleDesc });
+                                user.UserClaims.Add(new UserClaim() { Id = role.RoleId.ToString(), Subject = user.Subject, ClaimType = Constants.ClaimTypes.Role, ClaimValue = role.RoleDesc });
                             }
 
                             //var permission = new Permission();
@@ -241,7 +318,7 @@ namespace NtccSteward.Repository
         }
 
 
-        public User GetUserProfile(int userId)
+        public User GetUser(int userId)
         {
             User user = null;
 
@@ -282,10 +359,10 @@ namespace NtccSteward.Repository
                             if (role == null)
                             {
                                 role = new Role();
-                                role.RoleID = (int)reader["RoleID"];
+                                role.RoleId = (int)reader["RoleID"];
                                 role.RoleDesc = reader["RoleDesc"].ToString();
 
-                                user.UserClaims.Add(new UserClaim() { Id = role.RoleID.ToString(), Subject = user.Subject, ClaimType = Constants.ClaimTypes.Role, ClaimValue = role.RoleDesc });
+                                user.UserClaims.Add(new UserClaim() { Id = role.RoleId.ToString(), Subject = user.Subject, ClaimType = Constants.ClaimTypes.Role, ClaimValue = role.RoleDesc });
                             }
                         }
                     }
@@ -293,6 +370,125 @@ namespace NtccSteward.Repository
             }
 
             return user;
+        }
+
+        public List<Role> GetRoles()
+        {
+            var proc = "[Security].[GetRoles]";
+
+            Func<SqlDataReader, Role> readFx = (reader) =>
+            {
+                return new Role
+                {
+                    RoleId = (int)reader["RoleID"],
+                    RoleDesc = reader["RoleDesc"].ToString(),
+                };
+            };
+
+            var executor = new SqlCmdExecutor(ConnectionString);
+            var list = executor.ExecuteSql<Role>(proc, CommandType.StoredProcedure, null, readFx);
+
+            return list;
+        }
+
+
+        public UserProfile GetUserProfile(int userId)
+        {
+            var proc = "[Security].[GetUserProfile]";
+            var param = new SqlParameter("userId", userId);
+
+            var users = getUserProfiles(proc, param);
+
+            return users.FirstOrDefault();
+        }
+
+        public List<UserProfile> GetUserProfiles(bool active)
+        {
+            var proc = "[Security].[GetUserProfiles]";
+            var param = new SqlParameter("active", active);
+
+            var users = getUserProfiles(proc, param);
+
+            return users;
+        }
+
+        private List<UserProfile> getUserProfiles(string proc, SqlParameter param)
+        {
+            var users = new List<UserProfile>();
+
+            using (var cn = new SqlConnection(ConnectionString))
+            {
+                using (var cmd = new SqlCommand(proc, cn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add(param);
+
+                    cn.Open();
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (!reader.HasRows)
+                            return users;
+
+                        var userProfile = new UserProfile();
+                        while (reader.Read())
+                        {
+                            var userId = int.Parse(reader["PersonId"].ToString());
+
+                            if (userProfile.UserId != userId)
+                            {
+                                userProfile = new UserProfile();
+                                userProfile.UserId = userId;
+                                userProfile.FirstName = reader["FirstName"].ToString();
+                                userProfile.LastName = reader["LastName"].ToString();
+                                userProfile.Email = reader["UserName"].ToString();
+                                userProfile.RoleId = (int)reader["RoleID"];
+                                userProfile.RoleDesc = reader["RoleDesc"].ToString();
+                                userProfile.Active = bool.Parse(reader["Active"].ToString());
+                                userProfile.Line1 = reader["Line1"].ToString();
+                                userProfile.City = reader["City"].ToString();
+                                userProfile.State = reader["State"].ToString();
+                                userProfile.Zip = reader["Zip"].ToString();
+                                userProfile.Church = reader["Church"].ToString();
+
+                                users.Add(userProfile);
+                            }
+
+                            var churchId = reader["ChurchId"];
+                            if (churchId != DBNull.Value)
+                            {
+                                userProfile.ChurchIds.Add((int)churchId);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return users;
+        }
+
+        public UserProfile SaveUserProfile(UserProfile userProfile)
+        {
+            var proc = "[Security].[SaveUserProfile]";
+
+            var paramz = new List<SqlParameter>();
+            paramz.Add(new SqlParameter("userId", userProfile.UserId));
+            paramz.Add(new SqlParameter("roleId", userProfile.RoleId));
+
+            var table = new DataTable();
+            table.Columns.Add("Id", typeof(int));
+            userProfile.ChurchIds.ToList().ForEach(s => table.Rows.Add(s));
+            paramz.Add(new SqlParameter("@churchIds", table));
+
+            Func<SqlDataReader, string> readFx = (reader) =>
+            {
+                return reader["status"].ToString();
+            };
+
+            var executor = new SqlCmdExecutor(ConnectionString);
+            var list = executor.ExecuteSql<string>(proc, CommandType.StoredProcedure, paramz, readFx);
+
+            return userProfile;
         }
     }
 }

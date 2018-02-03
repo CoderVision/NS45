@@ -111,15 +111,43 @@ namespace NtccSteward.Api.Controllers
             }
         }
 
+        [Route("members/criteria/{criteria}")]
+        [HttpGet]
+        public IHttpActionResult GetListByCriteria(string criteria)
+        {
+            try
+            {
+                // example of how to get the user's id
+                var userId = TokenIdentityHelper.GetOwnerIdFromToken();
+
+
+                if (string.IsNullOrWhiteSpace(criteria))
+                    return BadRequest();
+
+                var members = _repository.SearchMembers(criteria);
+
+                return Ok(members);
+            }
+            catch (Exception ex)
+            {
+                ErrorHelper.ProcessError(_logger, ex, nameof(GetListByCriteria));
+
+                return InternalServerError();
+            }
+        }
+
 
         [Route("members/metadata/{churchId}")]
         [HttpGet]
         public IHttpActionResult GetProfileMetadata(int churchId)
         {
-            var list = _repository.GetProfileMetadata(churchId);
+            var userId = TokenIdentityHelper.GetOwnerIdFromToken();
+
+            var list = _repository.GetProfileMetadata(churchId, userId);
 
             var ret = new
             {
+                UserChurches = list.Where(i => i.AppEnumTypeName == "UserChurches").ToArray(),
                 ChurchList = list.Where(i => i.AppEnumTypeName == "Churches").ToArray(),
                 MemberList = list.Where(i => i.AppEnumTypeName == "Members").ToArray(),
                 TeamList = list.Where(i => i.AppEnumTypeName == "Teams").ToArray(),
@@ -168,7 +196,35 @@ namespace NtccSteward.Api.Controllers
             }
         }
 
+        [Route("members/merge")]
+        [HttpPost]
+        public IHttpActionResult MergeMembers(MemberMerge memberMerge)
+        {
+            try
+            {
+                if (memberMerge == null)
+                    return BadRequest();
 
+                var result = _repository.MergeMembers(memberMerge);
+
+                if (result.Status == RepositoryActionStatus.Ok)
+                {
+                    return Ok(result.Entity);
+                }
+                else if (result.Status == RepositoryActionStatus.NotFound)
+                {
+                    return NotFound();
+                }
+
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                ErrorHelper.ProcessError(_logger, ex, nameof(Post));
+
+                return InternalServerError();
+            }
+        }
 
         // Create Member
         [HttpPost]

@@ -12,6 +12,7 @@ using NtccSteward.Core.Models.Account;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web;
+using Marvin.JsonPatch;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -20,88 +21,119 @@ namespace NtccSteward.Api.Controllers
     //[RoutePrefix("api")]
     public class AccountController : ApiController
     {
-        private readonly IAccountRepository _repository = null;
-        private readonly ILogger _logger;
+        private readonly IAccountRepository repository = null;
+        private readonly ILogger logger;
+        private readonly IChurchRepository churchRepository;
 
-        public AccountController(IAccountRepository repository, ILogger logger)
+        public AccountController(IAccountRepository repository, IChurchRepository churchRepository, ILogger logger)
         {
-            _repository = repository;
-            _logger = logger;
+            this.repository = repository;
+            this.logger = logger;
+            this.churchRepository = churchRepository;
         }
 
 
-        // POST api/values
-        [Route("account/CreateAccountRequest")]
-        [HttpPost]
-        public IHttpActionResult CreateAccountRequest([FromBody] AccountRequest accountRequest)
+        [Route("account/GetUsers/{active}")]
+        [HttpGet]
+        public IHttpActionResult GetAccountRequests(bool active)
         {
             try
             {
-                if (accountRequest == null)
-                    return BadRequest();
+                var acctRequests = this.repository.GetAccountRequests();
+                var roles = this.repository.GetRoles();
+                var users = this.repository.GetUserProfiles(active);
+                var churches = this.churchRepository.GetList(false);
 
-                var accountRequestId = _repository.CreateAccountRequest(accountRequest);
-
-                if (accountRequestId > 0)
+                var usersInfo = new
                 {
-                    accountRequest.RequestId = accountRequestId;
+                    config = new { churches = churches, roles = roles },
+                    acctRequests = acctRequests,
+                    users = users,
+                };
 
-                    return Created(Request.RequestUri + "/" + accountRequestId.ToString(), accountRequest);
-                }
-              
-                return BadRequest();
+                return Ok(usersInfo);
             }
             catch (Exception ex)
             {
-                ErrorHelper.ProcessError(_logger, ex, nameof(CreateAccountRequest));
+                ErrorHelper.ProcessError(this.logger, ex, nameof(GetAccountRequests));
+
+                return InternalServerError(ex);
+            }
+        }
+
+        [Route("account")]
+        [HttpPost]
+        public IHttpActionResult PostUser(UserProfile userProfile)
+        {
+            if (userProfile == null)
+                return BadRequest();
+
+            try
+            {
+                var profile = this.repository.SaveUserProfile(userProfile);
+
+                if (profile == null)
+                    return NotFound();
+
+                return Ok(profile);
+            }
+            catch (Exception ex)
+            {
+                ErrorHelper.ProcessError(this.logger, ex, nameof(PostUser));
 
                 return InternalServerError();
             }
         }
 
-
-        [Route("account/GetAccountRequestStatus/{accountRequestId}")]
-        public IHttpActionResult GetAccountRequestStatus(int accountRequestId)
+        [Route("account/processAccountRequest")]
+        [HttpPost]
+        public IHttpActionResult ProcessAccountRequest(AccountRequest accountRequest)
         {
             try
             {
-                var status = _repository.GetAccountRequestStatus(accountRequestId);
+                // example of how to get the user's id
+                var userId = TokenIdentityHelper.GetOwnerIdFromToken();
 
-                if (!string.IsNullOrWhiteSpace(status))
-                    return Ok(status);
-                else
-                    return BadRequest("Invalid accountRequestId");
+                accountRequest.ReviewerUserId = userId;
 
+                var result = this.repository.ProcessAccountRequest(accountRequest);
+
+                return Ok(result);
             }
             catch (Exception ex)
             {
-                ErrorHelper.ProcessError(_logger, ex, nameof(CreateAccountRequest));
+                ErrorHelper.ProcessError(this.logger, ex, nameof(GetAccountRequests));
+
+                return InternalServerError(ex);
+            }
+        }
+
+        [Route("account/{userId}")]
+        [HttpPatch]
+        public IHttpActionResult Patch(int userId, [FromBody]JsonPatchDocument<UserProfile> doc)
+        {
+            if (doc == null)
+                return BadRequest();
+
+            try
+            {
+                var profile = this.repository.GetUserProfile(userId);
+
+                if (profile == null)
+                    return NotFound();
+
+                doc.ApplyTo(profile);
+
+                this.repository.SaveUserProfile(profile);
+
+                return Ok(profile);
+            }
+            catch (Exception ex)
+            {
+                ErrorHelper.ProcessError(this.logger, ex, nameof(Patch));
 
                 return InternalServerError();
             }
         }
-
-
-        //[Route("account/login")]
-        //[HttpPost]
-        //public IHttpActionResult Login([FromBody] Login login)
-        //{
-        //    try
-        //    {
-        //        // Create a new session and return it
-        //        var session = _repository.Login(login.Email, login.Password, login.ChurchId);
-
-        //        if (session == null)
-        //            return NotFound();
-        //        else
-        //            return Ok(session);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        ErrorHelper.ProcessError(_logger, ex, nameof(Login));
-
-        //        return InternalServerError();
-        //    }
-        //}
     }
 }

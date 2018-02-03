@@ -20,9 +20,12 @@ namespace NtccSteward.Repository
     {
         RepositoryActionResult<NewMember> Add(NewMember member);
         List<Member> GetList(int churchId, IEnumerable<int> statusEnumId);
-        List<AppEnum> GetProfileMetadata(int churchId);
+        List<AppEnum> GetProfileMetadata(int churchId, int userId);
+        List<MemberSearchResult> SearchMembers(string criteria);
 
         MemberProfile GetProfile(int id, int churchId);
+
+        RepositoryActionResult<MemberMerge> MergeMembers(MemberMerge memberMerge);
 
         RepositoryActionResult<MemberProfile> SaveProfile(MemberProfile memberProfile);
 
@@ -98,6 +101,33 @@ namespace NtccSteward.Repository
         }
 
 
+        public List<MemberSearchResult> SearchMembers(string criteria)
+        {
+            var proc = "SearchMembersByName";
+
+            var paramz = new List<SqlParameter>();
+            paramz.Add(new SqlParameter("criteria", criteria));
+
+            MemberListOrdinals o = null;
+
+            Func<SqlDataReader, MemberSearchResult> readFx = (reader) =>
+            {
+                var member = new MemberSearchResult();
+                member.MemberId = (int)reader["MemberId"];
+                member.FirstName = reader["FirstName"].ToString();
+                member.LastName = reader["LastName"].ToString();
+                member.ChurchId = (int)reader["ChurchId"];
+                member.ChurchName = reader["ChurchName"].ToString();
+
+                return member;
+            };
+
+            var list = _executor.ExecuteSql<MemberSearchResult>(proc, CommandType.StoredProcedure, paramz, readFx);
+
+            return list;
+        }
+
+
         public List<Member> GetList(int churchId, IEnumerable<int> statusEnumIds)
         {
             var proc = "GetMembership";
@@ -141,6 +171,7 @@ namespace NtccSteward.Repository
 
             return list;
         }
+
 
         public MemberProfile GetProfile(int id, int churchId)
         {
@@ -288,10 +319,12 @@ namespace NtccSteward.Repository
             return member;
         }
 
-        public List<AppEnum> GetProfileMetadata(int churchId)
+
+        public List<AppEnum> GetProfileMetadata(int churchId, int userId)
         {
             var paramz = new List<SqlParameter>();
             paramz.Add(new SqlParameter("churchId", churchId));
+            paramz.Add(new SqlParameter("userId", userId));
 
             Func<SqlDataReader, AppEnum> readFx = (reader) =>
             {
@@ -308,6 +341,36 @@ namespace NtccSteward.Repository
 
             return list;
         }
+
+
+        public RepositoryActionResult<MemberMerge> MergeMembers(MemberMerge memberMerge) {
+            try
+            {
+                var paramz = new List<SqlParameter>();
+                paramz.Add(new SqlParameter("sourceMemberId", memberMerge.SourceMemberId));
+                paramz.Add(new SqlParameter("targetMemberId", memberMerge.TargetMemberId));
+
+
+                Func<SqlDataReader, int> readFx = (reader) =>
+                {
+                    return (int)reader["success"];
+                };
+
+                var success = _executor.ExecuteSql<int>("MergeMembers", CommandType.StoredProcedure, paramz, readFx);
+
+                if (success.FirstOrDefault() > 0)
+                {
+                    return new RepositoryActionResult<MemberMerge>(memberMerge, RepositoryActionStatus.Ok);
+                }
+                else
+                    return new RepositoryActionResult<MemberMerge>(memberMerge, RepositoryActionStatus.Error);
+            }
+            catch (Exception ex)
+            {
+                return new RepositoryActionResult<MemberMerge>(memberMerge, RepositoryActionStatus.Error, ex);
+            }
+        }
+
 
         public RepositoryActionResult<MemberProfile> SaveProfile(MemberProfile memberProfile)
         {
