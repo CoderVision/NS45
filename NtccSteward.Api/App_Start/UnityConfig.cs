@@ -15,10 +15,9 @@ namespace NtccSteward.Api
         {
 			var container = new UnityContainer();
 
-            // register all your components with the container here
-            // it is NOT necessary to register your controllers
-
-            // e.g. container.RegisterType<ITestService, TestService>();
+            var cnString = ConfigurationManager.ConnectionStrings["Login"].ConnectionString;
+            var pepper = ConfigurationManager.AppSettings["Pepper"];
+            container.RegisterInstance<IAccountRepository>(new AccountRepository(cnString, pepper));
 
             // Dependency Injection trouble-shooting.
             //http://stackoverflow.com/questions/24254189/make-sure-that-the-controller-has-a-parameterless-public-constructor-error

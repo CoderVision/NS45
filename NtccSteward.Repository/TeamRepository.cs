@@ -25,7 +25,7 @@ namespace NtccSteward.Repository
         RepositoryActionResult<Teammate> SaveTeammate(Teammate teammate);
         RepositoryActionResult<Teammate> DeleteTeammate(int teamId, int teammateId);
 
-        RepositoryActionResult<TeamMetadata> GetMetadata(int churchId);
+        RepositoryActionResult<TeamMetadata> GetMetadata(int churchId, int userId);
     }
 
     public class TeamRepository : NtccSteward.Repository.Repository, ITeamRepository
@@ -39,7 +39,7 @@ namespace NtccSteward.Repository
             _executor = new SqlCmdExecutor(connectionString);
         }
 
-        public RepositoryActionResult<TeamMetadata> GetMetadata(int churchId)
+        public RepositoryActionResult<TeamMetadata> GetMetadata(int churchId, int userId)
         {
             var metadata = new TeamMetadata();
 
@@ -49,6 +49,8 @@ namespace NtccSteward.Repository
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.Add(new SqlParameter("churchId", churchId));
+                    cmd.Parameters.Add(new SqlParameter("userId", userId));
+
                     cn.Open();
 
                     using (var reader = cmd.ExecuteReader())

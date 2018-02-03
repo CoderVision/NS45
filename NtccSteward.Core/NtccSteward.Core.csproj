@@ -85,6 +85,8 @@
     <Compile Include="Factories\AddressInfoFactory.cs" />
     <Compile Include="Factories\MemberFactory.cs" />
     <Compile Include="Factories\TeamFactory.cs" />
+    <Compile Include="Framework\MemberType.cs" />
+    <Compile Include="Framework\Roles.cs" />
     <Compile Include="Framework\TeamPositionTypes.cs" />
     <Compile Include="Framework\AppConfigProvider.cs" />
     <Compile Include="Framework\EnumTypes.cs" />
@@ -120,6 +122,7 @@
     <Compile Include="Models\Account\Session.cs" />
     <Compile Include="Models\Account\User.cs" />
     <Compile Include="Models\Account\UserClaim.cs" />
+    <Compile Include="Models\Account\UserProfile.cs" />
     <Compile Include="Models\Church\Church.cs" />
     <Compile Include="Models\Church\ChurchProfile.cs" />
     <Compile Include="Interfaces\Church\IChurchProfile.cs" />
@@ -140,8 +143,10 @@
     <Compile Include="Interfaces\Members\IMember.cs" />
     <Compile Include="Models\Members\Activity.cs" />
     <Compile Include="Models\Members\Member.cs" />
+    <Compile Include="Models\Members\MemberMerge.cs" />
     <Compile Include="Models\Members\MemberProfile.cs" />
     <Compile Include="Models\Members\MembersByStatus.cs" />
+    <Compile Include="Models\Members\MemberSearchResult.cs" />
     <Compile Include="Models\Members\NewMember.cs" />
     <Compile Include="Models\Members\Sponsor.cs" />
     <Compile Include="Models\Members\Team.cs" />

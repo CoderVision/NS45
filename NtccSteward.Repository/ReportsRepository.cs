@@ -15,7 +15,7 @@ namespace NtccSteward.Repository
     public interface IReportsRepository
     {
         object GetReportData(ReportTypes reportType, List<KeyValuePair<string, string>> paramsCollection);
-        ReportMetadata GetMetadata(int churchId);
+        ReportMetadata GetMetadata(int churchId, int userId);
     }
 
     public class ReportsRepository : NtccSteward.Repository.Repository, IReportsRepository
@@ -87,7 +87,7 @@ namespace NtccSteward.Repository
             return list;
         }
 
-        public ReportMetadata GetMetadata(int churchId)
+        public ReportMetadata GetMetadata(int churchId, int userId)
         {
             var metadata = new ReportMetadata();
 
@@ -97,6 +97,7 @@ namespace NtccSteward.Repository
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.Add(new SqlParameter("churchId", churchId));
+                    cmd.Parameters.Add(new SqlParameter("userId", userId));
                     cn.Open();
 
                     using (var reader = cmd.ExecuteReader())
