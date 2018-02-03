@@ -135,5 +135,26 @@ namespace NtccSteward.Api.Controllers
                 return InternalServerError();
             }
         }
+
+        [Authorize]
+        [Route("account")]
+        [HttpGet]
+        public IHttpActionResult GetUser()
+        {
+            try
+            {
+                var userId = TokenIdentityHelper.GetOwnerIdFromToken();
+
+                var userProfile = this.repository.GetUserProfile(userId);
+
+                return Ok(userProfile);
+            }
+            catch (Exception ex)
+            {
+                ErrorHelper.ProcessError(this.logger, ex, nameof(GetUser));
+
+                return InternalServerError(ex);
+            }
+        }
     }
 }
