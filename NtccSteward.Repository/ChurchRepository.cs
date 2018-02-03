@@ -18,7 +18,7 @@ namespace NtccSteward.Repository
     {
         RepositoryActionResult<Church> Add(Church church);
         ChurchProfile Get(int id);
-        List<Church> GetList(bool showAll);
+        List<Church> GetList(bool showAll, int userId);
         RepositoryActionResult<ChurchProfile> SaveProfile(ChurchProfile profile);
         RepositoryActionResult<Church> Delete(int id, int entityType);
         ChurchProfileMetadata GetProfileMetadata(int churchId);
@@ -74,7 +74,7 @@ namespace NtccSteward.Repository
 
         }
 
-        public List<Church> GetList(bool showAll)
+        public List<Church> GetList(bool showAll, int userId)
         {
             var list = new List<Church>();
 
@@ -84,6 +84,7 @@ namespace NtccSteward.Repository
                 {
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("showAll", showAll);
+                    cmd.Parameters.AddWithValue("userId", userId);
 
                     cn.Open();
 
