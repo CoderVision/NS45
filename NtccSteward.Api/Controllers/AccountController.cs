@@ -39,10 +39,12 @@ namespace NtccSteward.Api.Controllers
         {
             try
             {
+                var userId = TokenIdentityHelper.GetOwnerIdFromToken();
+
                 var acctRequests = this.repository.GetAccountRequests();
                 var roles = this.repository.GetRoles();
                 var users = this.repository.GetUserProfiles(active);
-                var churches = this.churchRepository.GetList(false);
+                var churches = this.churchRepository.GetList(false, userId);
 
                 var usersInfo = new
                 {

@@ -48,7 +48,9 @@ namespace NtccSteward.Api.Controllers
                 if (pageSize == 0)
                     pageSize = 1000;
 
-                var list = _repository.GetList(showAll);
+                var userId = TokenIdentityHelper.GetOwnerIdFromToken();
+
+                var list = _repository.GetList(showAll, userId);
 
                 var totalCount = list.Count();
                 var totalPages = (int)Math.Ceiling((decimal)totalCount / pageSize);
