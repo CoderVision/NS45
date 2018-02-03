@@ -34,7 +34,7 @@ namespace NtccSteward.IdentityServer.Controllers
         [HttpGet]
         public ActionResult GetConfig()
         {
-            var churchList = this.churchRepository.GetList(false);
+            var churchList = this.churchRepository.GetList(false, -1);
 
             return Json(new { churchList = churchList }, JsonRequestBehavior.AllowGet);
         }
