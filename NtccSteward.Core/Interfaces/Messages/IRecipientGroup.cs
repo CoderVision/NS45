@@ -8,6 +8,7 @@ namespace NtccSteward.Core.Models.Message
         int ChurchId { get; set; }
         string Description { get; set; }
         int Id { get; set; }
+        int MessageTypeEnumID { get; set; }
         string Name { get; set; }
         List<Message> Messages { get; set; }
         DateTimeOffset LastMessageDate { get; set; }

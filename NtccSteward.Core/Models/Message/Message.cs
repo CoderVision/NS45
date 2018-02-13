@@ -10,14 +10,9 @@ namespace NtccSteward.Core.Models.Message
     {
         public long Id { get; set; }
 
-        public int RecipientId { get; set; }
+        public int RecipientGroupId { get; set; }
 
         public DateTimeOffset MessageDate { get; set; }
-
-        /// <summary>
-        /// Text, Email
-        /// </summary>
-        public int MessageTypeEnumID { get; set; }
 
         /// <summary>
         /// Sent, Received

@@ -7,7 +7,10 @@ namespace NtccSteward.Core.Models.Message
 {
     public class RecipientGroup : IRecipientGroup
     {
-        public RecipientGroup() { }
+        public RecipientGroup() {
+            Recipients = new List<Recipient>();
+            Messages = new List<Message>();
+        }
 
         public int Id { get; set; } // MessageRecipientGroupId
 
@@ -16,6 +19,8 @@ namespace NtccSteward.Core.Models.Message
         public string Description { get; set; }
 
         public int ChurchId { get; set; }
+
+        public int MessageTypeEnumID { get; set; }
 
         public List<Recipient> Recipients { get; set; }
 
