@@ -137,7 +137,7 @@
     <Compile Include="Models\Common\Enums\AppEnum.cs" />
     <Compile Include="Models\Common\Enums\AppEnumType.cs" />
     <Compile Include="Models\Common\Misc\Item.cs" />
-    <Compile Include="Models\Common\Parameters\GetCorrespondenceParameter.cs" />
+    <Compile Include="Models\Common\Parameters\GetRecipientGroupsParameter.cs" />
     <Compile Include="Models\Common\Parameters\GetMessagesParameter.cs" />
     <Compile Include="Models\Common\Parameters\ItemByID.cs" />
     <Compile Include="Interfaces\Members\IMember.cs" />

@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 
 namespace NtccSteward.Core.Models.Common.Parameters
 {
-    public class GetCorrespondenceParameter
+    public class GetRecipientGroupsParameter
     {
-        public GetCorrespondenceParameter()
+        public GetRecipientGroupsParameter()
         {        }
 
-        public GetCorrespondenceParameter(int churchID, int messageTypeEnumID, int maxReturnRows)
+        public GetRecipientGroupsParameter(int churchID, int messageTypeEnumID, int maxReturnRows)
         {
             ChurchID = churchID;
             MessageTypeEnumID = messageTypeEnumID;
