@@ -9,6 +9,7 @@ namespace NtccSteward.Repository.Framework
 {
     public interface ISqlCmdExecutor
     {
+        string ConnectionString { get; set; }
         List<T> ExecuteSql<T>(string sql, CommandType commandType, IEnumerable<SqlParameter> paramz, Func<SqlDataReader, T> readFx);
     }
 

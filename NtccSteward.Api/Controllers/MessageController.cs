@@ -24,6 +24,18 @@ namespace NtccSteward.Api.Controllers
             this.repo = repository;
         }
 
+        public async Task<IHttpActionResult> GetMetadata(int userId) {
+
+            var metadata = this.repo.GetMetadata(userId);
+
+            var result = new {
+                churches = metadata.Churches,
+                enums = metadata.Enums
+            };
+
+            return Ok(result);
+        }
+
         [Route("message/email")]
         [HttpPost()]
         public async Task<IHttpActionResult> SendEmail(Message message)
