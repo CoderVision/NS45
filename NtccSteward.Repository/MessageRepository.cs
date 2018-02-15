@@ -7,6 +7,8 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using NtccSteward.Core.Models.Church;
+using NtccSteward.Core.Models.Common.Enums;
 
 namespace NtccSteward.Repository
 {
@@ -20,18 +22,62 @@ namespace NtccSteward.Repository
         int SaveMessage(IMessage message);
         int SaveRecipient(IRecipient recipient);
         int SaveRecipientGroup(IRecipientGroup group);
+        MessageMetadata GetMetadata(int userId);
     }
 
     public class MessageRepository : NtccSteward.Repository.Repository, IMessageRepository
     {
-        private readonly ISqlCmdExecutor _executor;
+        private readonly ISqlCmdExecutor executor;
 
         public MessageRepository(string connectionString)
         {
             ConnectionString = connectionString;
-            _executor = new SqlCmdExecutor(connectionString);
+            this.executor = new SqlCmdExecutor(connectionString);
         }
 
+        public MessageMetadata GetMetadata(int userId)
+        {
+            var metadata = new MessageMetadata();
+
+            using (var cn = new SqlConnection(this.executor.ConnectionString))
+            {
+                using (var cmd = new SqlCommand("GetMessagesMetadata", cn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add(new SqlParameter("userId", userId));
+                    cn.Open();
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            // read enum types
+                            while (reader.Read())
+                            {
+                                var appEnum = new AppEnum();
+                                appEnum.ID = reader.ValueOrDefault<int>("EnumID");
+                                appEnum.Desc = reader.ValueOrDefault<string>("EnumDesc");
+                                appEnum.AppEnumTypeID = reader.ValueOrDefault<int>("EnumTypeID");
+                                appEnum.AppEnumTypeName = reader.ValueOrDefault<string>("EnumTypeName");
+                                metadata.Enums.Add(appEnum);
+                            }
+
+                            // read churches
+                            reader.NextResult();
+                            while (reader.Read())
+                            {
+                                var church = new Church();
+                                church.id = reader.ValueOrDefault<int>("Id");
+                                church.Name = reader.ValueOrDefault<string>("Name");
+                                metadata.Churches.Add(church);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return metadata;
+        }
 
         /// <summary>
         /// Gets message groups, does not include recipients
@@ -61,7 +107,7 @@ namespace NtccSteward.Repository
                 return item;
             };
 
-            var list = _executor.ExecuteSql<IRecipientGroup>(proc, CommandType.StoredProcedure, paramz, readFx);
+            var list = this.executor.ExecuteSql<IRecipientGroup>(proc, CommandType.StoredProcedure, paramz, readFx);
 
             return list;
         }
@@ -87,7 +133,7 @@ namespace NtccSteward.Repository
                 return reader.GetInt32(0); // new id
             };
 
-            var list = _executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, readFx);
+            var list = this.executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, readFx);
 
             return list.First();
         }
@@ -100,7 +146,7 @@ namespace NtccSteward.Repository
             var paramz = new List<SqlParameter>();
             paramz.Add(new SqlParameter("MessageRecipientGroupId", recipientGroupId));
 
-            _executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, null);
+            this.executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, null);
         }
 
 
@@ -123,7 +169,7 @@ namespace NtccSteward.Repository
                 return reader.GetInt32(0); // new id
             };
 
-            var list = _executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, readFx);
+            var list = this.executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, readFx);
 
             return list.First();
         }
@@ -138,7 +184,7 @@ namespace NtccSteward.Repository
             var paramz = new List<SqlParameter>();
             paramz.Add(new SqlParameter("Id", recipientId));
 
-            _executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, null);
+            this.executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, null);
         }
 
 
@@ -164,7 +210,7 @@ namespace NtccSteward.Repository
                 return reader.GetInt32(0); // new id
             };
 
-            var list = _executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, readFx);
+            var list = this.executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, readFx);
 
             return list.First();
         }
@@ -180,7 +226,7 @@ namespace NtccSteward.Repository
             var paramz = new List<SqlParameter>();
             paramz.Add(new SqlParameter("messageId", messageID));
 
-            _executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, null);
+            this.executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, null);
         }
 
 
@@ -205,7 +251,7 @@ namespace NtccSteward.Repository
                 return item;
             };
 
-            var list = _executor.ExecuteSql<IMessage>(proc, CommandType.StoredProcedure, paramz, readFx);
+            var list = this.executor.ExecuteSql<IMessage>(proc, CommandType.StoredProcedure, paramz, readFx);
 
             return list;
         }
