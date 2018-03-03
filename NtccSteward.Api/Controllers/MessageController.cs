@@ -10,6 +10,7 @@ using NtccSteward.Repository;
 
 namespace NtccSteward.Api.Controllers
 {
+ //   [Authorize]
     public class MessageController : ApiController
     {
         //private readonly SmsSettings _smsSettings;
@@ -24,6 +25,8 @@ namespace NtccSteward.Api.Controllers
             this.repo = repository;
         }
 
+        [Route("message/metadata")]
+        [HttpGet]
         public async Task<IHttpActionResult> GetMetadata(int userId) {
 
             var metadata = this.repo.GetMetadata(userId);
@@ -133,9 +136,9 @@ namespace NtccSteward.Api.Controllers
 
 
         [HttpGet]
-        public async Task<IHttpActionResult> GetMessages([FromBody] GetMessagesParameter messagesParameter)
+        public async Task<IHttpActionResult> GetMessages(int recipientGroupId, int maxRows)
         {
-            var messages = this.repo.GetMessages(messagesParameter.RecipientGroupId, messagesParameter.MaxReturnRows);
+            var messages = this.repo.GetMessages(recipientGroupId, maxRows);
 
             return Ok(messages);
         }
@@ -149,7 +152,7 @@ namespace NtccSteward.Api.Controllers
             return Ok(message);
         }
 
-        [HttpPost()]
+        [HttpDelete()]
         public async Task<IHttpActionResult> DeleteMessage(int id)
         {
             this.repo.DeleteMessage(id);
@@ -157,14 +160,16 @@ namespace NtccSteward.Api.Controllers
             return Ok();
         }
 
+        [Route("message/recipientGroups")]
         [HttpGet()]
-        public async Task<IHttpActionResult> GetRecipientGroups([FromBody] GetRecipientGroupsParameter recipientGroups)
+        public async Task<IHttpActionResult> GetRecipientGroups(int churchId, int messageTypeEnumId)
         {
-            var groups = this.repo.GetRecipientGroups(recipientGroups.ChurchID, recipientGroups.MessageTypeEnumID);
+            var groups = this.repo.GetRecipientGroups(churchId, messageTypeEnumId);
 
             return Ok(groups);
         }
 
+        [Route("message/recipientGroups")]
         [HttpPost]
         public async Task<IHttpActionResult> SaveRecipientGroups(RecipientGroup recipientGroup)
         {
@@ -173,12 +178,20 @@ namespace NtccSteward.Api.Controllers
 
             foreach (var r in recipientGroup.Recipients)
             {
-                r.Id = this.repo.SaveRecipient(r);
+                r.MessageRecipientGroupId = recipientGroup.Id;
+
+                this.repo.SaveRecipient(r);
+
+                var recipient = this.repo.GetRecipient(r.ContactInfoId, recipientGroup.Id);
+                r.Id = recipient.Id;
+                r.Name = recipient.Name;
+                r.Address = recipient.Address;
             }
 
             return Ok(recipientGroup);
         }
 
+        [Route("message/recipientGroups")]
         [HttpDelete]
         public async Task<IHttpActionResult> DeleteRecipientGroup(int id)
         {

@@ -23,6 +23,7 @@ namespace NtccSteward.Repository
         int SaveRecipient(IRecipient recipient);
         int SaveRecipientGroup(IRecipientGroup group);
         MessageMetadata GetMetadata(int userId);
+        IRecipient GetRecipient(int contactInfoid, int recipientGroupId);
     }
 
     public class MessageRepository : NtccSteward.Repository.Repository, IMessageRepository
@@ -172,6 +173,32 @@ namespace NtccSteward.Repository
             var list = this.executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, readFx);
 
             return list.First();
+        }
+
+        public IRecipient GetRecipient(int contactInfoid, int recipientGroupId)
+        {
+            var proc = "GetRecipient";
+
+            var paramz = new List<SqlParameter>();
+            paramz.Add(new SqlParameter("contactInfoid", contactInfoid));
+            paramz.Add(new SqlParameter("recipientGroupId", recipientGroupId));
+
+            Func<SqlDataReader, IRecipient> readFx = (reader) =>
+            {
+                var item = new Recipient();
+                item.Id = reader.ValueOrDefault<int>("Id");
+                item.IdentityId = reader.ValueOrDefault<int>("IdentityID");
+                item.MessageRecipientGroupId = reader.ValueOrDefault<int>("MessageRecipientGroupId");
+                item.ContactInfoId = reader.ValueOrDefault<int>("ContactInfoID");
+                item.Name = reader.ValueOrDefault<string>("Name");
+                item.Address = reader.ValueOrDefault<string>("Address");
+
+                return item;
+            };
+
+            var list = this.executor.ExecuteSql<IRecipient>(proc, CommandType.StoredProcedure, paramz, readFx);
+
+            return list.FirstOrDefault();
         }
 
         /// <summary>
