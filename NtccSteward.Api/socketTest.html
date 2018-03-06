@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title></title>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" ;></script>
+        <script>
+            $(document).ready(function () {
+
+                var churchId = prompt('Please enter a churchId:');
+
+                // connect using https
+                var uri = 'wss://' + window.location.host + window.location.pathname.replace('socketTest.html', 'ws/socket') + '/churchId=' + churchId;
+                websocket = new WebSocket(uri);
+
+                websocket.onopen = function () {
+                    $('#messages').prepend('<div>Connected.</div>');
+
+                    $('#chatform').submit(function (event) {
+                        websocket.send($('#inputbox').val());
+                        $('#inputbox').val('');
+                        event.preventDefault();
+                    });
+                };
+
+                websocket.onerror = function (event) {
+                    $('#messages').prepend('<div>ERROR</div>');
+                };
+
+                websocket.onmessage = function (event) {
+                    $('#messages').prepend('<div>' + event.data + '</div>');
+                };
+
+                websocket.onclose = function (event) {
+                    $('#messages').prepend('<div>Disconnected.</div>');
+                };
+            });
+        </script>
+    </head>
+    <body>
+        <form id="chatform" action="">
+            <input id="inputbox" />
+        </form>
+        <div id="messages" />
+    </body>
+</html>
