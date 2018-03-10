@@ -12,7 +12,7 @@ namespace NtccSteward.Api.Controllers
 {
     public class SocketController : ApiController
     {
-        public async Task<IHttpActionResult> Get()
+        public async Task<IHttpActionResult> Get(int churchId)
         {
             if (HttpContext.Current.IsWebSocketRequest || HttpContext.Current.IsWebSocketRequestUpgrading)
             {
