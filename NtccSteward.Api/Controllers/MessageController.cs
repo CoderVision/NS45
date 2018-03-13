@@ -7,10 +7,11 @@ using NtccSteward.Core.Models.Message;
 using NtccSteward.Core.Models.Common.Parameters;
 using System.Web.Http;
 using NtccSteward.Repository;
+using NtccSteward.Api.Framework;
 
 namespace NtccSteward.Api.Controllers
 {
- //   [Authorize]
+    [Authorize]
     public class MessageController : ApiController
     {
         //private readonly SmsSettings _smsSettings;
@@ -27,7 +28,9 @@ namespace NtccSteward.Api.Controllers
 
         [Route("message/metadata")]
         [HttpGet]
-        public async Task<IHttpActionResult> GetMetadata(int userId) {
+        public async Task<IHttpActionResult> GetMetadata() {
+
+            var userId = TokenIdentityHelper.GetOwnerIdFromToken();
 
             var metadata = this.repo.GetMetadata(userId);
 
@@ -135,6 +138,7 @@ namespace NtccSteward.Api.Controllers
         }
 
 
+        [Route("message/list")]
         [HttpGet]
         public async Task<IHttpActionResult> GetMessages(int recipientGroupId, int maxRows)
         {
@@ -143,6 +147,7 @@ namespace NtccSteward.Api.Controllers
             return Ok(messages);
         }
 
+        [Route("message")]
         [HttpPost()]
         public async Task<IHttpActionResult> SaveMessage([FromBody] Message message)
         {
@@ -152,6 +157,7 @@ namespace NtccSteward.Api.Controllers
             return Ok(message);
         }
 
+        [Route("message")]
         [HttpDelete()]
         public async Task<IHttpActionResult> DeleteMessage(int id)
         {
