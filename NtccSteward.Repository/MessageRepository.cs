@@ -68,7 +68,7 @@ namespace NtccSteward.Repository
                             while (reader.Read())
                             {
                                 var church = new Church();
-                                church.id = reader.ValueOrDefault<int>("Id");
+                                church.id = reader.ValueOrDefault<int>("ChurchId");
                                 church.Name = reader.ValueOrDefault<string>("Name");
                                 metadata.Churches.Add(church);
                             }
@@ -264,12 +264,12 @@ namespace NtccSteward.Repository
 
             var paramz = new List<SqlParameter>();
             paramz.Add(new SqlParameter("messageRecipientGroupId", recipientGroupId));
-            paramz.Add(new SqlParameter("maxRowsToReturn", maxReturnRows));
+            paramz.Add(new SqlParameter("maxrows", maxReturnRows));
 
             Func<SqlDataReader, IMessage> readFx = (reader) =>
             {
                 var item = new Message();
-                item.Id = reader.ValueOrDefault<int>("id");
+                item.Id = reader.ValueOrDefault<long>("id");
                 item.RecipientGroupId = reader.ValueOrDefault<int>("MessageRecipientGroupId");
                 item.MessageDirectionEnumID = reader.ValueOrDefault<int>("MessageDirectionEnumID");
                 item.Subject = reader.ValueOrDefault<string>("MessageSubject");
