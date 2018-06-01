@@ -17,5 +17,7 @@ namespace NtccSteward.Core.Models.Message
 
         public int IdentityId { get; set; }
         public int MessageRecipientGroupId { get; set; }
+
+        public bool PreferredAddress { get; set; }
     }
 }

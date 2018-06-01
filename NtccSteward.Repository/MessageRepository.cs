@@ -24,6 +24,7 @@ namespace NtccSteward.Repository
         int SaveRecipientGroup(IRecipientGroup group);
         MessageMetadata GetMetadata(int userId);
         IRecipient GetRecipient(int contactInfoid, int recipientGroupId);
+        List<IRecipient> GetRecipients(int churchId, int messageTypeEnumId, string criteria);
     }
 
     public class MessageRepository : NtccSteward.Repository.Repository, IMessageRepository
@@ -78,6 +79,30 @@ namespace NtccSteward.Repository
             }
 
             return metadata;
+        }
+
+        public List<IRecipient> GetRecipients(int churchId, int messageTypeEnumId, string criteria) {
+
+            var proc = messageTypeEnumId == 47 ? "GetSmsRecipients" : "GetEmailRecipients";
+
+            var paramz = new List<SqlParameter>();
+            paramz.Add(new SqlParameter("churchId", churchId));
+            paramz.Add(new SqlParameter("criteria", criteria));
+
+            Func<SqlDataReader, IRecipient> readFx = (reader) =>
+            {
+                var item = new Recipient();
+                item.IdentityId = reader.ValueOrDefault<int>("Id");
+                item.ContactInfoId = reader.ValueOrDefault<int>("ContactInfoID");
+                item.Name = $"{reader.ValueOrDefault<string>("FirstName", "").Trim()} {reader.ValueOrDefault<string>("MiddleName", "").Trim()}".Trim() + $" {reader.ValueOrDefault<string>("LastName", "").Trim()}";
+                item.Address = reader.ValueOrDefault<string>("Address");
+                item.PreferredAddress = reader.ValueOrDefault<bool>("Preferred");
+                return item;
+            };
+
+            var list = this.executor.ExecuteSql<IRecipient>(proc, CommandType.StoredProcedure, paramz, readFx);
+
+            return list;
         }
 
         /// <summary>

@@ -8,5 +8,6 @@
         int MessageRecipientGroupId { get; set; }
         string Name { get; set; }
         string Address { get; set; } // email or phone number
+        bool PreferredAddress { get; set; }
     }
 }
