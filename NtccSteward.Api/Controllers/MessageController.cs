@@ -8,6 +8,7 @@ using NtccSteward.Core.Models.Common.Parameters;
 using System.Web.Http;
 using NtccSteward.Repository;
 using NtccSteward.Api.Framework;
+using System.Collections.Generic;
 
 namespace NtccSteward.Api.Controllers
 {
@@ -164,6 +165,15 @@ namespace NtccSteward.Api.Controllers
             this.repo.DeleteMessage(id);
 
             return Ok();
+        }
+
+        [Route("message/recipients")]
+        [HttpGet()]
+        public async Task<IHttpActionResult> GetRecipients(int churchId, int messageTypeEnumId, string criteria)
+        {
+            var recipients = this.repo.GetRecipients(churchId, messageTypeEnumId, criteria);
+
+            return Ok(recipients);
         }
 
         [Route("message/recipientGroups")]

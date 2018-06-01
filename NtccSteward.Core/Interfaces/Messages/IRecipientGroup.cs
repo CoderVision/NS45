@@ -11,6 +11,7 @@ namespace NtccSteward.Core.Models.Message
         int MessageTypeEnumID { get; set; }
         string Name { get; set; }
         List<Message> Messages { get; set; }
+        List<Recipient> Recipients { get; set; }
         DateTimeOffset LastMessageDate { get; set; }
         string LastMessageSubject { get; set; }
         string LastMessageBody { get; set; }
