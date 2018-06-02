@@ -22,5 +22,7 @@ namespace NtccSteward.Core.Models.Message
         public string Subject { get; set; }
 
         public string Body { get; set; }
+
+        public int ChurchId { get; set; }
     }
 }

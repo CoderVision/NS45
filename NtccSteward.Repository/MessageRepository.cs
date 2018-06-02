@@ -25,6 +25,8 @@ namespace NtccSteward.Repository
         MessageMetadata GetMetadata(int userId);
         IRecipient GetRecipient(int contactInfoid, int recipientGroupId);
         List<IRecipient> GetRecipients(int churchId, int messageTypeEnumId, string criteria);
+        SmsConfiguration GetSmsConfiguration(int recipientGroupId);
+        List<IRecipient> GetGroupRecipients(int recipientGroupId, int messageTypeEnumId);
     }
 
     public class MessageRepository : NtccSteward.Repository.Repository, IMessageRepository
@@ -81,18 +83,45 @@ namespace NtccSteward.Repository
             return metadata;
         }
 
-        public List<IRecipient> GetRecipients(int churchId, int messageTypeEnumId, string criteria) {
-
-            var proc = messageTypeEnumId == 47 ? "GetSmsRecipients" : "GetEmailRecipients";
+        public List<IRecipient> GetGroupRecipients(int recipientGroupId, int messageTypeEnumId)
+        {
+            var proc = "GetGroupRecipients";
 
             var paramz = new List<SqlParameter>();
-            paramz.Add(new SqlParameter("churchId", churchId));
-            paramz.Add(new SqlParameter("criteria", criteria));
+            paramz.Add(new SqlParameter("recipientGroupId", recipientGroupId));
+            paramz.Add(new SqlParameter("messageTypeEnumId", messageTypeEnumId));
 
             Func<SqlDataReader, IRecipient> readFx = (reader) =>
             {
                 var item = new Recipient();
-                item.IdentityId = reader.ValueOrDefault<int>("Id");
+                item.Id = reader.ValueOrDefault<int>("Id");
+                item.IdentityId = reader.ValueOrDefault<int>("IdentityId");
+                item.ContactInfoId = reader.ValueOrDefault<int>("ContactInfoID");
+                item.Name = $"{reader.ValueOrDefault<string>("FirstName", "").Trim()} {reader.ValueOrDefault<string>("MiddleName", "").Trim()}".Trim() + $" {reader.ValueOrDefault<string>("LastName", "").Trim()}";
+                item.Address = reader.ValueOrDefault<string>("Address");
+                item.PreferredAddress = reader.ValueOrDefault<bool>("Preferred");
+                item.MessageRecipientGroupId = reader.ValueOrDefault<int>("MessageRecipientGroupId");
+                return item;
+            };
+
+            var list = this.executor.ExecuteSql<IRecipient>(proc, CommandType.StoredProcedure, paramz, readFx);
+
+            return list;
+        }
+
+        public List<IRecipient> GetRecipients(int churchId, int messageTypeEnumId, string criteria) {
+
+            var proc = "GetRecipients";
+
+            var paramz = new List<SqlParameter>();
+            paramz.Add(new SqlParameter("churchId", churchId));
+            paramz.Add(new SqlParameter("criteria", criteria));
+            paramz.Add(new SqlParameter("messageTypeEnumId", messageTypeEnumId));
+
+            Func<SqlDataReader, IRecipient> readFx = (reader) =>
+            {
+                var item = new Recipient();
+                item.IdentityId = reader.ValueOrDefault<int>("IdentityId");
                 item.ContactInfoId = reader.ValueOrDefault<int>("ContactInfoID");
                 item.Name = $"{reader.ValueOrDefault<string>("FirstName", "").Trim()} {reader.ValueOrDefault<string>("MiddleName", "").Trim()}".Trim() + $" {reader.ValueOrDefault<string>("LastName", "").Trim()}";
                 item.Address = reader.ValueOrDefault<string>("Address");
@@ -281,6 +310,27 @@ namespace NtccSteward.Repository
             this.executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, null);
         }
 
+
+        public SmsConfiguration GetSmsConfiguration(int recipientGroupId)
+        {
+            var proc = "GetSmsTokens";
+
+            var paramz = new List<SqlParameter>();
+            paramz.Add(new SqlParameter("recipientGroupId", recipientGroupId));
+
+            Func<SqlDataReader, SmsConfiguration> readFx = (reader) =>
+            {
+                var item = new SmsConfiguration();
+                item.Sid = reader.ValueOrDefault<string>("AccountSid");
+                item.Token = reader.ValueOrDefault<string>("AccountToken");
+                item.PhoneNumber = reader.ValueOrDefault<string>("PhoneNumber");
+                return item;
+            };
+
+            var list = this.executor.ExecuteSql<SmsConfiguration>(proc, CommandType.StoredProcedure, paramz, readFx);
+
+            return list.FirstOrDefault();
+        }
 
 
         public List<IMessage> GetMessages(int recipientGroupId, int maxReturnRows)

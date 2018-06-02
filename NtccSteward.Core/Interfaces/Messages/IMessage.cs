@@ -10,5 +10,6 @@ namespace NtccSteward.Core.Interfaces.Messages
         string Subject { get; set; }
         string Body { get; set; }
         int MessageDirectionEnumID { get; set; }
+        int ChurchId { get; set; }
     }
 }

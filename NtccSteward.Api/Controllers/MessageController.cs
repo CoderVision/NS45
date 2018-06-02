@@ -9,6 +9,7 @@ using System.Web.Http;
 using NtccSteward.Repository;
 using NtccSteward.Api.Framework;
 using System.Collections.Generic;
+//using Twilio.Rest.Api.V2010.Account;
 
 namespace NtccSteward.Api.Controllers
 {
@@ -105,20 +106,28 @@ namespace NtccSteward.Api.Controllers
             //https://www.twilio.com/docs/quickstart/csharp/sms/sending-via-rest
 
             var id = this.repo.SaveMessage(message);
-
             message.Id = id;
 
+            var config = this.repo.GetSmsConfiguration(message.RecipientGroupId);
 
             //// these are test credentials.  These need to be stored in the database, because it will be different for each church.
             //var accountSID = "ACbf84ef7f4c8900348b5fbbd4f7c519f2";
             //var authToken = "481094fec8f4f91654afcb7c03b5e259";
             ////sender = "+15005550006"; this is Gary's twilio phone number for sending sms.
 
-            //if (!string.IsNullOrWhiteSpace(subject))
-            //    body = $"({subject}) {body}";
+            //config.Sid = "AC743a79079b3df525e74b71ba2498ba7b"; //= "PN95fb71e231746fad3c988398976f2a42";  // sid for Gary's number:  "+12536552307
+            //config.Token = "a14f98f62a64d3e00d9a2472f7caf895";
+            //config.PhoneNumber = "+12536552307";  // Gary's number that he bought - $1 a month - for dev only, canncel ASAP
 
-            //var client = new Twilio.TwilioRestClient(accountSID, authToken);
-            //var sms = client.SendMessage("+15005550006", recipient, body);
+            var client = new Twilio.TwilioRestClient(config.Sid, config.Token);
+
+            var recipients = this.repo.GetGroupRecipients(message.RecipientGroupId, 47);
+            foreach (var recipient in recipients)
+            {
+                await Task.Run(() => {
+                    var sms = client.SendMessage(config.PhoneNumber, recipient.Address, message.Body);
+                });
+            }
 
             return Ok(message);
         }
@@ -135,6 +144,8 @@ namespace NtccSteward.Api.Controllers
             //  ?msisdn=19150000001&to=12108054321
             //  &messageId = 000000FFFB0356D1 & text = This +is+ an + inbound + message
             //  & type = text & message - timestamp = 2012 - 08 - 19 + 20 % 3A38 % 3A23
+
+
             return;
         }
 
@@ -190,7 +201,10 @@ namespace NtccSteward.Api.Controllers
         public async Task<IHttpActionResult> SaveRecipientGroups(RecipientGroup recipientGroup)
         {
             var id = this.repo.SaveRecipientGroup(recipientGroup);
+
             recipientGroup.Id = id;
+            if (string.IsNullOrEmpty(recipientGroup.Description))
+                recipientGroup.Description = recipientGroup.Name;
 
             foreach (var r in recipientGroup.Recipients)
             {
