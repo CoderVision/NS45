@@ -155,6 +155,7 @@
     <Compile Include="Models\Message\MessageMetadata.cs" />
     <Compile Include="Models\Message\Recipient.cs" />
     <Compile Include="Models\Message\RecipientGroup.cs" />
+    <Compile Include="Models\Message\SmsConfiguration.cs" />
     <Compile Include="Models\Report\ActiveGuestListReportData.cs" />
     <Compile Include="Models\Report\IReportData.cs" />
     <Compile Include="Models\Report\ReportMetadata.cs" />

@@ -58,5 +58,7 @@ namespace NtccSteward.Core.Models.Church
         public string SmsAccountSID { get; set; }
 
         public string SmsAccountToken { get; set; }
+
+        public string SmsPhoneNumber { get; set; }
     }
 }
