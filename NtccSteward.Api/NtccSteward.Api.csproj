@@ -261,6 +261,7 @@
     <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\SocketController.cs" />
     <Compile Include="Controllers\TeamController.cs" />
+    <Compile Include="Controllers\UploadsController.cs" />
     <Compile Include="Framework\ErrorHelper.cs" />
     <Compile Include="Framework\TokenIdentityHelper.cs" />
     <Compile Include="Framework\VersionConstraint.cs" />
@@ -289,7 +290,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
+    <Folder Include="App_Data\uploads\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
