@@ -1,5 +1,6 @@
 using Microsoft.Practices.Unity;
 using NtccSteward.Api.Controllers;
+using NtccSteward.Core.Services;
 using NtccSteward.Repository;
 using System.Configuration;
 using System.Web.Http;
@@ -31,6 +32,7 @@ namespace NtccSteward.Api
             container.RegisterInstance<IMemberRepository>(new MemberRepository(defaultConnectionString));
             container.RegisterInstance<IMessageRepository>(new MessageRepository(defaultConnectionString));
             container.RegisterInstance<IReportsRepository>(new ReportsRepository(defaultConnectionString));
+            container.RegisterInstance<IImportService>(new ImportService(defaultConnectionString));
 
             // register controllers
             container.RegisterType<AccountController>();
