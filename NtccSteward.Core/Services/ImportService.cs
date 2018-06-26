@@ -187,6 +187,16 @@ namespace NtccSteward.Core.Services
         private void ImportNoVisit(System.Data.OleDb.OleDbConnection cn)
         {
             // Don't Visit
+            /*
+                ID pk
+                Name
+                Address
+                City
+                Development
+                Date = Date added to list
+                Phone
+                Notes
+            */
         }
     }
 }
