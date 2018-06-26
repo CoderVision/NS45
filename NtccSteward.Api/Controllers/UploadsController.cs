@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NtccSteward.Core.Services;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,11 +10,19 @@ using System.Web.Http;
 
 namespace NtccSteward.Api.Controllers
 {
-    [Authorize]
+   // [Authorize]
     public class UploadsController : ApiController
     {
+        private readonly IImportService importService;
+
+        public UploadsController(IImportService importService)
+        {
+            this.importService = importService;
+        }
+
+        [Route("uploads/{churchId}")]
         [HttpPost]
-        public async Task<HttpResponseMessage> UploadFile()
+        public async Task<HttpResponseMessage> UploadFile(int churchId)
         {
             // https://stackoverflow.com/questions/10320232/how-to-accept-a-file-post
             HttpRequestMessage request = this.Request;
@@ -28,6 +37,14 @@ namespace NtccSteward.Api.Controllers
             // Reference this for large file uploads:
             // https://www.strathweb.com/2012/09/dealing-with-large-files-in-asp-net-web-api/
             var files = await Request.Content.ReadAsMultipartAsync(provider);
+
+            var localFilePath = provider.FileData.First().LocalFileName;
+
+            System.IO.File.Move(localFilePath, $"{localFilePath}.mdb");
+
+            localFilePath += ".mdb";
+            
+            this.importService.ImportMdbFile(churchId, localFilePath );
 
             return await Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK));
         }
