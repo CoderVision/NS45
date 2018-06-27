@@ -2,34 +2,53 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Data.OleDb;
+using NtccSteward.Core.Import;
+using NtccSteward.Core.Models.Church;
+using NtccSteward.Core.Models.Import;
+using NtccSteward.Repository.Framework;
+using NtccSteward.Core.Models.Team;
+using NtccSteward.Core.Models.Members;
 
-namespace NtccSteward.Core.Services
+namespace NtccSteward.Repository.Import
 {
     public interface IImportService
     {
-        void ImportMdbFile(int churchId, string filePath);
+        void ImportMdbFile(string filePath);
     }
 
     public class ImportService : IImportService
     {
         private readonly string connectingString;
+        private readonly IChurchRepository churchRepo = null;
+        private readonly ITeamRepository teamRepo = null;
+        private readonly IMemberRepository memberRepo = null;
+        private readonly EnumMapper mapper = new EnumMapper();
+        private readonly Factory factory = new Factory();
+        private int churchId = 0;
 
-        public ImportService(string connectingString)
+        public ImportService(string connectingString, IChurchRepository churchRepo
+            , ITeamRepository teamRepo
+            , IMemberRepository memberRepo)
         {
             this.connectingString = connectingString;
+            this.churchRepo = churchRepo;
+            this.teamRepo = teamRepo;
         }
 
-        public void ImportMdbFile(int churchId, string filePath)
+        public void ImportMdbFile(string filePath)
         {
             var cnString = $"Provider=Microsoft.Jet.OLEDB.4.0;Data Source={filePath};User Id=admin;Password =;";
 
-            using (var cn = new System.Data.OleDb.OleDbConnection(cnString))
+            using (var cn = new OleDbConnection(cnString))
             {
                 try
                 {
                     cn.Open();
 
-                    this.ImportEnums(cn);
+                    // Note:  Might be able to remove churchId!  Just add the church from the ChurchInfo table
+
+                    // this.ImportEnums(cn);  // this does not need to be done for each church, just make sure they match the Enums
 
                     this.ImportChurchInfo(cn);
 
@@ -54,28 +73,77 @@ namespace NtccSteward.Core.Services
                 return;
         }
 
-        private void ImportEnums(System.Data.OleDb.OleDbConnection cn)
-        {
-            // Reasons for Status Change (need to create temp table to map these reasons to ones in EnumLookup or make sure they are the same)
-            // ReasonID
-            // Reason for Status Change
-        }
 
-        private void ImportChurchInfo(System.Data.OleDb.OleDbConnection cn)
+        private void ImportChurchInfo(OleDbConnection cn)
         {
-            //Church Info
-            /*
-                (no pk)
-                Pastor (pastor's name)
-                Address
-                City1
-                State
-                Zip1
-                Phone
-            */
-        }
+            var sql = @"SELECT [Church Info].*
+                        FROM [Church Info];";
 
-        private void ImportConfigurations(System.Data.OleDb.OleDbConnection cn)
+            var churchInfoList = new List<ChurchInfo>();
+            using (var cmd = new OleDbCommand(sql, cn))
+            {
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (!reader.HasRows) {
+                        throw new Exception("Church Info table empty");
+                    }
+
+                    while (reader.Read())
+                    {
+                        var churchInfo = new ChurchInfo();
+                        churchInfo.PastorName = reader.ValueOrDefault<string>("Pastor", "");
+                        churchInfo.Address = reader.ValueOrDefault<string>("Address", "");
+                        churchInfo.City1 = reader.ValueOrDefault<string>("City1", "");
+                        churchInfo.State = reader.ValueOrDefault<string>("State", "");
+                        churchInfo.Zip1 = reader.ValueOrDefault<string>("Zip1", "");
+                        churchInfo.Phone = reader.ValueOrDefault<string>("Phone", "");
+                        churchInfoList.Add(churchInfo);
+                    }
+                }
+            }
+
+            var ci = churchInfoList.FirstOrDefault();
+
+            var church = factory.CreateChurch(ci);
+
+            var result = this.churchRepo.Add(church);
+
+            this.churchId = result.Entity.id;
+
+            // add member
+            var member = new NewMember();
+            member.ChurchId = this.churchId;
+            member.FirstName = ci.PastorName;
+            member.City = ci.City1;
+            member.Line1 = ci.Address;
+            member.State = ci.State;
+            member.Zip = ci.Zip1;
+
+            var memberResult = this.memberRepo.Add(member);
+
+            member.id = memberResult.Entity.id;
+
+            // create team
+            var team = new Core.Models.Team.Team();
+            team.Id = 0;
+            team.Name = church.Name + " Pastoral Team";
+            team.Desc = "Pastoral Team for " + church.Name;
+            team.ChurchId = church.id;
+            team.TeamTypeEnumId = 68;
+            team.TeamPositionEnumTypeId = 17;
+
+            var teamResult = this.teamRepo.SaveTeam(team);
+
+            // create teammate
+            var teammate = new Teammate(); 
+            teammate.ChurchId = this.churchId;
+            teammate.TeamId = teamResult.Entity.Id;
+            teammate.MemberId = member.id;
+            teammate.TeamPositionEnumId = 70; // Pastor
+            this.teamRepo.SaveTeammate(teammate);
+    }
+
+        private void ImportConfigurations(OleDbConnection cn)
         {
             // TBL_Configuration
             /*
@@ -96,7 +164,7 @@ namespace NtccSteward.Core.Services
         }
 
 
-        private void ImportPastors(System.Data.OleDb.OleDbConnection cn)
+        private void ImportPastors(OleDbConnection cn)
         {
             // Associate Pastor
             /*
@@ -118,7 +186,7 @@ namespace NtccSteward.Core.Services
         }
 
 
-        private void ImportSoulwinners(System.Data.OleDb.OleDbConnection cn)
+        private void ImportSoulwinners(OleDbConnection cn)
         {
             /*
                 Soulwinners
@@ -146,7 +214,7 @@ namespace NtccSteward.Core.Services
         }
 
 
-        private void ImportGuests(System.Data.OleDb.OleDbConnection cn)
+        private void ImportGuests(OleDbConnection cn)
         {
             // Guests
             /*
@@ -184,7 +252,7 @@ namespace NtccSteward.Core.Services
             */
         }
 
-        private void ImportNoVisit(System.Data.OleDb.OleDbConnection cn)
+        private void ImportNoVisit(OleDbConnection cn)
         {
             // Don't Visit
             /*
