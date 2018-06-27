@@ -9,6 +9,7 @@ using NtccSteward.Core.Models.Import;
 using NtccSteward.Repository.Framework;
 using NtccSteward.Core.Models.Team;
 using NtccSteward.Core.Models.Members;
+using NtccSteward.Core.Models.Message;
 
 namespace NtccSteward.Repository.Import
 {
@@ -23,13 +24,15 @@ namespace NtccSteward.Repository.Import
         private readonly IChurchRepository churchRepo = null;
         private readonly ITeamRepository teamRepo = null;
         private readonly IMemberRepository memberRepo = null;
+        private readonly IMessageRepository messageRepo = null;
         private readonly EnumMapper mapper = new EnumMapper();
         private readonly Factory factory = new Factory();
         private int churchId = 0;
 
         public ImportService(string connectingString, IChurchRepository churchRepo
             , ITeamRepository teamRepo
-            , IMemberRepository memberRepo)
+            , IMemberRepository memberRepo
+            , IMessageRepository messageRepo)
         {
             this.connectingString = connectingString;
             this.churchRepo = churchRepo;
@@ -70,7 +73,7 @@ namespace NtccSteward.Repository.Import
                 }
             }
 
-                return;
+            return;
         }
 
 
@@ -84,7 +87,8 @@ namespace NtccSteward.Repository.Import
             {
                 using (var reader = cmd.ExecuteReader())
                 {
-                    if (!reader.HasRows) {
+                    if (!reader.HasRows)
+                    {
                         throw new Exception("Church Info table empty");
                     }
 
@@ -135,32 +139,63 @@ namespace NtccSteward.Repository.Import
             var teamResult = this.teamRepo.SaveTeam(team);
 
             // create teammate
-            var teammate = new Teammate(); 
+            var teammate = new Teammate();
             teammate.ChurchId = this.churchId;
             teammate.TeamId = teamResult.Entity.Id;
             teammate.MemberId = member.id;
             teammate.TeamPositionEnumId = 70; // Pastor
             this.teamRepo.SaveTeammate(teammate);
-    }
+        }
 
         private void ImportConfigurations(OleDbConnection cn)
         {
-            // TBL_Configuration
-            /*
-                ID
-                Config_Name (name of config)
-                ROOT_PATH (path for saving reports)
-                ACTIVE (is this configuration active?)
-                SEND_USING
-                SMTP_SERVER
-                SMTP_SERVER_PORT
-                SMTP_AUTHENTICATE
-                SMTP_USESS1
-                SMTP_CONNECTIONTIMEOUT
-                SENDUSERNAME
-                SENDPASSWORD
-                SENDMESSAGES
-            */
+            var sql = @"SELECT TBL_CONFIGURATION.*
+                        FROM TBL_CONFIGURATION;";
+
+            var mailConfigs = new List<MailConfiguration>();
+            using (var cmd = new OleDbCommand(sql, cn))
+            {
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var config = new MailConfiguration();
+                        config.Name = reader.ValueOrDefault<string>("Config_Name", "");
+                        config.Server = reader.ValueOrDefault<string>("SMTP_SERVER", "");
+                        config.Port = reader.ValueOrDefault<int>("SMTP_SERVER_PORT", 25); // 25 is a default port for email
+                        config.Active = reader.ValueOrDefault<bool>("ACTIVE", false);
+                        config.UserName = reader.ValueOrDefault<string>("SENDUSERNAME", "");
+                        config.Password = reader.ValueOrDefault<string>("SENDPASSWORD", "");
+                        mailConfigs.Add(config);
+                    }
+                }
+            }
+
+            var existingConfigProfiles = this.messageRepo.GetEmailConfigurationProfiles();
+
+            foreach (var config in mailConfigs)
+            {
+                if (!existingConfigProfiles.Any(p => p.Name == config.Name))
+                {
+                    var configProfile = new EmailConfigurationProfile { Name = config.Name, Server = config.Server, Port = config.Port };
+                    var savedConfig = this.messageRepo.SaveEmailConfigurationProfiles(configProfile);
+                    config.EmailConfigurationProfileId = savedConfig.Id;
+                }
+            }
+
+            // get the updated list after adding the church's
+            existingConfigProfiles = this.messageRepo.GetEmailConfigurationProfiles();
+
+            var defaultConfig = mailConfigs.FirstOrDefault(ec => ec.Active == true);
+            if (defaultConfig != null) {
+                var configProfile = existingConfigProfiles.FirstOrDefault(c => c.Id == defaultConfig.EmailConfigurationProfileId);
+                if (configProfile != null)
+                {
+                    // save this config for this church
+                    var emailConfig = new EmailConfiguration { ChurchId = this.churchId, EmailConfigProfileId = configProfile.Id, UserName = defaultConfig.UserName, Password = defaultConfig.Password };
+                    this.messageRepo.SaveEmailConfiguration(emailConfig);
+                }
+            }
         }
 
 

@@ -143,6 +143,7 @@
     <Compile Include="Models\Common\Parameters\ItemByID.cs" />
     <Compile Include="Interfaces\Members\IMember.cs" />
     <Compile Include="Models\Import\ChurchInfo.cs" />
+    <Compile Include="Models\Import\MailConfiguration.cs" />
     <Compile Include="Models\Members\Activity.cs" />
     <Compile Include="Models\Members\Member.cs" />
     <Compile Include="Models\Members\MemberMerge.cs" />
@@ -152,6 +153,8 @@
     <Compile Include="Models\Members\NewMember.cs" />
     <Compile Include="Models\Members\Sponsor.cs" />
     <Compile Include="Models\Members\Team.cs" />
+    <Compile Include="Models\Message\EmailConfiguration.cs" />
+    <Compile Include="Models\Message\EmailConfigurationProfile.cs" />
     <Compile Include="Models\Message\ICorrespondence.cs" />
     <Compile Include="Models\Message\Message.cs" />
     <Compile Include="Models\Message\MessageMetadata.cs" />

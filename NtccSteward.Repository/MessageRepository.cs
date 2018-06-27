@@ -27,6 +27,9 @@ namespace NtccSteward.Repository
         List<IRecipient> GetRecipients(int churchId, int messageTypeEnumId, string criteria);
         SmsConfiguration GetSmsConfiguration(int recipientGroupId);
         List<IRecipient> GetGroupRecipients(int recipientGroupId, int messageTypeEnumId);
+        List<EmailConfigurationProfile> GetEmailConfigurationProfiles();
+        EmailConfigurationProfile SaveEmailConfigurationProfiles(EmailConfigurationProfile emailConfiguration);
+        void SaveEmailConfiguration(EmailConfiguration emailConfiguration);
     }
 
     public class MessageRepository : NtccSteward.Repository.Repository, IMessageRepository
@@ -310,6 +313,61 @@ namespace NtccSteward.Repository
             this.executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, null);
         }
 
+
+        public void SaveEmailConfiguration(EmailConfiguration emailConfiguration)
+        {
+            var proc = "SaveEmailConfigurations";
+
+            var paramz = new List<SqlParameter>();
+            paramz.Add(new SqlParameter("churchId", emailConfiguration.ChurchId));
+            paramz.Add(new SqlParameter("emailConfigProfileId", emailConfiguration.EmailConfigProfileId));
+            paramz.Add(new SqlParameter("userName", emailConfiguration.UserName));
+            paramz.Add(new SqlParameter("password", emailConfiguration.Password));
+
+            this.executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, null);
+        }
+
+
+        public EmailConfigurationProfile SaveEmailConfigurationProfiles(EmailConfigurationProfile emailConfiguration)
+        {
+            var proc = "SaveEmailConfigurationProfiles";
+
+            var paramz = new List<SqlParameter>();
+            paramz.Add(new SqlParameter("Name", emailConfiguration.Name));
+            paramz.Add(new SqlParameter("Server", emailConfiguration.Server));
+            paramz.Add(new SqlParameter("Port", emailConfiguration.Port));
+
+            Func<SqlDataReader, int> readFx = (reader) =>
+            {
+                return reader.ValueOrDefault<int>("Id");
+            };
+
+            var list = this.executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, readFx);
+
+            emailConfiguration.Id = list.FirstOrDefault();
+
+            return emailConfiguration;
+        }
+
+        public List<EmailConfigurationProfile> GetEmailConfigurationProfiles()
+        {
+            var proc = "GetEmailConfigurationProfiles";
+
+            var paramz = new List<SqlParameter>();
+
+            Func<SqlDataReader, EmailConfigurationProfile> readFx = (reader) =>
+            {
+                var item = new EmailConfigurationProfile();
+                item.Name = reader.ValueOrDefault<string>("Name");
+                item.Server = reader.ValueOrDefault<string>("Server");
+                item.Port = reader.ValueOrDefault<int>("Port");
+                return item;
+            };
+
+            var list = this.executor.ExecuteSql<EmailConfigurationProfile>(proc, CommandType.StoredProcedure, paramz, readFx);
+
+            return list;
+        }
 
         public SmsConfiguration GetSmsConfiguration(int recipientGroupId)
         {
