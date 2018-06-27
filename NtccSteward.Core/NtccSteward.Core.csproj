@@ -94,6 +94,7 @@
     <Compile Include="Framework\MessageDirection.cs" />
     <Compile Include="Framework\MessageType.cs" />
     <Compile Include="Framework\TeamTypes.cs" />
+    <Compile Include="Import\EnumMapper.cs" />
     <Compile Include="Interfaces\Account\IAccountPasswordChange.cs" />
     <Compile Include="Interfaces\Account\IAccountRequest.cs" />
     <Compile Include="Interfaces\Account\ILogin.cs" />
@@ -141,6 +142,7 @@
     <Compile Include="Models\Common\Parameters\GetMessagesParameter.cs" />
     <Compile Include="Models\Common\Parameters\ItemByID.cs" />
     <Compile Include="Interfaces\Members\IMember.cs" />
+    <Compile Include="Models\Import\ChurchInfo.cs" />
     <Compile Include="Models\Members\Activity.cs" />
     <Compile Include="Models\Members\Member.cs" />
     <Compile Include="Models\Members\MemberMerge.cs" />
@@ -168,9 +170,10 @@
     <Compile Include="Models\Team\Teammate.cs" />
     <Compile Include="Models\Team\TeamMetadata.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\ImportService.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

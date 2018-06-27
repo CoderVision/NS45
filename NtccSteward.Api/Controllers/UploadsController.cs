@@ -1,4 +1,5 @@
 ﻿using NtccSteward.Core.Services;
+using NtccSteward.Repository.Import;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,10 +21,12 @@ namespace NtccSteward.Api.Controllers
             this.importService = importService;
         }
 
-        [Route("uploads/{churchId}")]
+        [Route("uploads")]
         [HttpPost]
-        public async Task<HttpResponseMessage> UploadFile(int churchId)
+        public async Task<HttpResponseMessage> UploadFile()
         {
+            // Note:  Might be able to remove churchId!  Just add the church from the ChurchInfo table
+
             // https://stackoverflow.com/questions/10320232/how-to-accept-a-file-post
             HttpRequestMessage request = this.Request;
             if (!request.Content.IsMimeMultipartContent())
@@ -44,7 +47,7 @@ namespace NtccSteward.Api.Controllers
 
             localFilePath += ".mdb";
             
-            this.importService.ImportMdbFile(churchId, localFilePath );
+            this.importService.ImportMdbFile(localFilePath );
 
             return await Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK));
         }
