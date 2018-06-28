@@ -142,8 +142,11 @@
     <Compile Include="Models\Common\Parameters\GetMessagesParameter.cs" />
     <Compile Include="Models\Common\Parameters\ItemByID.cs" />
     <Compile Include="Interfaces\Members\IMember.cs" />
+    <Compile Include="Models\Import\AssociatePastor.cs" />
     <Compile Include="Models\Import\ChurchInfo.cs" />
+    <Compile Include="Models\Import\LayPastor.cs" />
     <Compile Include="Models\Import\MailConfiguration.cs" />
+    <Compile Include="Models\Import\Soulwinner.cs" />
     <Compile Include="Models\Members\Activity.cs" />
     <Compile Include="Models\Members\Member.cs" />
     <Compile Include="Models\Members\MemberMerge.cs" />
