@@ -63,6 +63,7 @@ namespace NtccSteward.Repository
             paramz.Add(new SqlParameter("ChurchId", member.ChurchId));
             paramz.Add(new SqlParameter("createdByUserId", member.CreatedByUserId));
             paramz.Add(new SqlParameter("firstName", member.FirstName.ToSqlString()));
+            paramz.Add(new SqlParameter("middleName", member.MiddleName.ToSqlString()));
             paramz.Add(new SqlParameter("lastName", member.LastName.ToSqlString()));
             paramz.Add(new SqlParameter("dateCame", member.DateCame));
             paramz.Add(new SqlParameter("isGroup", member.IsGroup));

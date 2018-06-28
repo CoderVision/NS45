@@ -21,7 +21,7 @@ namespace NtccSteward.Repository.Import
             return church;
         }
 
-        private string ParseNumber(string phoneNumber)
+        public string ParseNumber(string phoneNumber)
         {
             if (string.IsNullOrWhiteSpace(phoneNumber))
                 return "";

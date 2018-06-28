@@ -17,6 +17,8 @@ namespace NtccSteward.Core.Models.Members
 
         public string FirstName { get; set; }
 
+        public string MiddleName { get; set; }
+
         public string LastName { get; set; }
 
         public string Line1 { get; set; }
