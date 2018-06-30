@@ -7,5 +7,6 @@
         int MemberId { get; set; }
         int TeamId { get; set; }
         int TeamPositionEnumId { get; set; }
+        int TeamStatusTypeEnumId { get; set; }
     }
 }
