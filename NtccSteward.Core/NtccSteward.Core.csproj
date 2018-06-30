@@ -147,6 +147,7 @@
     <Compile Include="Models\Import\Guest.cs" />
     <Compile Include="Models\Import\LayPastor.cs" />
     <Compile Include="Models\Import\MailConfiguration.cs" />
+    <Compile Include="Models\Import\ReasonMap.cs" />
     <Compile Include="Models\Import\Soulwinner.cs" />
     <Compile Include="Models\Members\Activity.cs" />
     <Compile Include="Models\Members\Member.cs" />
