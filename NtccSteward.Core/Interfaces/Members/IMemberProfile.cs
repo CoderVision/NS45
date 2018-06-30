@@ -33,10 +33,10 @@ namespace NtccSteward.Core.Interfaces.Members
         int StatusChangeTypeId { get; set; }
         string StatusChangeTypeDesc { get; set; }
         string Suffix { get; set; }
-
         bool Veteran { get; set; }
-
         int MemberTypeEnumId { get; set; }
         bool IsHere { get; set; }
+        int LanguageTypeEnumId { get; set; }
+        bool HasBeenBaptized { get; set; }
     }
 }

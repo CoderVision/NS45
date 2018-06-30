@@ -86,5 +86,9 @@ namespace NtccSteward.Core.Models.Members
         public string Suffix { get; set; }
 
         public bool IsHere { get; set; }
+
+        public int LanguageTypeEnumId { get; set; }
+
+        public bool HasBeenBaptized { get; set; }
     }
 }

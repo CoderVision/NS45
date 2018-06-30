@@ -543,30 +543,28 @@ namespace NtccSteward.Repository.Import
                 memberProfile.StatusChangeTypeId = reasonMap.Reasons.FirstOrDefault(r => r.ReasonId == guest.ReasonForChange).EnumId;
                 memberProfile.StatusChangeTypeDesc = reasonMap.Reasons.FirstOrDefault(r => r.ReasonId == guest.ReasonForChange).Desc;
                 memberProfile.Comments = guest.Note;
+                memberProfile.LanguageTypeEnumId = guest.LetterTranslation == 2 ? 108 : 107; // 108 = Spanish, 107 = English 
+                memberProfile.HasBeenBaptized = guest.HasBeenBaptized;
 
                 var soulwinner = this.soulwinners.FirstOrDefault(s => s.SoulwinnerId == guest.SponsorId);
                 if (soulwinner != null)
                     memberProfile.SponsorId = soulwinner.IdentityId;
 
                 // To-Do:  figure out what to do with
-                // guest.IsLayPastor // don't do anything with this, because there is no way to associate them with a team
                 // guest.NeedsPastorFollowUp
                 // guest.AssocId // maybe Membership table
+
+                // Don't do anything with
+                // guest.IsLayPastor // don't do anything with this, because there is no way to associate them with a team
                 // guest.PendingBaptism  // this is pointless, because if they haven't been baptized, then they are pending
                 // guest.IsNew     // not needed because their date came will tell us they are new
-
-                // guest.DateCameToChurch    // guest book 
-                // guest.MultipleGuestsFirstVisit  // guest book
-                // guest.Prayed  // guest book
-
-                // guest.HasBeenBaptized // Person table
-                // guest.LetterTranslation // Person table - came LanguageEnumId
-
-
 
                 var result = this.memberRepo.SaveProfile(memberProfile);
 
                 guest.IdentityId = result.Entity.MemberId;
+
+                var sponsorId = soulwinner?.IdentityId ?? 0;
+                this.memberRepo.AddToGuestbook(this.church.id, guest.IdentityId, sponsorId, guest.DateCameToChurch, guest.MultipleGuestsFirstVisit, guest.Prayed);
 
                 if (guest.DateCameToChurch.HasValue)
                     this.CreateActivity(guest.IdentityId, 13, guest.DateCameToChurch, null); // Came to Church 
@@ -594,7 +592,6 @@ namespace NtccSteward.Repository.Import
                         this.CreateActivity(guest.IdentityId, 106, guest.DateChanged, note); // Status Changed
                     }
                 }
-
 
                 // Save the addresses after the profile is saved, because they don't get saved with the profile
                 this.commonRepo.MergeAddress(new Core.Models.Common.Address.Address
