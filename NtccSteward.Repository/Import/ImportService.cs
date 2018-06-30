@@ -190,7 +190,8 @@ namespace NtccSteward.Repository.Import
             existingConfigProfiles = this.messageRepo.GetEmailConfigurationProfiles();
 
             var defaultConfig = mailConfigs.FirstOrDefault(ec => ec.Active == true);
-            if (defaultConfig != null) {
+            if (defaultConfig != null)
+            {
                 var configProfile = existingConfigProfiles.FirstOrDefault(c => c.Id == defaultConfig.EmailConfigurationProfileId);
                 if (configProfile != null)
                 {
@@ -413,15 +414,19 @@ namespace NtccSteward.Repository.Import
                 soulwinner.IdentityId = result.Entity.MemberId;
 
                 // Save the addresses after the profile is saved, because they don't get saved with the profile
-                this.commonRepo.MergeEmail(new NtccSteward.Core.Models.Common.Address.Email {
+                this.commonRepo.MergeEmail(new NtccSteward.Core.Models.Common.Address.Email
+                {
                     IdentityId = soulwinner.IdentityId,
                     EmailAddress = soulwinner.Email,
-                    ContactInfoLocationType = 8 });
+                    ContactInfoLocationType = 8
+                });
 
-                this.commonRepo.MergePhone(new Core.Models.Common.Address.Phone {
+                this.commonRepo.MergePhone(new Core.Models.Common.Address.Phone
+                {
                     IdentityId = soulwinner.IdentityId,
                     PhoneNumber = this.factory.ParseNumber(soulwinner.PhoneNumber),
-                    ContactInfoLocationType = 8 });
+                    ContactInfoLocationType = 8
+                });
 
 
                 // Save Teammate
@@ -435,7 +440,7 @@ namespace NtccSteward.Repository.Import
 
                     var teamStatusTypeEnumId = soulwinner.IsDoorToDoor ? 103 : soulwinner.IsCasualStatus ? 104 : 105; // 103 Door to Door, 104 Casual, 105 Inactive
 
-                    this.SaveTeammate(soulwinner.IdentityId, layPastor.IdentityId, positionEnumId, teamStatusTypeEnumId);  
+                    this.SaveTeammate(soulwinner.IdentityId, layPastor.IdentityId, positionEnumId, teamStatusTypeEnumId);
                 }
             }
         }
@@ -443,6 +448,7 @@ namespace NtccSteward.Repository.Import
 
         private void ImportGuests(OleDbConnection cn)
         {
+            var reasonMap = new ReasonMap();
             // Guests
             /*
                 GUESTID (pk)
@@ -534,6 +540,8 @@ namespace NtccSteward.Repository.Import
                 memberProfile.LastName = guest.LastName;
                 memberProfile.MemberStatusEnumType = guest.CurrentStatus == "A" ? 49 : guest.CurrentStatus == "F" ? 50 : 51; // 49 = Active, 50 = Faithful, 51 = Inactive
                 memberProfile.MemberTypeEnumId = 62; // 62 = member
+                memberProfile.StatusChangeTypeId = reasonMap.Reasons.FirstOrDefault(r => r.ReasonId == guest.ReasonForChange).EnumId;
+                memberProfile.StatusChangeTypeDesc = reasonMap.Reasons.FirstOrDefault(r => r.ReasonId == guest.ReasonForChange).Desc;
                 memberProfile.Comments = guest.Note;
 
                 var soulwinner = this.soulwinners.FirstOrDefault(s => s.SoulwinnerId == guest.SponsorId);
@@ -543,29 +551,54 @@ namespace NtccSteward.Repository.Import
                 // To-Do:  figure out what to do with
                 // guest.IsLayPastor // don't do anything with this, because there is no way to associate them with a team
                 // guest.NeedsPastorFollowUp
-                // guest.AssocId
-                // guest.LetterMailed
-                // guest.IsNew
-                // guest.DateCameToChurch
-                // guest.MultipleGuestsFirstVisit
-                // guest.Prayed
-                // guest.DateChanged
-                // guest.ReasonForChange
-                // guest.NewStatus
-                // guest.OldStatus
-                // guest.Changed
-                // guest.PendingBaptism
-                // guest.HasBeenBaptized
-                // guest.LetterTranslation
-                // guest.LetterMailed
-               
+                // guest.AssocId // maybe Membership table
+                // guest.PendingBaptism  // this is pointless, because if they haven't been baptized, then they are pending
+                // guest.IsNew     // not needed because their date came will tell us they are new
+
+                // guest.DateCameToChurch    // guest book 
+                // guest.MultipleGuestsFirstVisit  // guest book
+                // guest.Prayed  // guest book
+
+                // guest.HasBeenBaptized // Person table
+                // guest.LetterTranslation // Person table - came LanguageEnumId
+
+
 
                 var result = this.memberRepo.SaveProfile(memberProfile);
 
                 guest.IdentityId = result.Entity.MemberId;
 
+                if (guest.DateCameToChurch.HasValue)
+                    this.CreateActivity(guest.IdentityId, 13, guest.DateCameToChurch, null); // Came to Church 
+
+                if (guest.LetterMailed == true)
+                    this.CreateActivity(guest.IdentityId, 15, null, null); // Mailed Letter
+
+                if (!string.IsNullOrWhiteSpace(guest.NewStatus))
+                {
+                    var newStatus = guest.NewStatus == "A" ? "Active" : guest.NewStatus == "F" ? "Faithful" : "Inactive"; // 49 = Active, 50 = Faithful, 51 = Inactive
+                    var oldStatus = string.IsNullOrWhiteSpace(guest.OldStatus) ? "" : guest.OldStatus == "A" ? "Active" : guest.OldStatus == "F" ? "Faithful" : "Inactive"; // 49 = Active, 50 = Faithful, 51 = Inactive
+                    var reason = reasonMap.Reasons.FirstOrDefault(r => r.ReasonId == guest.ReasonForChange)?.Desc;
+                    var note = $"Status changed from {oldStatus} to {newStatus}, because {reason}";
+                    this.CreateActivity(guest.IdentityId, 106, guest.DateChanged, note); // Status Changed
+                }
+
+                // the Current Status is king, so if the NewStatus doesn't match the Current Status, then add an activity
+                if (!string.IsNullOrWhiteSpace(guest.NewStatus) && !string.IsNullOrWhiteSpace(guest.CurrentStatus))
+                {
+                    if (guest.NewStatus.ToLower() != guest.CurrentStatus.ToLower())
+                    {
+                        var newStatus = guest.CurrentStatus == "A" ? "Active" : guest.CurrentStatus == "F" ? "Faithful" : "Inactive"; // 49 = Active, 50 = Faithful, 51 = Inactive
+                        var oldStatus = string.IsNullOrWhiteSpace(guest.NewStatus) ? "" : guest.NewStatus == "A" ? "Active" : guest.NewStatus == "F" ? "Faithful" : "Inactive"; // 49 = Active, 50 = Faithful, 51 = Inactive
+                        var note = $"Status changed from {oldStatus} to {newStatus}";
+                        this.CreateActivity(guest.IdentityId, 106, guest.DateChanged, note); // Status Changed
+                    }
+                }
+
+
                 // Save the addresses after the profile is saved, because they don't get saved with the profile
-                this.commonRepo.MergeAddress(new Core.Models.Common.Address.Address {
+                this.commonRepo.MergeAddress(new Core.Models.Common.Address.Address
+                {
                     IdentityId = guest.IdentityId,
                     Line1 = guest.AddressLine1,
                     City = guest.City,
@@ -596,6 +629,23 @@ namespace NtccSteward.Repository.Import
                 });
             }
         }
+
+        private void CreateActivity(int memberId, int activityTypeEnumId, DateTime? activityDate, string note)
+        {
+            var activity = new Activity();
+            activity.ChurchId = this.church.id;
+            activity.TargetId = memberId;
+            activity.ActivityTypeEnumID = activityTypeEnumId;
+
+            if (activityDate.HasValue)
+                activity.ActivityDate = activityDate.Value;
+
+            if (!string.IsNullOrWhiteSpace(note))
+                activity.Note = note;
+
+            this.memberRepo.SaveActivity(activity);
+        }
+
 
         private void ImportNoVisit(OleDbConnection cn)
         {
