@@ -479,6 +479,122 @@ namespace NtccSteward.Repository.Import
             */
 
             // SWID links to SPNSR
+
+            var sql = @"SELECT Guests.GUESTID, Guests.FLUP, Guests.ASSOCID, Guests.LTRMLD, Guests.NEW, Guests.CRNTST, Guests.DTATTND, Guests.SPNSR, Guests.MULTI, Guests.FSNM, Guests.LSNM, Guests.PSTFU, Guests.ADDR, Guests.CITY, Guests.ST, Guests.ZIP, Guests.PHNE, Guests.PHNE2, Guests.[PRYD?], Guests.NOTE, Guests.DTCHNG, Guests.RSCHID, Guests.OLDST, Guests.NEWST, Guests.CHGD, Guests.PNDBAP, Guests.BAPT, Guests.LYP, Guests.EMail, Guests.LetterTranslation, Guests.PluralTense
+                        FROM Guests;";
+
+            var guests = new List<Guest>();
+            using (var cmd = new OleDbCommand(sql, cn))
+            {
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var member = new Guest();
+                        member.GuestId = reader.ValueOrDefault<int>("GUESTID", 0);
+                        member.FollowUp = reader.ValueOrDefault<bool>("FLUP", false);
+                        member.AssocId = reader.ValueOrDefault<int>("ASSOCID", 0);
+                        member.LetterMailed = reader.ValueOrDefault<bool>("LTRMLD", false);
+                        member.IsNew = reader.ValueOrDefault<bool>("NEW", false);
+                        member.CurrentStatus = reader.ValueOrDefault<string>("CRNTST", "");
+                        member.DateCameToChurch = reader.ValueOrDefault<DateTime?>("DTATTND", null);
+                        member.SponsorId = reader.ValueOrDefault<int>("SPNSR", 0); // Soulwinner Id
+                        member.MultipleGuestsFirstVisit = reader.ValueOrDefault<bool>("MULTI", false);
+                        member.FirstName = reader.ValueOrDefault<string>("FSNM", "");
+                        member.LastName = reader.ValueOrDefault<string>("LSNM", "");
+                        member.NeedsPastorFollowUp = reader.ValueOrDefault<bool>("PSTFU", false);
+                        member.AddressLine1 = reader.ValueOrDefault<string>("ADDR", "");
+                        member.City = reader.ValueOrDefault<string>("CITY", "");
+                        member.State = reader.ValueOrDefault<string>("ST", "");
+                        member.Zip = reader.ValueOrDefault<string>("ZIP", "");
+                        member.Phone = reader.ValueOrDefault<string>("PHNE", "");
+                        member.Phone2 = reader.ValueOrDefault<string>("PHNE2", "");
+                        member.Prayed = reader.ValueOrDefault<bool>("PRYD?", false);
+                        member.Note = reader.ValueOrDefault<string>("NOTE", "");
+                        member.DateChanged = reader.ValueOrDefault<DateTime?>("DTCHNG", null);
+                        member.ReasonForChange = reader.ValueOrDefault<int>("RSCHID", 0);
+                        member.OldStatus = reader.ValueOrDefault<string>("OLDST", "");
+                        member.NewStatus = reader.ValueOrDefault<string>("NEWST", "");
+                        member.Changed = reader.ValueOrDefault<bool>("CHGD", false);
+                        member.PendingBaptism = reader.ValueOrDefault<bool>("PNDBAP", false);
+                        member.HasBeenBaptized = reader.ValueOrDefault<bool>("BAPT", false);
+                        member.IsLayPastor = reader.ValueOrDefault<bool>("LYP", false);
+                        member.Email = reader.ValueOrDefault<string>("EMAIL", "");
+                        member.LetterTranslation = reader.ValueOrDefault<int>("LetterTranslation", 1);
+                        guests.Add(member);
+                    }
+                }
+            }
+
+            foreach (var guest in guests)
+            {
+                // create member profile
+                var memberProfile = new MemberProfile();
+                memberProfile.FirstName = guest.FirstName;
+                memberProfile.LastName = guest.LastName;
+                memberProfile.MemberStatusEnumType = guest.CurrentStatus == "A" ? 49 : guest.CurrentStatus == "F" ? 50 : 51; // 49 = Active, 50 = Faithful, 51 = Inactive
+                memberProfile.MemberTypeEnumId = 62; // 62 = member
+                memberProfile.Comments = guest.Note;
+
+                var soulwinner = this.soulwinners.FirstOrDefault(s => s.SoulwinnerId == guest.SponsorId);
+                if (soulwinner != null)
+                    memberProfile.SponsorId = soulwinner.IdentityId;
+
+                // To-Do:  figure out what to do with
+                // guest.IsLayPastor // don't do anything with this, because there is no way to associate them with a team
+                // guest.NeedsPastorFollowUp
+                // guest.AssocId
+                // guest.LetterMailed
+                // guest.IsNew
+                // guest.DateCameToChurch
+                // guest.MultipleGuestsFirstVisit
+                // guest.Prayed
+                // guest.DateChanged
+                // guest.ReasonForChange
+                // guest.NewStatus
+                // guest.OldStatus
+                // guest.Changed
+                // guest.PendingBaptism
+                // guest.HasBeenBaptized
+                // guest.LetterTranslation
+                // guest.LetterMailed
+               
+
+                var result = this.memberRepo.SaveProfile(memberProfile);
+
+                guest.IdentityId = result.Entity.MemberId;
+
+                // Save the addresses after the profile is saved, because they don't get saved with the profile
+                this.commonRepo.MergeAddress(new Core.Models.Common.Address.Address {
+                    IdentityId = guest.IdentityId,
+                    Line1 = guest.AddressLine1,
+                    City = guest.City,
+                    State = guest.State,
+                    Zip = this.factory.ParseNumber(guest.Zip),
+                    ContactInfoLocationType = 9
+                });
+
+                this.commonRepo.MergeEmail(new NtccSteward.Core.Models.Common.Address.Email
+                {
+                    IdentityId = guest.IdentityId,
+                    EmailAddress = guest.Email,
+                    ContactInfoLocationType = 8
+                });
+
+                this.commonRepo.MergePhone(new Core.Models.Common.Address.Phone
+                {
+                    IdentityId = guest.IdentityId,
+                    PhoneNumber = this.factory.ParseNumber(guest.Phone),
+                    ContactInfoLocationType = 8
+                });
+
+                this.commonRepo.MergePhone(new Core.Models.Common.Address.Phone
+                {
+                    IdentityId = guest.IdentityId,
+                    PhoneNumber = this.factory.ParseNumber(guest.Phone2),
+                    ContactInfoLocationType = 8
+                });
+            }
         }
 
         private void ImportNoVisit(OleDbConnection cn)
