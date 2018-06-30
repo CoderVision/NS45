@@ -228,6 +228,7 @@ namespace NtccSteward.Repository
                             teammate.TeamId = (int)reader["TeamId"];
                             teammate.MemberId = (int)reader["EntityId"];
                             teammate.TeamPositionEnumId = (int)reader["TeamPositionEnumId"];
+                            teammate.TeamStatusTypeEnumId = reader.ValueOrDefault("TeamStatusTypeEnumId", 0);
                             teammate.TeamPositionEnumDesc = reader.ValueOrDefault<string>("Position", string.Empty);
                             teammate.Name = reader.ValueOrDefault<string>("TeammateName", string.Empty);
                             team.Teammates.Add(teammate);
@@ -286,6 +287,7 @@ namespace NtccSteward.Repository
                         teammate.TeamId = (int)reader["TeamId"];
                         teammate.MemberId = (int)reader["EntityId"];
                         teammate.TeamPositionEnumId = (int)reader["TeamPositionEnumId"];
+                        teammate.TeamStatusTypeEnumId = reader.ValueOrDefault("TeamStatusTypeEnumId", 0);
                         teammate.TeamPositionEnumDesc = reader.ValueOrDefault<string>("TeamPositionEnumDesc", string.Empty);
                         teammate.Name = reader.ValueOrDefault<string>("Name", string.Empty);
                         teammate.ChurchId = (int)reader["ChurchId"];
@@ -338,6 +340,7 @@ namespace NtccSteward.Repository
             paramz.Add(new SqlParameter("entityId", teammate.MemberId));
             paramz.Add(new SqlParameter("entityTypeEnumId", 56)); // 56:  entity is a person.  could be a team (78), or something else
             paramz.Add(new SqlParameter("teamPositionEnumId", teammate.TeamPositionEnumId));
+            paramz.Add(new SqlParameter("teamStatusTypeEnumId", teammate.TeamStatusTypeEnumId));
 
             Func<SqlDataReader, int> readFx = (reader) =>
             {

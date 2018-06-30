@@ -82,5 +82,9 @@ namespace NtccSteward.Core.Models.Members
         public int MemberStatusEnumType { get; set; }
 
         public int MemberTypeEnumId { get; set; }
+
+        public string Suffix { get; set; }
+
+        public bool IsHere { get; set; }
     }
 }

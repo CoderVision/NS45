@@ -340,13 +340,14 @@ namespace NtccSteward.Repository.Import
         }
 
 
-        private void SaveTeammate(int memberId, int teamid, int positionEnumId)
+        private void SaveTeammate(int memberId, int teamid, int positionEnumId, int teamStatusTypeEnumId = 0)
         {
             var teammate = new Teammate();
             teammate.ChurchId = this.church.id;
             teammate.TeamId = teamid;
             teammate.MemberId = memberId;
-            teammate.TeamPositionEnumId = positionEnumId; 
+            teammate.TeamPositionEnumId = positionEnumId;
+            teammate.TeamStatusTypeEnumId = teamStatusTypeEnumId;
             this.teamRepo.SaveTeammate(teammate);
         }
 
@@ -400,18 +401,10 @@ namespace NtccSteward.Repository.Import
                 memberProfile.MemberStatusEnumType = soulwinner.IsActive ? 49 : 51; // 49 = Active, 51 = Inactive
                 memberProfile.MemberTypeEnumId = soulwinner.IsMinister ? 64 : 62; // 64 = minister, 62 = member
                 memberProfile.Married = soulwinner.MarriedStatus == "M";  // (M)arried, (O)ther or (S)ingle   They are either married or they are not
+                memberProfile.IsHere = soulwinner.IsHere;
 
                 if (!string.IsNullOrWhiteSpace(soulwinner.SpouseName))
                     comments = $"Spouse:  {soulwinner.SpouseName}, " + (soulwinner.IsSpousePartner ? "Is soulwinning partner" : "Is not soulwinning partner");
-
-                var whatTodoWithThese = soulwinner.IsLayPastor;
-                // soulwinner.IsLayPastor; // figure out what to do with - maybe nothing, because there is a LayPastor table
-                // To Add
-                // soulwinner.Generation
-                // soulwinner.IsHere
-                // soulwinner.IsDoorToDoor
-                // soulwinner.IsCasualStatus
-
 
                 memberProfile.Comments = comments;  // last before saving
 
@@ -438,7 +431,11 @@ namespace NtccSteward.Repository.Import
                     var team = new Core.Models.Members.Team { TeamId = layPastor.IdentityId, MemberId = soulwinner.IdentityId };
                     memberProfile.TeamList.Add(team);
 
-                    this.SaveTeammate(soulwinner.IdentityId, layPastor.IdentityId, 75);  // 75 = soulwinner
+                    var positionEnumId = soulwinner.IsLayPastor ? 74 : 75;  // 75 = soulwinner, 74 = TeamLeader
+
+                    var teamStatusTypeEnumId = soulwinner.IsDoorToDoor ? 103 : soulwinner.IsCasualStatus ? 104 : 105; // 103 Door to Door, 104 Casual, 105 Inactive
+
+                    this.SaveTeammate(soulwinner.IdentityId, layPastor.IdentityId, positionEnumId, teamStatusTypeEnumId);  
                 }
             }
         }

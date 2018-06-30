@@ -203,6 +203,7 @@ namespace NtccSteward.Repository
                         member.Gender = reader.ValueOrDefault("Gender", string.Empty);
                         member.Married = reader.ValueOrDefault<bool>("Married", false);
                         member.Veteran = reader.ValueOrDefault<bool>("Veteran", false);
+                        member.IsHere = reader.ValueOrDefault<bool>("IsHere", true);
                         member.BirthDate = reader.ValueOrDefault<DateTime?>("DateOfBirth", null);
                         member.DateSaved = reader.ValueOrDefault<DateTime?>("DateSaved", null);
                         member.DateBaptizedHolyGhost = reader.ValueOrDefault<DateTime?>("DateBaptizedHolyGhost", null);
@@ -379,6 +380,8 @@ namespace NtccSteward.Repository
             paramz.Add(new SqlParameter("firstName", memberProfile.FirstName.ToSqlString()));
             paramz.Add(new SqlParameter("middleName", memberProfile.MiddleName.ToSqlString()));
             paramz.Add(new SqlParameter("lastName", memberProfile.LastName.ToSqlString()));
+            paramz.Add(new SqlParameter("suffix", memberProfile.Suffix.ToSqlString()));
+            paramz.Add(new SqlParameter("isHere", memberProfile.IsHere));
             paramz.Add(new SqlParameter("preferredName", memberProfile.PreferredName.ToSqlString()));
             paramz.Add(new SqlParameter("birthDate", memberProfile.BirthDate.ToSqlDateTime()));
             paramz.Add(new SqlParameter("gender", memberProfile.Gender.ToSqlString()));
