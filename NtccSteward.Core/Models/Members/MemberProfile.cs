@@ -90,5 +90,7 @@ namespace NtccSteward.Core.Models.Members
         public int LanguageTypeEnumId { get; set; }
 
         public bool HasBeenBaptized { get; set; }
+
+        public bool NeedsPastoralVisit { get; set; }
     }
 }
