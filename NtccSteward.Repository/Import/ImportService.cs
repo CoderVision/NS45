@@ -545,13 +545,13 @@ namespace NtccSteward.Repository.Import
                 memberProfile.Comments = guest.Note;
                 memberProfile.LanguageTypeEnumId = guest.LetterTranslation == 2 ? 108 : 107; // 108 = Spanish, 107 = English 
                 memberProfile.HasBeenBaptized = guest.HasBeenBaptized;
+                memberProfile.NeedsPastoralVisit = guest.NeedsPastorFollowUp;
 
                 var soulwinner = this.soulwinners.FirstOrDefault(s => s.SoulwinnerId == guest.SponsorId);
                 if (soulwinner != null)
                     memberProfile.SponsorId = soulwinner.IdentityId;
 
                 // To-Do:  figure out what to do with
-                // guest.NeedsPastorFollowUp
                 // guest.AssocId // maybe Membership table
 
                 // Don't do anything with
