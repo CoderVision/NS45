@@ -358,6 +358,7 @@ namespace NtccSteward.Repository
             Func<SqlDataReader, EmailConfigurationProfile> readFx = (reader) =>
             {
                 var item = new EmailConfigurationProfile();
+                item.Id = reader.ValueOrDefault<int>("Id");
                 item.Name = reader.ValueOrDefault<string>("Name");
                 item.Server = reader.ValueOrDefault<string>("Server");
                 item.Port = reader.ValueOrDefault<int>("Port");

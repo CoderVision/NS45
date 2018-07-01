@@ -7,6 +7,11 @@ namespace NtccSteward.Core.Models.Members
 {
     public class NewMember
     {
+        public NewMember()
+        {
+            this.SponsorList = new List<Sponsor>();
+        }
+
         public int id { get; set; }
 
         public DateTimeOffset DateCame { get; set; }
