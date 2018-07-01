@@ -92,5 +92,7 @@ namespace NtccSteward.Core.Models.Members
         public bool HasBeenBaptized { get; set; }
 
         public bool NeedsPastoralVisit { get; set; }
+
+        public int AssociatePastorId { get; set; }
     }
 }

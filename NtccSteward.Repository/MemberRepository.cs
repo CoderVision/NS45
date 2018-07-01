@@ -251,6 +251,7 @@ namespace NtccSteward.Repository
                         member.HasBeenBaptized = reader.ValueOrDefault<bool>("HasBeenBaptized", false);
                         member.LanguageTypeEnumId = reader.ValueOrDefault<int>("LanguageTypeEnumId", 0);
                         member.NeedsPastoralVisit = reader.ValueOrDefault<bool>("NeedsPastoralVisit", false);
+                        member.AssociatePastorId = reader.ValueOrDefault<int>("AssociatePastorId", 0);
 
                         // address info
                         reader.NextResult();
@@ -431,6 +432,8 @@ namespace NtccSteward.Repository
             paramz.Add(new SqlParameter("hasBeenBaptized", memberProfile.HasBeenBaptized));
             paramz.Add(new SqlParameter("languageTypeEnumId", memberProfile.LanguageTypeEnumId));
             paramz.Add(new SqlParameter("needsPastoralVisit", memberProfile.NeedsPastoralVisit));
+            paramz.Add(new SqlParameter("associatePastorId", memberProfile.AssociatePastorId));
+
 
             Func<SqlDataReader, int> readFx = (reader) =>
             {
