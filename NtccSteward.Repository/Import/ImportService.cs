@@ -425,6 +425,7 @@ namespace NtccSteward.Repository.Import
                 memberProfile.MemberTypeEnumId = soulwinner.IsMinister ? 64 : 62; // 64 = minister, 62 = member
                 memberProfile.Married = soulwinner.MarriedStatus == "M";  // (M)arried, (O)ther or (S)ingle   They are either married or they are not
                 memberProfile.IsHere = soulwinner.IsHere;
+                memberProfile.ChurchId = this.church.id;
 
                 if (!string.IsNullOrWhiteSpace(soulwinner.SpouseName))
                     comments = $"Spouse:  {soulwinner.SpouseName}, " + (soulwinner.IsSpousePartner ? "Is soulwinning partner" : "Is not soulwinning partner");
@@ -569,6 +570,7 @@ namespace NtccSteward.Repository.Import
                 memberProfile.LanguageTypeEnumId = guest.LetterTranslation == 2 ? 108 : 107; // 108 = Spanish, 107 = English 
                 memberProfile.HasBeenBaptized = guest.HasBeenBaptized;
                 memberProfile.NeedsPastoralVisit = guest.NeedsPastorFollowUp;
+                memberProfile.ChurchId = this.church.id;
 
                 var associatePastor = this.associateList.FirstOrDefault(ap => ap.AssocId == guest.AssocId);
                 memberProfile.AssociatePastorId = associatePastor?.IdentityId ?? 0;
