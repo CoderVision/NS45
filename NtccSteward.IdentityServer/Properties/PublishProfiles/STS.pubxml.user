@@ -56,28 +56,28 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/03/2017 16:27:30</publishTime>
     </File>
     <File Include="bin/NtccSteward.Core.dll">
-      <publishTime>06/06/2018 20:51:08</publishTime>
+      <publishTime>06/30/2018 22:52:58</publishTime>
     </File>
     <File Include="bin/NtccSteward.Core.dll.config">
       <publishTime>06/04/2018 21:36:40</publishTime>
     </File>
     <File Include="bin/NtccSteward.Core.pdb">
-      <publishTime>06/06/2018 20:51:08</publishTime>
+      <publishTime>06/30/2018 22:52:58</publishTime>
     </File>
     <File Include="bin/NtccSteward.IdentityServer.dll">
-      <publishTime>06/06/2018 20:51:13</publishTime>
+      <publishTime>06/30/2018 22:53:02</publishTime>
     </File>
     <File Include="bin/NtccSteward.IdentityServer.pdb">
-      <publishTime>06/06/2018 20:51:13</publishTime>
+      <publishTime>06/30/2018 22:53:02</publishTime>
     </File>
     <File Include="bin/NtccSteward.Repository.dll">
-      <publishTime>06/06/2018 20:51:09</publishTime>
+      <publishTime>06/30/2018 22:52:58</publishTime>
     </File>
     <File Include="bin/NtccSteward.Repository.dll.config">
       <publishTime>06/04/2018 21:39:34</publishTime>
     </File>
     <File Include="bin/NtccSteward.Repository.pdb">
-      <publishTime>06/06/2018 20:51:09</publishTime>
+      <publishTime>06/30/2018 22:52:58</publishTime>
     </File>
     <File Include="bin/Owin.dll">
       <publishTime>12/03/2017 16:27:30</publishTime>
@@ -290,7 +290,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/23/2018 19:20:38</publishTime>
     </File>
     <File Include="Content/app/consent.html">
-      <publishTime>06/06/2018 21:03:40</publishTime>
+      <publishTime>06/25/2018 17:36:14</publishTime>
     </File>
     <File Include="Content/app/error.html">
       <publishTime>06/06/2018 20:39:51</publishTime>
@@ -299,16 +299,16 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/06/2018 20:40:30</publishTime>
     </File>
     <File Include="Content/app/login.html">
-      <publishTime>06/06/2018 20:36:53</publishTime>
+      <publishTime>06/25/2018 17:36:14</publishTime>
     </File>
     <File Include="Content/app/logout.html">
       <publishTime>06/06/2018 20:38:12</publishTime>
     </File>
     <File Include="Content/app/permissions.html">
-      <publishTime>06/06/2018 20:44:17</publishTime>
+      <publishTime>06/25/2018 17:36:14</publishTime>
     </File>
     <File Include="Content/app/toolbarHeader.html">
-      <publishTime>01/23/2018 19:20:38</publishTime>
+      <publishTime>06/25/2018 17:36:14</publishTime>
     </File>
     <File Include="Content/bootstrap-theme.css">
       <publishTime>01/23/2018 19:20:38</publishTime>
@@ -533,7 +533,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/23/2018 19:20:38</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>06/05/2018 19:46:53</publishTime>
+      <publishTime>06/30/2018 22:53:24</publishTime>
     </File>
   </ItemGroup>
 </Project>
