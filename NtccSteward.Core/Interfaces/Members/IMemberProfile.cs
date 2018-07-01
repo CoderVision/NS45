@@ -39,5 +39,6 @@ namespace NtccSteward.Core.Interfaces.Members
         int LanguageTypeEnumId { get; set; }
         bool HasBeenBaptized { get; set; }
         bool NeedsPastoralVisit { get; set; }
+        int AssociatePastorId { get; set; }
     }
 }

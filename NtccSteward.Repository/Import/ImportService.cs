@@ -449,42 +449,6 @@ namespace NtccSteward.Repository.Import
         private void ImportGuests(OleDbConnection cn)
         {
             var reasonMap = new ReasonMap();
-            // Guests
-            /*
-                GUESTID (pk)
-                FLUP = Follow up
-                ASSOCID = Associate Pastor Id
-                LTRMLD = Letter mailed?  (has the 1st time visitor letter been mailed)
-                NEW = First time visitor?
-                CRNTST = Status (1 = F[aithful], 2 = A[ctive], 3 = I[nactive])
-                DTATTND = Date attended
-                SPNSR = Sponsor (Sponsor Id)
-                MULTI = Multiple guests in one visit?
-                FSNM = First Name
-                LSNM = Last Name
-                PSTFU = Pastor Followup (is a pastor visit needed?)
-                ADDR = Address
-                City
-                St
-                Zip
-                PHNE = Phone (Home phone)
-                PHNE2 = Phone #2 (other phone)
-                PRYD? = Prayed?
-                NOTE
-                DTCHNG = Date Changed
-                RSCHID = Reason for Change (ReasonId / Enum)
-                OLDST
-                NEWST
-                CHGD = Changed?  (possibly indicates something has changed)
-                PNDBAP = Pending Baptism
-                BAPT = Has already been baptized
-                LYP = are they a lay pastor?
-                EMail
-                LetterTranslation = (1 = English, 2 = Spanish)
-                PluralTense (bool)
-            */
-
-            // SWID links to SPNSR
 
             var sql = @"SELECT Guests.GUESTID, Guests.FLUP, Guests.ASSOCID, Guests.LTRMLD, Guests.NEW, Guests.CRNTST, Guests.DTATTND, Guests.SPNSR, Guests.MULTI, Guests.FSNM, Guests.LSNM, Guests.PSTFU, Guests.ADDR, Guests.CITY, Guests.ST, Guests.ZIP, Guests.PHNE, Guests.PHNE2, Guests.[PRYD?], Guests.NOTE, Guests.DTCHNG, Guests.RSCHID, Guests.OLDST, Guests.NEWST, Guests.CHGD, Guests.PNDBAP, Guests.BAPT, Guests.LYP, Guests.EMail, Guests.LetterTranslation, Guests.PluralTense
                         FROM Guests;";
@@ -547,14 +511,14 @@ namespace NtccSteward.Repository.Import
                 memberProfile.HasBeenBaptized = guest.HasBeenBaptized;
                 memberProfile.NeedsPastoralVisit = guest.NeedsPastorFollowUp;
 
+                var associatePastor = this.associateList.FirstOrDefault(ap => ap.AssocId == guest.AssocId);
+                memberProfile.AssociatePastorId = associatePastor?.IdentityId ?? 0;
+
                 var soulwinner = this.soulwinners.FirstOrDefault(s => s.SoulwinnerId == guest.SponsorId);
                 if (soulwinner != null)
                     memberProfile.SponsorId = soulwinner.IdentityId;
 
-                // To-Do:  figure out what to do with
-                // guest.AssocId // maybe Membership table
-
-                // Don't do anything with
+                // Don't do anything with these
                 // guest.IsLayPastor // don't do anything with this, because there is no way to associate them with a team
                 // guest.PendingBaptism  // this is pointless, because if they haven't been baptized, then they are pending
                 // guest.IsNew     // not needed because their date came will tell us they are new
