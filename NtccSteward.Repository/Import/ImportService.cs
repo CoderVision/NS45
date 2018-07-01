@@ -16,7 +16,7 @@ namespace NtccSteward.Repository.Import
 {
     public interface IImportService
     {
-        void ImportMdbFile(string filePath);
+        void ImportMdbFile(string filePath, int userId);
     }
 
     public class ImportService : IImportService
@@ -27,6 +27,7 @@ namespace NtccSteward.Repository.Import
         private readonly IMemberRepository memberRepo = null;
         private readonly IMessageRepository messageRepo = null;
         private readonly ICommonRepository commonRepo = null;
+        private readonly ILogger logger = null;
         private readonly EnumMapper mapper = new EnumMapper();
         private readonly Factory factory = new Factory();
         private Church church = null;
@@ -34,21 +35,40 @@ namespace NtccSteward.Repository.Import
         private List<AssociatePastor> associateList = new List<AssociatePastor>();
         private List<LayPastor> layPastors = new List<LayPastor>();
         private List<Soulwinner> soulwinners = new List<Soulwinner>();
+        private int userId = 0;
 
         public ImportService(string connectingString, IChurchRepository churchRepo
             , ITeamRepository teamRepo
             , IMemberRepository memberRepo
             , IMessageRepository messageRepo
-            , ICommonRepository commonRepo)
+            , ICommonRepository commonRepo
+            , ILogger logger)
         {
             this.connectingString = connectingString;
             this.churchRepo = churchRepo;
             this.teamRepo = teamRepo;
             this.commonRepo = commonRepo;
+            this.memberRepo = memberRepo;
+            this.messageRepo = messageRepo;
+            this.logger = logger;
         }
 
-        public void ImportMdbFile(string filePath)
+        private void Initialize()
         {
+            this.church = null;
+            this.pastoralTeam = null;
+            this.associateList = new List<AssociatePastor>();
+            this.layPastors = new List<LayPastor>();
+            this.soulwinners = new List<Soulwinner>();
+            this.userId = 0;
+        }
+
+        public void ImportMdbFile(string filePath, int userId)
+        {
+            Initialize();
+
+            this.userId = userId;
+
             var cnString = $"Provider=Microsoft.Jet.OLEDB.4.0;Data Source={filePath};User Id=admin;Password =;";
 
             using (var cn = new OleDbConnection(cnString))
@@ -56,8 +76,6 @@ namespace NtccSteward.Repository.Import
                 try
                 {
                     cn.Open();
-
-                    // Note:  Might be able to remove churchId!  Just add the church from the ChurchInfo table
 
                     this.ImportChurchInfo(cn);
 
@@ -75,7 +93,9 @@ namespace NtccSteward.Repository.Import
                 }
                 catch (Exception ex)
                 {
-                    var x = ex;
+                    this.logger.LogInfo(Core.Framework.LogLevel.Critical, ex.Message, ex.StackTrace, this.userId);
+
+                    throw;
                 }
             }
 
@@ -141,6 +161,7 @@ namespace NtccSteward.Repository.Import
             team.ChurchId = church.id;
             team.TeamTypeEnumId = 68;
             team.TeamPositionEnumTypeId = 17;
+            team.Comment = "";
 
             var teamResult = this.teamRepo.SaveTeam(team);
             this.pastoralTeam = teamResult.Entity;
@@ -165,7 +186,7 @@ namespace NtccSteward.Repository.Import
                         var config = new MailConfiguration();
                         config.Name = reader.ValueOrDefault<string>("Config_Name", "");
                         config.Server = reader.ValueOrDefault<string>("SMTP_SERVER", "");
-                        config.Port = reader.ValueOrDefault<int>("SMTP_SERVER_PORT", 25); // 25 is a default port for email
+                        config.Port = Convert.ToInt32(reader.ValueOrDefault<string>("SMTP_SERVER_PORT", "25")); // 25 is a default port for email
                         config.Active = reader.ValueOrDefault<bool>("ACTIVE", false);
                         config.UserName = reader.ValueOrDefault<string>("SENDUSERNAME", "");
                         config.Password = reader.ValueOrDefault<string>("SENDPASSWORD", "");
@@ -224,7 +245,7 @@ namespace NtccSteward.Repository.Import
                 Associate (person's name)
                 Current (currently an associate? - active/inactive) 
             */
-            var sql = @"SELECT [Associate Pastor].ASSOCID, [Associate Pastor].[Associate's Initials] as Initials, [Associate Pastor].Associate, [Associate Pastor].Current
+            var sql = @"SELECT *
                         FROM [Associate Pastor];";
 
             using (var cmd = new OleDbCommand(sql, cn))
@@ -235,7 +256,7 @@ namespace NtccSteward.Repository.Import
                     {
                         var config = new AssociatePastor();
                         config.Name = reader.ValueOrDefault<string>("Associate", "");
-                        config.Initials = reader.ValueOrDefault<string>("Initials", "");
+                        config.Initials = reader.ValueOrDefault<string>("Associate's Initials", "");
                         config.AssocId = reader.ValueOrDefault<int>("ASSOCID", 0);
                         config.Current = reader.ValueOrDefault<bool>("Current", false);
                         this.associateList.Add(config);
@@ -282,7 +303,7 @@ namespace NtccSteward.Repository.Import
                 Phone
             */
 
-            var sql = @"SELECT [Lay Pastors].LayPastorID, [Lay Pastors].[Lay Pastor] as LayPastor, [Lay Pastors].[LP Initials] as Initials, [Lay Pastors].Current, [Lay Pastors].Email, [Lay Pastors].Phone
+            var sql = @"SELECT *
                         FROM [Lay Pastors];";
 
             using (var cmd = new OleDbCommand(sql, cn))
@@ -293,8 +314,8 @@ namespace NtccSteward.Repository.Import
                     {
                         var pastor = new LayPastor();
                         pastor.LayPastorID = reader.ValueOrDefault<int>("LayPastorID", 0);
-                        pastor.LayPastorName = reader.ValueOrDefault<string>("LayPastor", "");
-                        pastor.Initials = reader.ValueOrDefault<string>("Initials", "");
+                        pastor.LayPastorName = reader.ValueOrDefault<string>("Lay Pastor", "");
+                        pastor.Initials = reader.ValueOrDefault<string>("LP Initials", "");
                         pastor.Current = reader.ValueOrDefault<bool>("Current", false);
                         pastor.Email = reader.ValueOrDefault<string>("Email", "");
                         pastor.Phone = reader.ValueOrDefault<string>("Phone", "");
@@ -313,6 +334,7 @@ namespace NtccSteward.Repository.Import
                 team.ChurchId = church.id;
                 team.TeamTypeEnumId = 69; // Evangelistic
                 team.TeamPositionEnumTypeId = 16; // TeamType
+                team.Comment = "";
 
                 var teamResult = this.teamRepo.SaveTeam(team);
                 pastor.IdentityId = teamResult.Entity.Id; // this will be a TeamId
@@ -414,20 +436,9 @@ namespace NtccSteward.Repository.Import
                 soulwinner.IdentityId = result.Entity.MemberId;
 
                 // Save the addresses after the profile is saved, because they don't get saved with the profile
-                this.commonRepo.MergeEmail(new NtccSteward.Core.Models.Common.Address.Email
-                {
-                    IdentityId = soulwinner.IdentityId,
-                    EmailAddress = soulwinner.Email,
-                    ContactInfoLocationType = 8
-                });
+                this.SaveEmail(soulwinner.IdentityId, soulwinner.Email);
 
-                this.commonRepo.MergePhone(new Core.Models.Common.Address.Phone
-                {
-                    IdentityId = soulwinner.IdentityId,
-                    PhoneNumber = this.factory.ParseNumber(soulwinner.PhoneNumber),
-                    ContactInfoLocationType = 8
-                });
-
+                this.SavePhone(soulwinner.IdentityId, soulwinner.PhoneNumber);
 
                 // Save Teammate
                 var layPastor = this.layPastors.FirstOrDefault(lp => lp.LayPastorID == soulwinner.LayPastorId);
@@ -445,6 +456,54 @@ namespace NtccSteward.Repository.Import
             }
         }
 
+        private void SavePhone(int identityId, string phone)
+        {
+            var ph = this.factory.ParseNumber(phone);
+
+            if (string.IsNullOrWhiteSpace(ph))
+                return;
+
+            this.commonRepo.MergePhone(new Core.Models.Common.Address.Phone
+            {
+                IdentityId = identityId,
+                PhoneNumber = ph,
+                ContactInfoLocationType = 8
+            });
+        }
+
+        private void SaveEmail(int identityId, string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return;
+
+            this.commonRepo.MergeEmail(new NtccSteward.Core.Models.Common.Address.Email
+            {
+                IdentityId = identityId,
+                EmailAddress = email,
+                ContactInfoLocationType = 8
+            });
+        }
+
+        private void SaveAddress(int identityId, string addressLine1, string city, string state, string zip)
+        {
+            if (string.IsNullOrWhiteSpace(addressLine1)
+                && string.IsNullOrWhiteSpace(city)
+                && string.IsNullOrWhiteSpace(state)
+                && string.IsNullOrWhiteSpace(zip))
+            {
+                return;
+            }
+
+            this.commonRepo.MergeAddress(new Core.Models.Common.Address.Address
+            {
+                IdentityId = identityId,
+                Line1 = addressLine1,
+                City = city,
+                State = state,
+                Zip = this.factory.ParseNumber(zip),
+                ContactInfoLocationType = 9
+            });
+        }
 
         private void ImportGuests(OleDbConnection cn)
         {
@@ -504,8 +563,8 @@ namespace NtccSteward.Repository.Import
                 memberProfile.LastName = guest.LastName;
                 memberProfile.MemberStatusEnumType = guest.CurrentStatus == "A" ? 49 : guest.CurrentStatus == "F" ? 50 : 51; // 49 = Active, 50 = Faithful, 51 = Inactive
                 memberProfile.MemberTypeEnumId = 62; // 62 = member
-                memberProfile.StatusChangeTypeId = reasonMap.Reasons.FirstOrDefault(r => r.ReasonId == guest.ReasonForChange).EnumId;
-                memberProfile.StatusChangeTypeDesc = reasonMap.Reasons.FirstOrDefault(r => r.ReasonId == guest.ReasonForChange).Desc;
+                memberProfile.StatusChangeTypeId = reasonMap.Reasons.FirstOrDefault(r => r.ReasonId == guest.ReasonForChange)?.EnumId ?? 0;
+                memberProfile.StatusChangeTypeDesc = reasonMap.Reasons.FirstOrDefault(r => r.ReasonId == guest.ReasonForChange)?.Desc;
                 memberProfile.Comments = guest.Note;
                 memberProfile.LanguageTypeEnumId = guest.LetterTranslation == 2 ? 108 : 107; // 108 = Spanish, 107 = English 
                 memberProfile.HasBeenBaptized = guest.HasBeenBaptized;
@@ -558,36 +617,13 @@ namespace NtccSteward.Repository.Import
                 }
 
                 // Save the addresses after the profile is saved, because they don't get saved with the profile
-                this.commonRepo.MergeAddress(new Core.Models.Common.Address.Address
-                {
-                    IdentityId = guest.IdentityId,
-                    Line1 = guest.AddressLine1,
-                    City = guest.City,
-                    State = guest.State,
-                    Zip = this.factory.ParseNumber(guest.Zip),
-                    ContactInfoLocationType = 9
-                });
+                this.SaveAddress(guest.IdentityId, guest.AddressLine1, guest.City, guest.State, guest.Zip);
 
-                this.commonRepo.MergeEmail(new NtccSteward.Core.Models.Common.Address.Email
-                {
-                    IdentityId = guest.IdentityId,
-                    EmailAddress = guest.Email,
-                    ContactInfoLocationType = 8
-                });
+                this.SaveEmail(guest.IdentityId, guest.Email);
 
-                this.commonRepo.MergePhone(new Core.Models.Common.Address.Phone
-                {
-                    IdentityId = guest.IdentityId,
-                    PhoneNumber = this.factory.ParseNumber(guest.Phone),
-                    ContactInfoLocationType = 8
-                });
+                this.SavePhone(guest.IdentityId, guest.Phone);
 
-                this.commonRepo.MergePhone(new Core.Models.Common.Address.Phone
-                {
-                    IdentityId = guest.IdentityId,
-                    PhoneNumber = this.factory.ParseNumber(guest.Phone2),
-                    ContactInfoLocationType = 8
-                });
+                this.SavePhone(guest.IdentityId, guest.Phone2);
             }
         }
 
@@ -633,6 +669,7 @@ namespace NtccSteward.Repository.Import
                 }
             }
 
+
             foreach (var dnv in dnvList)
             {
                 var member = new MemberProfile();
@@ -649,29 +686,15 @@ namespace NtccSteward.Repository.Import
                 if (!string.IsNullOrWhiteSpace(dnv.Notes))
                     member.Comments += dnv.Notes;
 
-                member.Comments = member.Comments.Trim();
+                member.Comments = member.Comments?.Trim();
 
                 var result = this.memberRepo.SaveProfile(member);
 
                 dnv.IdentityId = result.Entity.MemberId;
 
-                this.commonRepo.MergeAddress(new Core.Models.Common.Address.Address
-                {
-                    IdentityId = dnv.IdentityId,
-                    Line1 = dnv.Address,
-                    City = dnv.City,
-                    ContactInfoLocationType = 9
-                });
+                this.SaveAddress(dnv.IdentityId, dnv.Address, dnv.City, null, null);
 
-                if (!string.IsNullOrWhiteSpace(dnv.Phone))
-                {
-                    this.commonRepo.MergePhone(new Core.Models.Common.Address.Phone
-                    {
-                        IdentityId = dnv.IdentityId,
-                        PhoneNumber = this.factory.ParseNumber(dnv.Phone),
-                        ContactInfoLocationType = 8
-                    });
-                }
+                this.SavePhone(dnv.IdentityId, dnv.Phone);
             }
         }
     }

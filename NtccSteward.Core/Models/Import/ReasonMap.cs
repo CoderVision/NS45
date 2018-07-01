@@ -14,6 +14,8 @@ namespace NtccSteward.Core.Models.Import
     {
         public ReasonMap()
         {
+            this.Reasons = new List<Reason>();
+
             AddReason(1, "Not Interested", 19);
             AddReason(2, "Attends another church", 20);
             AddReason(3, "Moved / Sponsor finding new address", 21);

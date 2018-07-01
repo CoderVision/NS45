@@ -1,4 +1,5 @@
-﻿using NtccSteward.Repository.Import;
+﻿using NtccSteward.Api.Framework;
+using NtccSteward.Repository.Import;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,7 +11,7 @@ using System.Web.Http;
 
 namespace NtccSteward.Api.Controllers
 {
-   // [Authorize]
+    [Authorize]
     public class UploadsController : ApiController
     {
         private readonly IImportService importService;
@@ -24,8 +25,6 @@ namespace NtccSteward.Api.Controllers
         [HttpPost]
         public async Task<HttpResponseMessage> UploadFile()
         {
-            // Note:  Might be able to remove churchId!  Just add the church from the ChurchInfo table
-
             // https://stackoverflow.com/questions/10320232/how-to-accept-a-file-post
             HttpRequestMessage request = this.Request;
             if (!request.Content.IsMimeMultipartContent())
@@ -45,10 +44,19 @@ namespace NtccSteward.Api.Controllers
             System.IO.File.Move(localFilePath, $"{localFilePath}.mdb");
 
             localFilePath += ".mdb";
-            
-            this.importService.ImportMdbFile(localFilePath );
 
-            return await Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK));
+            var userId = TokenIdentityHelper.GetOwnerIdFromToken();
+
+            try
+            {
+                await Task.Run(() => { this.importService.ImportMdbFile(localFilePath, userId); }); 
+
+                return await Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK));
+            }
+            catch (Exception ex)
+            {
+                return await Task.FromResult(new HttpResponseMessage(HttpStatusCode.InternalServerError));
+            }
         }
     }
 }

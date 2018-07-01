@@ -37,7 +37,9 @@ namespace NtccSteward.Api
                 container.Resolve<IChurchRepository>(), 
                 container.Resolve<ITeamRepository>(), 
                 container.Resolve<IMemberRepository>(),
-                container.Resolve<IMessageRepository>()));
+                container.Resolve<IMessageRepository>(),
+                container.Resolve<ICommonRepository>(),
+                container.Resolve<ILogger>()));
 
             // register controllers
             container.RegisterType<AccountController>();
