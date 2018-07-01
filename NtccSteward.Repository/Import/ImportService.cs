@@ -610,17 +610,69 @@ namespace NtccSteward.Repository.Import
 
         private void ImportNoVisit(OleDbConnection cn)
         {
-            // Don't Visit
-            /*
-                ID pk
-                Name
-                Address
-                City
-                Development
-                Date = Date added to list
-                Phone
-                Notes
-            */
+            var sql = @"SELECT [Don't Visit].ID, [Don't Visit].Name, [Don't Visit].Address, [Don't Visit].City, [Don't Visit].Development, [Don't Visit].Date, [Don't Visit].Phone, [Don't Visit].Notes
+                        FROM [Don't Visit];";
+
+            var dnvList = new List<DoNotVisit>();
+            using (var cmd = new OleDbCommand(sql, cn))
+            {
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var doNotVisit = new DoNotVisit();
+                        doNotVisit.Name = reader.ValueOrDefault<string>("Name", "");
+                        doNotVisit.Address = reader.ValueOrDefault<string>("Address", "");
+                        doNotVisit.City = reader.ValueOrDefault<string>("City", "");
+                        doNotVisit.Development = reader.ValueOrDefault<string>("Development", "");
+                        doNotVisit.Date = reader.ValueOrDefault<string>("Date", "");
+                        doNotVisit.Phone = reader.ValueOrDefault<string>("Phone", "");
+                        doNotVisit.Notes = reader.ValueOrDefault<string>("Notes", "");
+                        dnvList.Add(doNotVisit);
+                    }
+                }
+            }
+
+            foreach (var dnv in dnvList)
+            {
+                var member = new MemberProfile();
+                member.StatusId = 109; // Do Not Visit
+                member.ChurchId = this.church.id;
+                member.FirstName = dnv.Name;
+
+                if (!string.IsNullOrWhiteSpace(dnv.Date))
+                    member.Comments = $"Date Entered: " + dnv.Date + ".  ";
+
+                if (!string.IsNullOrWhiteSpace(dnv.Development))
+                    member.Comments += $"Development:  {dnv.Development}.  ";
+
+                if (!string.IsNullOrWhiteSpace(dnv.Notes))
+                    member.Comments += dnv.Notes;
+
+                member.Comments = member.Comments.Trim();
+
+                var result = this.memberRepo.SaveProfile(member);
+
+                dnv.IdentityId = result.Entity.MemberId;
+
+                this.commonRepo.MergeAddress(new Core.Models.Common.Address.Address
+                {
+                    IdentityId = dnv.IdentityId,
+                    Line1 = dnv.Address,
+                    City = dnv.City,
+                    ContactInfoLocationType = 9
+                });
+
+                if (!string.IsNullOrWhiteSpace(dnv.Phone))
+                {
+                    this.commonRepo.MergePhone(new Core.Models.Common.Address.Phone
+                    {
+                        IdentityId = dnv.IdentityId,
+                        PhoneNumber = this.factory.ParseNumber(dnv.Phone),
+                        ContactInfoLocationType = 8
+                    });
+                }
+            }
         }
     }
 }
