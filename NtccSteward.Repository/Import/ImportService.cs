@@ -421,7 +421,8 @@ namespace NtccSteward.Repository.Import
                 memberProfile.MiddleName = soulwinner.MiddleName;
                 memberProfile.LastName = soulwinner.LastName;
                 memberProfile.Gender = soulwinner.Gender;
-                memberProfile.MemberStatusEnumType = soulwinner.IsActive ? 49 : 51; // 49 = Active, 51 = Inactive
+                memberProfile.StatusId = soulwinner.IsActive ? 49 : 51; // 49 = Active, 51 = Inactive
+                //memberProfile.MemberStatusEnumType = soulwinner.IsActive ? 49 : 51; // 49 = Active, 51 = Inactive
                 memberProfile.MemberTypeEnumId = soulwinner.IsMinister ? 64 : 62; // 64 = minister, 62 = member
                 memberProfile.Married = soulwinner.MarriedStatus == "M";  // (M)arried, (O)ther or (S)ingle   They are either married or they are not
                 memberProfile.IsHere = soulwinner.IsHere;
@@ -562,7 +563,8 @@ namespace NtccSteward.Repository.Import
                 var memberProfile = new MemberProfile();
                 memberProfile.FirstName = guest.FirstName;
                 memberProfile.LastName = guest.LastName;
-                memberProfile.MemberStatusEnumType = guest.CurrentStatus == "A" ? 49 : guest.CurrentStatus == "F" ? 50 : 51; // 49 = Active, 50 = Faithful, 51 = Inactive
+                memberProfile.StatusId = guest.CurrentStatus == "A" ? 49 : guest.CurrentStatus == "F" ? 50 : 51; // 49 = Active, 50 = Faithful, 51 = Inactive
+                //memberProfile.MemberStatusEnumType = guest.CurrentStatus == "A" ? 49 : guest.CurrentStatus == "F" ? 50 : 51; // 49 = Active, 50 = Faithful, 51 = Inactive
                 memberProfile.MemberTypeEnumId = 62; // 62 = member
                 memberProfile.StatusChangeTypeId = reasonMap.Reasons.FirstOrDefault(r => r.ReasonId == guest.ReasonForChange)?.EnumId ?? 0;
                 memberProfile.StatusChangeTypeDesc = reasonMap.Reasons.FirstOrDefault(r => r.ReasonId == guest.ReasonForChange)?.Desc;
@@ -571,7 +573,7 @@ namespace NtccSteward.Repository.Import
                 memberProfile.HasBeenBaptized = guest.HasBeenBaptized;
                 memberProfile.NeedsPastoralVisit = guest.NeedsPastorFollowUp;
                 memberProfile.ChurchId = this.church.id;
-
+                
                 var associatePastor = this.associateList.FirstOrDefault(ap => ap.AssocId == guest.AssocId);
                 memberProfile.AssociatePastorId = associatePastor?.IdentityId ?? 0;
 

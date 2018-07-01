@@ -434,7 +434,6 @@ namespace NtccSteward.Repository
             paramz.Add(new SqlParameter("needsPastoralVisit", memberProfile.NeedsPastoralVisit));
             paramz.Add(new SqlParameter("associatePastorId", memberProfile.AssociatePastorId));
 
-
             Func<SqlDataReader, int> readFx = (reader) =>
             {
                 return (int)reader["MemberId"];
