@@ -269,6 +269,7 @@ namespace NtccSteward.Repository.Import
                         config.Initials = reader.ValueOrDefault<string>("Associate's Initials", "");
                         config.AssocId = reader.ValueOrDefault<int>("ASSOCID", 0);
                         config.Current = reader.ValueOrDefault<bool>("Current", false);
+
                         this.associateList.Add(config);
                     }
                 }
@@ -277,20 +278,19 @@ namespace NtccSteward.Repository.Import
             // add member
             foreach (var assoc in this.associateList)
             {
-                var member = new NewMember();
+                var member = new MemberProfile();
                 member.ChurchId = this.church.id;
                 member.FirstName = assoc.Name;
-                member.City = this.church.City;
-                member.Line1 = this.church.Line1;
-                member.State = this.church.State;
-                member.Zip = this.church.Zip;
+                member.StatusId = assoc.Current ? 49 : 51; // 49 = Active, 51 = Inactive
 
-                var memberResult = this.memberRepo.Add(member);
+                var memberResult = this.memberRepo.SaveProfile(member);
 
                 if (memberResult.Status == RepositoryActionStatus.Error)
                     LogError(memberResult.Exception);
 
-                assoc.IdentityId = memberResult.Entity.id;
+                assoc.IdentityId = memberResult.Entity.MemberId;
+
+                this.SaveAddress(assoc.IdentityId, this.church.Line1, this.church.City, this.church.State, this.church.Zip);
 
                 this.SaveTeammate(assoc.IdentityId, this.pastoralTeam.Id, 71); // Associate Pastor
             }
