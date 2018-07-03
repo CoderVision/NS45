@@ -13,7 +13,7 @@ namespace NtccSteward.Repository.Import
         {
             var church = new Church();
             church.Name = churchInfo.City1;
-            church.Address = churchInfo.Address;
+            church.Line1 = churchInfo.Address;
             church.City = churchInfo.City1;
             church.State = churchInfo.State;
             church.Zip = ParseNumber(churchInfo.Zip1);

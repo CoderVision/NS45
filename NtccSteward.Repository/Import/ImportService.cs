@@ -138,6 +138,9 @@ namespace NtccSteward.Repository.Import
 
             var result = this.churchRepo.Add(church);
 
+            if (result.Status == RepositoryActionStatus.Error)
+                LogError(result.Exception);
+
             this.church = result.Entity;
 
             // add member
@@ -150,6 +153,9 @@ namespace NtccSteward.Repository.Import
             member.Zip = ci.Zip1;
 
             var memberResult = this.memberRepo.Add(member);
+
+            if (memberResult.Status == RepositoryActionStatus.Error)
+                LogError(memberResult.Exception);
 
             member.id = memberResult.Entity.id;
 
@@ -164,6 +170,10 @@ namespace NtccSteward.Repository.Import
             team.Comment = "";
 
             var teamResult = this.teamRepo.SaveTeam(team);
+
+            if (teamResult.Status == RepositoryActionStatus.Error)
+                LogError(teamResult.Exception);
+
             this.pastoralTeam = teamResult.Entity;
 
             // create teammate
@@ -271,16 +281,25 @@ namespace NtccSteward.Repository.Import
                 member.ChurchId = this.church.id;
                 member.FirstName = assoc.Name;
                 member.City = this.church.City;
-                member.Line1 = this.church.Address;
+                member.Line1 = this.church.Line1;
                 member.State = this.church.State;
                 member.Zip = this.church.Zip;
 
                 var memberResult = this.memberRepo.Add(member);
 
+                if (memberResult.Status == RepositoryActionStatus.Error)
+                    LogError(memberResult.Exception);
+
                 assoc.IdentityId = memberResult.Entity.id;
 
                 this.SaveTeammate(assoc.IdentityId, this.pastoralTeam.Id, 71); // Associate Pastor
             }
+        }
+
+        private void LogError(Exception ex)
+        {
+            var details = $"churchId:  {this.church.id}.  Stacktrace:  { ex.StackTrace }";
+            this.logger.LogInfo(Core.Framework.LogLevel.Error, ex.Message, details, this.userId);
         }
 
 
@@ -337,6 +356,10 @@ namespace NtccSteward.Repository.Import
                 team.Comment = "";
 
                 var teamResult = this.teamRepo.SaveTeam(team);
+
+                if (teamResult.Status == RepositoryActionStatus.Error)
+                    LogError(teamResult.Exception);
+
                 pastor.IdentityId = teamResult.Entity.Id; // this will be a TeamId
             }
 
@@ -371,7 +394,10 @@ namespace NtccSteward.Repository.Import
             teammate.MemberId = memberId;
             teammate.TeamPositionEnumId = positionEnumId;
             teammate.TeamStatusTypeEnumId = teamStatusTypeEnumId;
-            this.teamRepo.SaveTeammate(teammate);
+            var result = this.teamRepo.SaveTeammate(teammate);
+
+            if (result.Status == RepositoryActionStatus.Error)
+                LogError(result.Exception);
         }
 
 
@@ -427,6 +453,7 @@ namespace NtccSteward.Repository.Import
                 memberProfile.Married = soulwinner.MarriedStatus == "M";  // (M)arried, (O)ther or (S)ingle   They are either married or they are not
                 memberProfile.IsHere = soulwinner.IsHere;
                 memberProfile.ChurchId = this.church.id;
+                memberProfile.LanguageTypeEnumId = 107; // default to English
 
                 if (!string.IsNullOrWhiteSpace(soulwinner.SpouseName))
                     comments = $"Spouse:  {soulwinner.SpouseName}, " + (soulwinner.IsSpousePartner ? "Is soulwinning partner" : "Is not soulwinning partner");
@@ -434,6 +461,9 @@ namespace NtccSteward.Repository.Import
                 memberProfile.Comments = comments;  // last before saving
 
                 var result = this.memberRepo.SaveProfile(memberProfile);
+
+                if (result.Status == RepositoryActionStatus.Error)
+                    LogError(result.Exception);
 
                 soulwinner.IdentityId = result.Entity.MemberId;
 
@@ -465,12 +495,14 @@ namespace NtccSteward.Repository.Import
             if (string.IsNullOrWhiteSpace(ph))
                 return;
 
-            this.commonRepo.MergePhone(new Core.Models.Common.Address.Phone
+            var result = this.commonRepo.MergePhone(new Core.Models.Common.Address.Phone
             {
                 IdentityId = identityId,
                 PhoneNumber = ph,
                 ContactInfoLocationType = 8
             });
+            if (result.Status == RepositoryActionStatus.Error)
+                LogError(result.Exception);
         }
 
         private void SaveEmail(int identityId, string email)
@@ -478,12 +510,15 @@ namespace NtccSteward.Repository.Import
             if (string.IsNullOrWhiteSpace(email))
                 return;
 
-            this.commonRepo.MergeEmail(new NtccSteward.Core.Models.Common.Address.Email
+            var result = this.commonRepo.MergeEmail(new NtccSteward.Core.Models.Common.Address.Email
             {
                 IdentityId = identityId,
                 EmailAddress = email,
                 ContactInfoLocationType = 8
             });
+
+            if (result.Status == RepositoryActionStatus.Error)
+                LogError(result.Exception);
         }
 
         private void SaveAddress(int identityId, string addressLine1, string city, string state, string zip)
@@ -496,7 +531,7 @@ namespace NtccSteward.Repository.Import
                 return;
             }
 
-            this.commonRepo.MergeAddress(new Core.Models.Common.Address.Address
+            var result = this.commonRepo.MergeAddress(new Core.Models.Common.Address.Address
             {
                 IdentityId = identityId,
                 Line1 = addressLine1,
@@ -505,6 +540,8 @@ namespace NtccSteward.Repository.Import
                 Zip = this.factory.ParseNumber(zip),
                 ContactInfoLocationType = 9
             });
+            if (result.Status == RepositoryActionStatus.Error)
+                LogError(result.Exception);
         }
 
         private void ImportGuests(OleDbConnection cn)
@@ -588,6 +625,9 @@ namespace NtccSteward.Repository.Import
 
                 var result = this.memberRepo.SaveProfile(memberProfile);
 
+                if (result.Status == RepositoryActionStatus.Error)
+                    LogError(result.Exception);
+
                 guest.IdentityId = result.Entity.MemberId;
 
                 var sponsorId = soulwinner?.IdentityId ?? 0;
@@ -644,7 +684,10 @@ namespace NtccSteward.Repository.Import
             if (!string.IsNullOrWhiteSpace(note))
                 activity.Note = note;
 
-            this.memberRepo.SaveActivity(activity);
+            var result = this.memberRepo.SaveActivity(activity);
+
+            if (result.Status == RepositoryActionStatus.Error)
+                LogError(result.Exception);
         }
 
 
@@ -680,6 +723,7 @@ namespace NtccSteward.Repository.Import
                 member.StatusId = 109; // Do Not Visit
                 member.ChurchId = this.church.id;
                 member.FirstName = dnv.Name;
+                member.LanguageTypeEnumId = 107; // default to English
 
                 if (!string.IsNullOrWhiteSpace(dnv.Date))
                     member.Comments = $"Date Entered: " + dnv.Date + ".  ";
@@ -693,6 +737,9 @@ namespace NtccSteward.Repository.Import
                 member.Comments = member.Comments?.Trim();
 
                 var result = this.memberRepo.SaveProfile(member);
+
+                if (result.Status == RepositoryActionStatus.Error)
+                    LogError(result.Exception);
 
                 dnv.IdentityId = result.Entity.MemberId;
 
