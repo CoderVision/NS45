@@ -32,6 +32,7 @@ namespace NtccSteward.Api
             container.RegisterInstance<IMemberRepository>(new MemberRepository(defaultConnectionString));
             container.RegisterInstance<IMessageRepository>(new MessageRepository(defaultConnectionString));
             container.RegisterInstance<IReportsRepository>(new ReportsRepository(defaultConnectionString));
+            container.RegisterInstance<IImportRepository>(new ImportRepository(defaultConnectionString));
 
             container.RegisterInstance<IImportService>(new ImportService(defaultConnectionString, 
                 container.Resolve<IChurchRepository>(), 

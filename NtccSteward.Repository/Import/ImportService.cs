@@ -28,6 +28,7 @@ namespace NtccSteward.Repository.Import
         private readonly IMessageRepository messageRepo = null;
         private readonly ICommonRepository commonRepo = null;
         private readonly ILogger logger = null;
+        private readonly ImportRepository importRepo = null;
         private readonly EnumMapper mapper = new EnumMapper();
         private readonly Factory factory = new Factory();
         private Church church = null;
@@ -36,13 +37,15 @@ namespace NtccSteward.Repository.Import
         private List<LayPastor> layPastors = new List<LayPastor>();
         private List<Soulwinner> soulwinners = new List<Soulwinner>();
         private int userId = 0;
+        private int accessDbFilePathId = 0;
 
         public ImportService(string connectingString, IChurchRepository churchRepo
             , ITeamRepository teamRepo
             , IMemberRepository memberRepo
             , IMessageRepository messageRepo
             , ICommonRepository commonRepo
-            , ILogger logger)
+            , ILogger logger
+            , ImportRepository importRepo)
         {
             this.connectingString = connectingString;
             this.churchRepo = churchRepo;
@@ -51,6 +54,7 @@ namespace NtccSteward.Repository.Import
             this.memberRepo = memberRepo;
             this.messageRepo = messageRepo;
             this.logger = logger;
+            this.importRepo = importRepo;
         }
 
         private void Initialize()
@@ -79,6 +83,9 @@ namespace NtccSteward.Repository.Import
 
                     this.ImportChurchInfo(cn);
 
+                    this.accessDbFilePathId = 
+                        this.importRepo.SaveAccessDbFilePath(this.church.id, filePath);
+
                     this.ImportConfigurations(cn);
 
                     this.ImportPastors(cn);
@@ -101,7 +108,6 @@ namespace NtccSteward.Repository.Import
 
             return;
         }
-
 
         private void ImportChurchInfo(OleDbConnection cn)
         {
@@ -290,6 +296,8 @@ namespace NtccSteward.Repository.Import
 
                 assoc.IdentityId = memberResult.Entity.MemberId;
 
+                this.importRepo.SaveImportMember(this.accessDbFilePathId, assoc.IdentityId, assoc.AssocId, (int)AccessDbTableType.AssociatePastor);
+
                 this.SaveAddress(assoc.IdentityId, this.church.Line1, this.church.City, this.church.State, this.church.Zip);
 
                 this.SaveTeammate(assoc.IdentityId, this.pastoralTeam.Id, 71); // Associate Pastor
@@ -467,6 +475,8 @@ namespace NtccSteward.Repository.Import
 
                 soulwinner.IdentityId = result.Entity.MemberId;
 
+                this.importRepo.SaveImportMember(this.accessDbFilePathId, soulwinner.IdentityId, soulwinner.SoulwinnerId, (int)AccessDbTableType.Soulwinners);
+
                 // Save the addresses after the profile is saved, because they don't get saved with the profile
                 this.SaveEmail(soulwinner.IdentityId, soulwinner.Email);
 
@@ -630,6 +640,8 @@ namespace NtccSteward.Repository.Import
 
                 guest.IdentityId = result.Entity.MemberId;
 
+                this.importRepo.SaveImportMember(this.accessDbFilePathId, guest.IdentityId, guest.GuestId, (int)AccessDbTableType.Guests);
+
                 var sponsorId = soulwinner?.IdentityId ?? 0;
                 this.memberRepo.AddToGuestbook(this.church.id, guest.IdentityId, sponsorId, guest.DateCameToChurch, guest.MultipleGuestsFirstVisit, guest.Prayed);
 
@@ -704,6 +716,7 @@ namespace NtccSteward.Repository.Import
                     while (reader.Read())
                     {
                         var doNotVisit = new DoNotVisit();
+                        doNotVisit.Id = reader.ValueOrDefault<int>("ID", 0);
                         doNotVisit.Name = reader.ValueOrDefault<string>("Name", "");
                         doNotVisit.Address = reader.ValueOrDefault<string>("Address", "");
                         doNotVisit.City = reader.ValueOrDefault<string>("City", "");
@@ -742,6 +755,8 @@ namespace NtccSteward.Repository.Import
                     LogError(result.Exception);
 
                 dnv.IdentityId = result.Entity.MemberId;
+
+                this.importRepo.SaveImportMember(this.accessDbFilePathId, dnv.IdentityId, dnv.Id, (int)AccessDbTableType.DontVisit);
 
                 this.SaveAddress(dnv.IdentityId, dnv.Address, dnv.City, null, null);
 
