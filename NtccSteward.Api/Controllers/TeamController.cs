@@ -79,9 +79,6 @@ namespace NtccSteward.Repository.Controllers
         {
             try
             {
-                if (churchId <= 0)
-                    return BadRequest("Invalid id");
-
                 var userId = TokenIdentityHelper.GetOwnerIdFromToken();
 
                 var response = _repository.GetMetadata(churchId, userId);

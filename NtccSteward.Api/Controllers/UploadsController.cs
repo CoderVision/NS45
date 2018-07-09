@@ -1,4 +1,6 @@
-﻿using System;
+﻿using NtccSteward.Api.Framework;
+using NtccSteward.Repository.Import;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,14 +11,17 @@ using System.Web.Http;
 
 namespace NtccSteward.Api.Controllers
 {
+    [Authorize]
     public class UploadsController : ApiController
     {
-        [HttpGet]
-        public IHttpActionResult Test()
+        private readonly IImportService importService;
+
+        public UploadsController(IImportService importService)
         {
-            return Ok("Test Response");
+            this.importService = importService;
         }
 
+        [Route("uploads")]
         [HttpPost]
         public async Task<HttpResponseMessage> UploadFile()
         {
@@ -27,39 +32,31 @@ namespace NtccSteward.Api.Controllers
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
             }
 
-            string uploadsFolder = System.Web.HttpContext.Current.Server.MapPath("~/uploads");
             string root = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/uploads");
             var provider = new MultipartFormDataStreamProvider(root);
 
+            // Reference this for large file uploads:
+            // https://www.strathweb.com/2012/09/dealing-with-large-files-in-asp-net-web-api/
+            var files = await Request.Content.ReadAsMultipartAsync(provider);
+
+            var localFilePath = provider.FileData.First().LocalFileName;
+
+            System.IO.File.Move(localFilePath, $"{localFilePath}.mdb");
+
+            localFilePath += ".mdb";
+
+            var userId = TokenIdentityHelper.GetOwnerIdFromToken();
+
             try
             {
-                // Reference this for large file uploads:
-                // https://www.strathweb.com/2012/09/dealing-with-large-files-in-asp-net-web-api/
-                var files = await Request.Content.ReadAsMultipartAsync(provider);
+                await Task.Run(() => { this.importService.ImportMdbFile(localFilePath, userId); }); 
+
+                return await Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK));
             }
             catch (Exception ex)
             {
-                var x = ex;
+                return await Task.FromResult(new HttpResponseMessage(HttpStatusCode.InternalServerError));
             }
-
-             
-
-            return await Task.FromResult(new HttpResponseMessage());
-
-            //var task = request.Content.ReadAsMultipartAsync(provider).
-            //    ContinueWith<HttpResponseMessage>(o =>
-            //    {
-            //        string file1 = provider.FileData.First().LocalFileName;
-            //        // this is the file name on the server where the file was saved 
-                    
-            //        var fileName = Path.GetFileName(file1);
-
-            //        File.Move(file1, $"{uploadsFolder}\\{fileName}");
-
-            //        return new HttpResponseMessage() { Content = new StringContent("File uploaded.") };
-            //    }
-            //);
-            //return task;
         }
     }
 }
