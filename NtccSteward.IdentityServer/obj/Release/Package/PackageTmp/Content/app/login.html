@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html ng-app="app" ng-controller="LayoutCtrl">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>{siteName}</title>
+
+    <link href="../Content/angular-material.css" rel="stylesheet" />
+    <link href="../Content/angular-material.layout-attributes.css" rel="stylesheet" />
+    <link href="../Content/angular-material.layouts.css" rel="stylesheet" />
+
+    <link href="../Content/app/app2.css" rel="stylesheet">
+</head>
+<body lang="en" layout="row">
+    <div layout="column" flex id="wrapper">
+        <div ng-include="'../Content/app/toolbarHeader.html'"></div>
+        
+        <div layout="column"
+             layout-gt-xs="row"
+             layout-align="start start"
+             flex>
+
+            <!-- left panel -->
+            <div layout="column"
+                 flex flex-gt-xs="50"
+                 class="maxWidth">
+
+
+                <form name="form" method="post" action="{{model.loginUrl}}" class="maxWidth">
+                    <anti-forgery-token token="model.antiForgery"></anti-forgery-token>
+
+   
+                    <fieldset class="maxWidth">
+                        <h3 >I Have An Account</h3>
+
+                        <div class="form-group">
+
+                            <md-input-container class="logInControlContainer">
+                                <label>Email Address</label>
+                                <input type="email" ng-model="model.Username" name="username" id="username" min="5" ng-maxlength="50"
+                                       ng-pattern="/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/"
+                                        md-autofocus />
+                                <div class="hint" ng-show="showHints">user@email.com</div>
+                                <div ng-messages="form.email.$error">
+                                    <div ng-message="maxlength">50 characters max</div>
+                                    <div ng-message="pattern">Invalid email address</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                        <div class="form-group">
+
+                            <md-input-container class="logInControlContainer">
+                                <label>Password</label>
+                                <input type="password" ng-model="model.password" name="password" id="password" min="1" ng-maxlength="50" />
+                                <div ng-messages="form.password.$error">
+                                    <div ng-message="minlength">At least 1 character is required</div>
+                                    <div ng-message="maxlength">50 characters max</div>
+                                </div>
+                            </md-input-container>
+
+                        </div>
+                        <div class="form-group login-remember" ng-show="model.allowRememberMe">
+                            <md-switch class="md-primary" name="rememberMe" id="rememberMe" ng-model="model.rememberMe">
+                                <span ng-if="!model.rememberMe">Do Not </span>Remember My Login
+                            </md-switch>
+                        </div>
+                        <div class="form-group">
+                            <md-button type="submit" ng-disabled="form.$invalid">Login</md-button>
+                        </div>
+
+                        <div layout="row" ng-show="model.errorMessage">
+                            <p style="color:red;">
+                                <strong>Error:</strong>
+                                {{model.errorMessage}}
+                            </p>
+                        </div>
+                    </fieldset>
+                </form>
+
+            </div>
+
+            <!-- right panel -->
+            <div layout="column" layout-align="start stretch"
+                 flex flex-gt-sm="50" class="maxWidth haveAnAcctContainer">
+
+                <div class="maxWidth">
+                    <h3>Request A New Account</h3>
+                    <!--<md-button>Request an Account</md-button>-->
+                    <md-button ng-href="{{link.href}}" ng-repeat="link in model.additionalLinks | filter: { 'type' : 'createAccount'}">{{link.text}}</md-button>
+
+                    <p style="margin-top:30px;">
+                        Request a new account today to start enjoying the benefits of using a website that is designed to help you run your church effectively!
+                    </p>
+
+                    <ul class="standard">
+                        <li>Keep track of the important information about your church members, such as their address, phone number, email address, etc.</li>
+                        <li>Keep track of activities, such as who attended what church service and when.</li>
+                        <li>Send out emails or text notifications to your church members individually or to a group.</li>
+                        <li>Keep track of sponsors and their guests.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+        <script id='modelJson' type='application/json'>
+            {model}
+        </script>
+
+
+        <script src="../Content/libs/jquery/jquery-1.11.0.min.js"></script>
+        <script src="../Content/libs/encoder/encoder.min.js"></script>
+
+        <script src="../Content/libs/angular/angular.min.js"></script>
+        <script src="../Content/libs/angular/angular-animate.min.js"></script>
+        <script src="../Content/libs/angular/angular-aria.min.js"></script>
+        <script src="../Content/libs/angular/angular-material.min.js"></script>
+        <script src="../Content/libs/angular/angular-messages.min.js"></script>
+        <script src="../Content/libs/angular/angular-material-icons.min.js"></script>
+
+        <script src="../Content/app/app.js"></script>
+
+</body>
+</html>

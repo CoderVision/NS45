@@ -117,10 +117,6 @@ namespace NtccSteward.Api.Controllers
         {
             try
             {
-                // example of how to get the user's id
-                var userId = TokenIdentityHelper.GetOwnerIdFromToken();
-
-
                 if (string.IsNullOrWhiteSpace(criteria))
                     return BadRequest();
 

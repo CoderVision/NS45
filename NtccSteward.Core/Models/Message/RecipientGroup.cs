@@ -7,14 +7,29 @@ namespace NtccSteward.Core.Models.Message
 {
     public class RecipientGroup : IRecipientGroup
     {
-        public RecipientGroup() { }
+        public RecipientGroup() {
+            Recipients = new List<Recipient>();
+            Messages = new List<Message>();
+        }
 
-        public int ID { get; set; } // MessageRecipientGroupId
+        public int Id { get; set; } // MessageRecipientGroupId
 
         public string Name { get; set; }
 
         public string Description { get; set; }
 
         public int ChurchId { get; set; }
+
+        public int MessageTypeEnumID { get; set; }
+
+        public List<Recipient> Recipients { get; set; }
+
+        public List<Message> Messages { get; set; }
+
+        public DateTimeOffset LastMessageDate { get; set; }
+
+        public string LastMessageSubject { get; set; }
+
+        public string LastMessageBody { get; set; }
     }
 }

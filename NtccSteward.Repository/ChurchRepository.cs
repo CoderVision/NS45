@@ -146,6 +146,7 @@ namespace NtccSteward.Repository
                         church.TimeZoneOffset = reader.ValueOrDefault("TimeZoneOffset", string.Empty);
                         church.SmsAccountSID = reader.ValueOrDefault("AccountSid", string.Empty);
                         church.SmsAccountToken = reader.ValueOrDefault("AccountToken", string.Empty);
+                        church.SmsPhoneNumber = reader.ValueOrDefault("PhoneNumber", string.Empty);
                         church.EmailConfigProfileId = reader.ValueOrDefault<int>("EmailConfigProfileId");
                         church.EmailConfigUsername = reader.ValueOrDefault<string>("EmailConfigUsername");
                         church.EmailConfigPassword = reader.ValueOrDefault<string>("EmailConfigPassword");
@@ -328,6 +329,7 @@ namespace NtccSteward.Repository
             paramz.Add(new SqlParameter("timeZoneOffset", profile.TimeZoneOffset.ToSqlString()));
             paramz.Add(new SqlParameter("smsAccoundSid", profile.SmsAccountSID.ToSqlString()));
             paramz.Add(new SqlParameter("smsAccountToken", profile.SmsAccountToken.ToSqlString()));
+            paramz.Add(new SqlParameter("smsPhoneNumber", profile.SmsPhoneNumber.ToSqlString()));
             paramz.Add(new SqlParameter("emailConfigProfileId", profile.EmailConfigProfileId));
             paramz.Add(new SqlParameter("emailConfigUserName", profile.EmailConfigUsername.ToSqlString()));
             paramz.Add(new SqlParameter("emailConfigPassword", profile.EmailConfigPassword.ToSqlString()));
@@ -367,9 +369,10 @@ namespace NtccSteward.Repository
                 paramz.Clear();
                 paramz.Add(new SqlParameter("id", profile.PastoralTeam.Id));
                 paramz.Add(new SqlParameter("name", profile.PastoralTeam.Name.ToSqlString()));
+                paramz.Add(new SqlParameter("desc", profile.PastoralTeam.Desc.ToSqlString()));
                 paramz.Add(new SqlParameter("churchId", profile.Id));
                 paramz.Add(new SqlParameter("teamTypeEnumId", profile.PastoralTeam.TeamTypeEnumId));
-                paramz.Add(new SqlParameter("teamPositionEnumTypeId", profile.PastoralTeam.TeamPositionEnumTypeId));
+                paramz.Add(new SqlParameter("comment", profile.PastoralTeam.Comment.ToSqlString()));
 
                 readFx = (reader) =>
                 {
@@ -388,7 +391,8 @@ namespace NtccSteward.Repository
                     paramz.Clear();
                     paramz.Add(new SqlParameter("@teammateId", teamMate.Id));
                     paramz.Add(new SqlParameter("@teamId", teamMate.TeamId));
-                    paramz.Add(new SqlParameter("@personId", teamMate.MemberId));
+                    paramz.Add(new SqlParameter("@entityId", teamMate.MemberId));
+                    paramz.Add(new SqlParameter("@entityTypeEnumId", 56));   // person
                     paramz.Add(new SqlParameter("@teamPositionEnumId", teamMate.TeamPositionEnumId));
 
                     var teammateIds = _executor.ExecuteSql<int>("SaveTeammate", CommandType.StoredProcedure, paramz, readFx);
