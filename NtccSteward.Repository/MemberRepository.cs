@@ -32,6 +32,8 @@ namespace NtccSteward.Repository
         RepositoryActionResult<Member> Delete(int id, int entityType);
 
         RepositoryActionResult<Activity> SaveActivity(Activity activity);
+
+        bool AddToGuestbook(int churchId, int memberId, int sponsorId, DateTimeOffset? dateCame, bool isGroup, bool prayed);
     }
 
     public class MemberRepository : NtccSteward.Repository.Repository, IMemberRepository
@@ -63,6 +65,7 @@ namespace NtccSteward.Repository
             paramz.Add(new SqlParameter("ChurchId", member.ChurchId));
             paramz.Add(new SqlParameter("createdByUserId", member.CreatedByUserId));
             paramz.Add(new SqlParameter("firstName", member.FirstName.ToSqlString()));
+            paramz.Add(new SqlParameter("middleName", member.MiddleName.ToSqlString()));
             paramz.Add(new SqlParameter("lastName", member.LastName.ToSqlString()));
             paramz.Add(new SqlParameter("dateCame", member.DateCame));
             paramz.Add(new SqlParameter("isGroup", member.IsGroup));
@@ -99,6 +102,33 @@ namespace NtccSteward.Repository
                 return new RepositoryActionResult<NewMember>(member, RepositoryActionStatus.NotFound);
 
         }
+
+
+
+        public bool AddToGuestbook(int churchId, int memberId, int sponsorId, DateTimeOffset? dateCame, bool isGroup, bool prayed)
+        {
+            var proc = "AddToGuestBook";
+
+            var paramz = new List<SqlParameter>();
+            paramz.Add(new SqlParameter("churchId", churchId));
+            paramz.Add(new SqlParameter("memberId", memberId));
+            paramz.Add(new SqlParameter("sponsorId", sponsorId));
+            paramz.Add(new SqlParameter("dateCame", dateCame));
+            paramz.Add(new SqlParameter("isGroup", isGroup));
+            paramz.Add(new SqlParameter("prayed", prayed));
+
+            Func<SqlDataReader, int> readFx = (reader) =>
+            {
+                return (int)reader["Id"];
+            };
+
+            var list = _executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, readFx);
+
+            var guestBookId = list.FirstOrDefault();
+
+            return (guestBookId != 0);
+        }
+
 
 
         public List<MemberSearchResult> SearchMembers(string criteria)
@@ -202,6 +232,7 @@ namespace NtccSteward.Repository
                         member.Gender = reader.ValueOrDefault("Gender", string.Empty);
                         member.Married = reader.ValueOrDefault<bool>("Married", false);
                         member.Veteran = reader.ValueOrDefault<bool>("Veteran", false);
+                        member.IsHere = reader.ValueOrDefault<bool>("IsHere", true);
                         member.BirthDate = reader.ValueOrDefault<DateTime?>("DateOfBirth", null);
                         member.DateSaved = reader.ValueOrDefault<DateTime?>("DateSaved", null);
                         member.DateBaptizedHolyGhost = reader.ValueOrDefault<DateTime?>("DateBaptizedHolyGhost", null);
@@ -216,6 +247,11 @@ namespace NtccSteward.Repository
                         member.Sponsor = reader.ValueOrDefault("Sponsor", string.Empty);
                         member.Comments = reader.ValueOrDefault("Comment", string.Empty);
                         member.MemberTypeEnumId = reader.ValueOrDefault<int>("MemberTypeEnumID", 0);
+                        member.Suffix = reader.ValueOrDefault("Suffix", string.Empty);
+                        member.HasBeenBaptized = reader.ValueOrDefault<bool>("HasBeenBaptized", false);
+                        member.LanguageTypeEnumId = reader.ValueOrDefault<int>("LanguageTypeEnumId", 0);
+                        member.NeedsPastoralVisit = reader.ValueOrDefault<bool>("NeedsPastoralVisit", false);
+                        member.AssociatePastorId = reader.ValueOrDefault<int>("AssociatePastorId", 0);
 
                         // address info
                         reader.NextResult();
@@ -378,6 +414,8 @@ namespace NtccSteward.Repository
             paramz.Add(new SqlParameter("firstName", memberProfile.FirstName.ToSqlString()));
             paramz.Add(new SqlParameter("middleName", memberProfile.MiddleName.ToSqlString()));
             paramz.Add(new SqlParameter("lastName", memberProfile.LastName.ToSqlString()));
+            paramz.Add(new SqlParameter("suffix", memberProfile.Suffix.ToSqlString()));
+            paramz.Add(new SqlParameter("isHere", memberProfile.IsHere));
             paramz.Add(new SqlParameter("preferredName", memberProfile.PreferredName.ToSqlString()));
             paramz.Add(new SqlParameter("birthDate", memberProfile.BirthDate.ToSqlDateTime()));
             paramz.Add(new SqlParameter("gender", memberProfile.Gender.ToSqlString()));
@@ -391,6 +429,10 @@ namespace NtccSteward.Repository
             paramz.Add(new SqlParameter("memberStatusEnumId", memberProfile.StatusId));
             paramz.Add(new SqlParameter("statusChangeTypeEnumId", memberProfile.StatusChangeTypeId));
             paramz.Add(new SqlParameter("memberTypeEnumId", memberProfile.MemberTypeEnumId));
+            paramz.Add(new SqlParameter("hasBeenBaptized", memberProfile.HasBeenBaptized));
+            paramz.Add(new SqlParameter("languageTypeEnumId", memberProfile.LanguageTypeEnumId));
+            paramz.Add(new SqlParameter("needsPastoralVisit", memberProfile.NeedsPastoralVisit));
+            paramz.Add(new SqlParameter("associatePastorId", memberProfile.AssociatePastorId));
 
             Func<SqlDataReader, int> readFx = (reader) =>
             {

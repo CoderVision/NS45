@@ -93,6 +93,10 @@
     <Compile Include="Framework\RepositoryActionStatus.cs" />
     <Compile Include="Framework\SqlCmdExecutor.cs" />
     <Compile Include="CommonRepository.cs" />
+    <Compile Include="ImportRepository.cs" />
+    <Compile Include="Import\AccessDbTableType.cs" />
+    <Compile Include="Import\Factory.cs" />
+    <Compile Include="Import\ImportService.cs" />
     <Compile Include="LoggerRepository.cs" />
     <Compile Include="MemberRepository.cs" />
     <Compile Include="MessageRepository.cs" />

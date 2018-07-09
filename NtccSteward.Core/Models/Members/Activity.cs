@@ -7,6 +7,11 @@ namespace NtccSteward.Core.Models.Members
 {
     public class Activity
     {
+        public Activity()
+        {
+            this.CreatedDate = DateTimeOffset.Now;
+        }
+
         public int Id { get; set; }
         public int ChurchId { get; set; }
 

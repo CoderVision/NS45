@@ -82,5 +82,17 @@ namespace NtccSteward.Core.Models.Members
         public int MemberStatusEnumType { get; set; }
 
         public int MemberTypeEnumId { get; set; }
+
+        public string Suffix { get; set; }
+
+        public bool IsHere { get; set; }
+
+        public int LanguageTypeEnumId { get; set; }
+
+        public bool HasBeenBaptized { get; set; }
+
+        public bool NeedsPastoralVisit { get; set; }
+
+        public int AssociatePastorId { get; set; }
     }
 }

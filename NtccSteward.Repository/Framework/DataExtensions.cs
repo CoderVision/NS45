@@ -49,6 +49,10 @@ namespace NtccSteward.Repository.Framework
             return ValueOrDefault<T>(reader, columnName, default(T));
         }
 
+        public static T ValueOrDefault<T>(this System.Data.OleDb.OleDbDataReader reader, string columnName, T defaultValue)
+        {
+            return (reader[columnName].ToString() != string.Empty ? (T)reader[columnName] : defaultValue);
+        }
 
         /// <summary>
         /// Returns the value from the specified field; if null, returns the specified default value.

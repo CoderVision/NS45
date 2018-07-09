@@ -1,6 +1,7 @@
 using Microsoft.Practices.Unity;
 using NtccSteward.Api.Controllers;
 using NtccSteward.Repository;
+using NtccSteward.Repository.Import;
 using System.Configuration;
 using System.Web.Http;
 using Unity.WebApi;
@@ -31,6 +32,15 @@ namespace NtccSteward.Api
             container.RegisterInstance<IMemberRepository>(new MemberRepository(defaultConnectionString));
             container.RegisterInstance<IMessageRepository>(new MessageRepository(defaultConnectionString));
             container.RegisterInstance<IReportsRepository>(new ReportsRepository(defaultConnectionString));
+            container.RegisterInstance<IImportRepository>(new ImportRepository(defaultConnectionString));
+
+            container.RegisterInstance<IImportService>(new ImportService(defaultConnectionString, 
+                container.Resolve<IChurchRepository>(), 
+                container.Resolve<ITeamRepository>(), 
+                container.Resolve<IMemberRepository>(),
+                container.Resolve<IMessageRepository>(),
+                container.Resolve<ICommonRepository>(),
+                container.Resolve<ILogger>()));
 
             // register controllers
             container.RegisterType<AccountController>();

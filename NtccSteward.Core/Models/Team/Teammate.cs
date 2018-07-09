@@ -24,5 +24,7 @@ namespace NtccSteward.Core.Models.Team
         public int TeamPositionEnumId { get; set; }
 
         public string TeamPositionEnumDesc { get; set; }
+
+        public int TeamStatusTypeEnumId { get; set; }
     }
 }
