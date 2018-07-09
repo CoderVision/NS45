@@ -26,6 +26,12 @@ namespace NtccSteward.Api
             //var cors = new EnableCorsAttribute("*", "*", "*");
             //config.EnableCors(cors);
 
+            //config.Routes.MapHttpRoute(
+            //    name: "WebSockets",
+            //    routeTemplate: "ws/{controller}/{churchId}",
+            //    defaults: new { clientId = RouteParameter.Optional }
+            //);
+
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "{controller}/{id}",

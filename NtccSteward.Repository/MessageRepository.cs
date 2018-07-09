@@ -7,6 +7,8 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using NtccSteward.Core.Models.Church;
+using NtccSteward.Core.Models.Common.Enums;
 
 namespace NtccSteward.Repository
 {
@@ -15,67 +17,152 @@ namespace NtccSteward.Repository
         void DeleteMessage(int messageID);
         void DeleteRecipient(int recipientId);
         void DeleteRecipientGroup(int recipientGroupId);
-        List<ICorrespondence> GetCorresondence(int churchID, int messageTypeEnumID, int maxReturnRows);
-        List<IRecipientGroup> GetGroups(int churchID);
-        List<IMessage> GetMessages(int correspondenceID, int messageTypeEnumID, int maxReturnRows);
-        List<RecipientGroup> GetRecipientGroups(int churchId);
+        List<IMessage> GetMessages(int recipietGroupId, int maxReturnRows);
+        List<IRecipientGroup> GetRecipientGroups(int churchId, int messageTypeEnumId);
         int SaveMessage(IMessage message);
-        int SaveRecient(int recipientId, int recipientGroupId);
-        int SaveRecipientGroup(RecipientGroup group);
+        int SaveRecipient(IRecipient recipient);
+        int SaveRecipientGroup(IRecipientGroup group);
+        MessageMetadata GetMetadata(int userId);
+        IRecipient GetRecipient(int contactInfoid, int recipientGroupId);
+        List<IRecipient> GetRecipients(int churchId, int messageTypeEnumId, string criteria);
+        SmsConfiguration GetSmsConfiguration(int recipientGroupId);
+        List<IRecipient> GetGroupRecipients(int recipientGroupId, int messageTypeEnumId);
     }
 
     public class MessageRepository : NtccSteward.Repository.Repository, IMessageRepository
     {
-        private readonly ISqlCmdExecutor _executor;
+        private readonly ISqlCmdExecutor executor;
 
         public MessageRepository(string connectionString)
         {
             ConnectionString = connectionString;
-            _executor = new SqlCmdExecutor(connectionString);
+            this.executor = new SqlCmdExecutor(connectionString);
         }
 
-
-        public List<RecipientGroup> GetRecipientGroups(int churchId)
+        public MessageMetadata GetMetadata(int userId)
         {
-            var list = new List<RecipientGroup>();
+            var metadata = new MessageMetadata();
 
-            var proc = "Membership_SelectByChurch";
-
-            using (var cn = new SqlConnection(ConnectionString))
-            using (var cmd = new SqlCommand(proc, cn))
+            using (var cn = new SqlConnection(this.executor.ConnectionString))
             {
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("ChurchId", churchId);
-
-                using (var reader = cmd.ExecuteReader())
+                using (var cmd = new SqlCommand("GetMessagesMetadata", cn))
                 {
-                    var groupId = -1;
-                    RecipientGroup group = null;
-                    while (reader.Read())
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add(new SqlParameter("userId", userId));
+                    cn.Open();
+
+                    using (var reader = cmd.ExecuteReader())
                     {
-                        var mrgId = reader.ValueOrDefault<int>("MessageRecipientGroupId");
-                        if (mrgId != groupId)
+                        if (reader.HasRows)
                         {
-                            group = new RecipientGroup();
-                            group.ID = mrgId;
-                            group.Name = reader["GroupName"].ToString();
+                            // read enum types
+                            while (reader.Read())
+                            {
+                                var appEnum = new AppEnum();
+                                appEnum.ID = reader.ValueOrDefault<int>("EnumID");
+                                appEnum.Desc = reader.ValueOrDefault<string>("EnumDesc");
+                                appEnum.AppEnumTypeID = reader.ValueOrDefault<int>("EnumTypeID");
+                                appEnum.AppEnumTypeName = reader.ValueOrDefault<string>("EnumTypeName");
+                                metadata.Enums.Add(appEnum);
+                            }
 
-                            list.Add(group);
+                            // read churches
+                            reader.NextResult();
+                            while (reader.Read())
+                            {
+                                var church = new Church();
+                                church.id = reader.ValueOrDefault<int>("ChurchId");
+                                church.Name = reader.ValueOrDefault<string>("Name");
+                                metadata.Churches.Add(church);
+                            }
                         }
-
-                        //if (reader["IdentityID"] == DBNull.Value)
-                        //    continue;  // skip adding recipient below (it's possible to have a group with no members)
-
-                        //var recipient = new Recipient();
-                        //recipient.IdentityId = reader.ValueOrDefault<int>("IdentityID");
-                        //recipient.ContactInfoId = reader.ValueOrDefault<int>("ContactInfoID");
-                        //recipient.Name = reader.ValueOrDefault<string>("RecipientName");
-                        //recipient.Address = reader.ValueOrDefault < string >("Address");
-
-                        //group.Recipients.Add(recipient);
                     }
                 }
             }
+
+            return metadata;
+        }
+
+        public List<IRecipient> GetGroupRecipients(int recipientGroupId, int messageTypeEnumId)
+        {
+            var proc = "GetGroupRecipients";
+
+            var paramz = new List<SqlParameter>();
+            paramz.Add(new SqlParameter("recipientGroupId", recipientGroupId));
+            paramz.Add(new SqlParameter("messageTypeEnumId", messageTypeEnumId));
+
+            Func<SqlDataReader, IRecipient> readFx = (reader) =>
+            {
+                var item = new Recipient();
+                item.Id = reader.ValueOrDefault<int>("Id");
+                item.IdentityId = reader.ValueOrDefault<int>("IdentityId");
+                item.ContactInfoId = reader.ValueOrDefault<int>("ContactInfoID");
+                item.Name = $"{reader.ValueOrDefault<string>("FirstName", "").Trim()} {reader.ValueOrDefault<string>("MiddleName", "").Trim()}".Trim() + $" {reader.ValueOrDefault<string>("LastName", "").Trim()}";
+                item.Address = reader.ValueOrDefault<string>("Address");
+                item.PreferredAddress = reader.ValueOrDefault<bool>("Preferred");
+                item.MessageRecipientGroupId = reader.ValueOrDefault<int>("MessageRecipientGroupId");
+                return item;
+            };
+
+            var list = this.executor.ExecuteSql<IRecipient>(proc, CommandType.StoredProcedure, paramz, readFx);
+
+            return list;
+        }
+
+        public List<IRecipient> GetRecipients(int churchId, int messageTypeEnumId, string criteria) {
+
+            var proc = "GetRecipients";
+
+            var paramz = new List<SqlParameter>();
+            paramz.Add(new SqlParameter("churchId", churchId));
+            paramz.Add(new SqlParameter("criteria", criteria));
+            paramz.Add(new SqlParameter("messageTypeEnumId", messageTypeEnumId));
+
+            Func<SqlDataReader, IRecipient> readFx = (reader) =>
+            {
+                var item = new Recipient();
+                item.IdentityId = reader.ValueOrDefault<int>("IdentityId");
+                item.ContactInfoId = reader.ValueOrDefault<int>("ContactInfoID");
+                item.Name = $"{reader.ValueOrDefault<string>("FirstName", "").Trim()} {reader.ValueOrDefault<string>("MiddleName", "").Trim()}".Trim() + $" {reader.ValueOrDefault<string>("LastName", "").Trim()}";
+                item.Address = reader.ValueOrDefault<string>("Address");
+                item.PreferredAddress = reader.ValueOrDefault<bool>("Preferred");
+                return item;
+            };
+
+            var list = this.executor.ExecuteSql<IRecipient>(proc, CommandType.StoredProcedure, paramz, readFx);
+
+            return list;
+        }
+
+        /// <summary>
+        /// Gets message groups, does not include recipients
+        /// </summary>
+        /// <param name="churchID">churchID</param>
+        /// <returns></returns>
+        public List<IRecipientGroup> GetRecipientGroups(int churchID, int messageTypeEnumId)
+        {
+            var proc = "GetMessageRecipientGroups";
+
+            var paramz = new List<SqlParameter>();
+            paramz.Add(new SqlParameter("churchId", churchID));
+            paramz.Add(new SqlParameter("messageTypeEnumId", messageTypeEnumId));
+
+            Func<SqlDataReader, IRecipientGroup> readFx = (reader) =>
+            {
+                var item = new RecipientGroup();
+                item.Id = reader.ValueOrDefault<int>("Id");
+                item.ChurchId = reader.ValueOrDefault<int>("ChurchID");
+                item.Name = reader.ValueOrDefault<string>("Name");
+                item.Description = reader.ValueOrDefault<string>("Description");
+                item.LastMessageDate = reader.ValueOrDefault<DateTimeOffset>("LastMessageDate");
+                item.LastMessageBody = reader.ValueOrDefault<string>("LastMessageBody");
+                item.LastMessageSubject = reader.ValueOrDefault<string>("LastMessageSubject");
+                item.MessageTypeEnumID = reader.ValueOrDefault<int>("MessageTypeEnumID");
+
+                return item;
+            };
+
+            var list = this.executor.ExecuteSql<IRecipientGroup>(proc, CommandType.StoredProcedure, paramz, readFx);
 
             return list;
         }
@@ -85,21 +172,23 @@ namespace NtccSteward.Repository
         /// Saves the group, returns the ID.
         /// </summary>
         /// <returns>The ID of the group (new if insert, same if update)</returns>
-        public int SaveRecipientGroup(RecipientGroup group)
+        public int SaveRecipientGroup(IRecipientGroup group)
         {
-            var proc = "MessageRecipientGroup_Merge";
+            var proc = "SaveMessageRecipientGroup";
 
             var paramz = new List<SqlParameter>();
-            paramz.Add(new SqlParameter("MessageRecipientGroupId", group.ID));
-            paramz.Add(new SqlParameter("GroupName", group.Name));
-            paramz.Add(new SqlParameter("churchIdentityId", group.ChurchId));
+            paramz.Add(new SqlParameter("id", group.Id));
+            paramz.Add(new SqlParameter("ChurchId", group.ChurchId));
+            paramz.Add(new SqlParameter("Name", group.Name));
+            paramz.Add(new SqlParameter("Desc", group.Description));
+            paramz.Add(new SqlParameter("MessageTypeEnumId", group.MessageTypeEnumID));
 
             Func<SqlDataReader, int> readFx = (reader) =>
             {
                 return reader.GetInt32(0); // new id
             };
 
-            var list = _executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, readFx);
+            var list = this.executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, readFx);
 
             return list.First();
         }
@@ -107,12 +196,12 @@ namespace NtccSteward.Repository
 
         public void DeleteRecipientGroup(int recipientGroupId)
         {
-            var proc = "MessageRecipientGroup_Delete";
+            var proc = "DeleteMessageRecipientGroup";
 
             var paramz = new List<SqlParameter>();
             paramz.Add(new SqlParameter("MessageRecipientGroupId", recipientGroupId));
 
-            _executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, null);
+            this.executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, null);
         }
 
 
@@ -120,22 +209,50 @@ namespace NtccSteward.Repository
         /// Saves the recipient, returns the ID.
         /// </summary>
         /// <returns>The ID of the recipient (new if insert, same if update)</returns>
-        public int SaveRecient(int recipientId, int recipientGroupId)
+        public int SaveRecipient(IRecipient recipient)
         {
-            var proc = "MessageRecipient_Insert";
-
+            var proc = "SaveMessageRecipient";
+            
             var paramz = new List<SqlParameter>();
-            paramz.Add(new SqlParameter("IdentityId", recipientId));
-            paramz.Add(new SqlParameter("MessageRecipientGroupId", recipientGroupId));
+            paramz.Add(new SqlParameter("Id", recipient.Id));
+            paramz.Add(new SqlParameter("IdentityId", recipient.IdentityId));
+            paramz.Add(new SqlParameter("recipientGroupId", recipient.MessageRecipientGroupId));
+            paramz.Add(new SqlParameter("ContactInfoId", recipient.ContactInfoId));
 
             Func<SqlDataReader, int> readFx = (reader) =>
             {
                 return reader.GetInt32(0); // new id
             };
 
-            var list = _executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, readFx);
+            var list = this.executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, readFx);
 
             return list.First();
+        }
+
+        public IRecipient GetRecipient(int contactInfoid, int recipientGroupId)
+        {
+            var proc = "GetRecipient";
+
+            var paramz = new List<SqlParameter>();
+            paramz.Add(new SqlParameter("contactInfoid", contactInfoid));
+            paramz.Add(new SqlParameter("recipientGroupId", recipientGroupId));
+
+            Func<SqlDataReader, IRecipient> readFx = (reader) =>
+            {
+                var item = new Recipient();
+                item.Id = reader.ValueOrDefault<int>("Id");
+                item.IdentityId = reader.ValueOrDefault<int>("IdentityID");
+                item.MessageRecipientGroupId = reader.ValueOrDefault<int>("MessageRecipientGroupId");
+                item.ContactInfoId = reader.ValueOrDefault<int>("ContactInfoID");
+                item.Name = reader.ValueOrDefault<string>("Name");
+                item.Address = reader.ValueOrDefault<string>("Address");
+
+                return item;
+            };
+
+            var list = this.executor.ExecuteSql<IRecipient>(proc, CommandType.StoredProcedure, paramz, readFx);
+
+            return list.FirstOrDefault();
         }
 
         /// <summary>
@@ -143,12 +260,12 @@ namespace NtccSteward.Repository
         /// </summary>
         public void DeleteRecipient(int recipientId)
         {
-            var proc = "MessageRecipient_Delete";
+            var proc = "DeleteMessageRecipient";
 
             var paramz = new List<SqlParameter>();
-            paramz.Add(new SqlParameter("MessageRecipientId", recipientId));
+            paramz.Add(new SqlParameter("Id", recipientId));
 
-            _executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, null);
+            this.executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, null);
         }
 
 
@@ -159,21 +276,22 @@ namespace NtccSteward.Repository
         /// <returns>The ID of the new message</returns>
         public int SaveMessage(IMessage message)
         {
-            var proc = "Messages_Insert";
+            var proc = "SaveMessage";
 
             var paramz = new List<SqlParameter>();
-            paramz.Add(new SqlParameter("personIdentityID", message.IdentityID));
-            paramz.Add(new SqlParameter("messageTypeEnumID", message.MessageTypeEnumID)); // text, email
+            paramz.Add(new SqlParameter("id", message.Id));
+            paramz.Add(new SqlParameter("messageRecipientGroupId", message.RecipientGroupId));
             paramz.Add(new SqlParameter("messageDirectionEnumID", message.MessageDirectionEnumID)); // sent, received
             paramz.Add(new SqlParameter("messageSubject", message.Subject));
             paramz.Add(new SqlParameter("messageBody", message.Body));
+            paramz.Add(new SqlParameter("messageDate", message.MessageDate));
 
             Func<SqlDataReader, int> readFx = (reader) =>
             {
                 return reader.GetInt32(0); // new id
             };
 
-            var list = _executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, readFx);
+            var list = this.executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, readFx);
 
             return list.First();
         }
@@ -184,103 +302,58 @@ namespace NtccSteward.Repository
         /// </summary>
         public void DeleteMessage(int messageID)
         {
-            var proc = "Message_Delete";
+            var proc = "DeleteMessage";
 
             var paramz = new List<SqlParameter>();
             paramz.Add(new SqlParameter("messageId", messageID));
 
-            _executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, null);
+            this.executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, null);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="churchID"></param>
-        /// <param name="messageTypeEnumID">Text, Email</param>
-        /// <returns></returns>
-        public List<IMessage> GetMessages(int correspondenceID, int messageTypeEnumID, int maxReturnRows)
+
+        public SmsConfiguration GetSmsConfiguration(int recipientGroupId)
         {
-            var proc = "Message_SelectByIdentityID";
+            var proc = "GetSmsTokens";
 
             var paramz = new List<SqlParameter>();
-            paramz.Add(new SqlParameter("identityID", correspondenceID));
-            paramz.Add(new SqlParameter("messageTypeEnumID", messageTypeEnumID)); // text, email
-            paramz.Add(new SqlParameter("maxReturnRows", maxReturnRows));
+            paramz.Add(new SqlParameter("recipientGroupId", recipientGroupId));
+
+            Func<SqlDataReader, SmsConfiguration> readFx = (reader) =>
+            {
+                var item = new SmsConfiguration();
+                item.Sid = reader.ValueOrDefault<string>("AccountSid");
+                item.Token = reader.ValueOrDefault<string>("AccountToken");
+                item.PhoneNumber = reader.ValueOrDefault<string>("PhoneNumber");
+                return item;
+            };
+
+            var list = this.executor.ExecuteSql<SmsConfiguration>(proc, CommandType.StoredProcedure, paramz, readFx);
+
+            return list.FirstOrDefault();
+        }
+
+
+        public List<IMessage> GetMessages(int recipientGroupId, int maxReturnRows)
+        {
+            var proc = "GetMessages";
+
+            var paramz = new List<SqlParameter>();
+            paramz.Add(new SqlParameter("messageRecipientGroupId", recipientGroupId));
+            paramz.Add(new SqlParameter("maxrows", maxReturnRows));
 
             Func<SqlDataReader, IMessage> readFx = (reader) =>
             {
                 var item = new Message();
-                item.MessageID = reader.ValueOrDefault<long>("MessageId");
-                item.IdentityID = reader.ValueOrDefault<int>("IdentityID");
-                item.IdentityName = reader.ValueOrDefault<string>("Name");
-                item.MessageTypeEnumID = reader.ValueOrDefault<int>("MessageTypeEnumID");
+                item.Id = reader.ValueOrDefault<long>("id");
+                item.RecipientGroupId = reader.ValueOrDefault<int>("MessageRecipientGroupId");
                 item.MessageDirectionEnumID = reader.ValueOrDefault<int>("MessageDirectionEnumID");
-                item.MessageDate = reader.ValueOrDefault<DateTime>("genDate");
                 item.Subject = reader.ValueOrDefault<string>("MessageSubject");
                 item.Body = reader.ValueOrDefault<string>("MessageBody");
+                item.MessageDate = reader.ValueOrDefault<DateTimeOffset>("MessageDate");
                 return item;
             };
 
-            var list = _executor.ExecuteSql<IMessage>(proc, CommandType.StoredProcedure, paramz, readFx);
-
-            return list;
-        }
-
-        /// <summary>
-        /// Gets message groups, does not include recipients
-        /// </summary>
-        /// <param name="churchID">churchID</param>
-        /// <returns></returns>
-        public List<IRecipientGroup> GetGroups(int churchID)
-        {
-            // get all of the message recipient groups for this church
-
-            var proc = "MessageRecipientGroup_Select";
-
-            var paramz = new List<SqlParameter>();
-            paramz.Add(new SqlParameter("churchId", churchID));
-
-            Func<SqlDataReader, IRecipientGroup> readFx = (reader) =>
-            {
-                var item = new RecipientGroup();
-                item.ID = reader.ValueOrDefault<int>("MessageRecipientGroupId");
-                item.Name = reader.ValueOrDefault<string>("GroupName");
-                item.ChurchId = reader.ValueOrDefault<int>("ChurchID");
-                item.Description = reader.ValueOrDefault<string>("Description");
-                return item;
-            };
-
-            var list = _executor.ExecuteSql<IRecipientGroup>(proc, CommandType.StoredProcedure, paramz, readFx);
-
-            return list;
-        }
-
-
-        /// <summary>
-        /// Gets recipients that have correspondence.  This is not the same as getting all recients (everyone that has a mobile phone number)
-        /// </summary>
-        /// <param name="churchID">IdentityID of the church</param>
-        /// <param name="messageTypeEnumID">Enum - text, email, etc.</param>
-        /// <param name="fromDate">The earliest date to retrieve corresondence for</param>
-        /// /// <param name="fromDate">The latest date to retrieve corresondence for; e.g., current day</param>
-        public List<ICorrespondence> GetCorresondence(int churchID, int messageTypeEnumID, int maxReturnRows)
-        {
-            var proc = "MessageCorrespondence_SelectByChurch";
-
-            var paramz = new List<SqlParameter>();
-            paramz.Add(new SqlParameter("churchId", churchID));
-            paramz.Add(new SqlParameter("messageTypeEnumID", messageTypeEnumID)); // text, email
-            paramz.Add(new SqlParameter("maxRowsToReturn", maxReturnRows));
-
-            Func<SqlDataReader, ICorrespondence> readFx = (reader) =>
-            {
-                var item = new Correspondence();
-                item.ID = reader.ValueOrDefault<int>("PersonID");
-                item.Name = (reader.ValueOrDefault<string>("FirstName") + " " + reader.ValueOrDefault<string>("LastName")).Trim();
-                return item;
-            };
-
-            var list = _executor.ExecuteSql<ICorrespondence>(proc, CommandType.StoredProcedure, paramz, readFx);
+            var list = this.executor.ExecuteSql<IMessage>(proc, CommandType.StoredProcedure, paramz, readFx);
 
             return list;
         }

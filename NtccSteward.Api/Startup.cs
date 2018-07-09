@@ -16,10 +16,10 @@ namespace NtccSteward.Api
     {
         public void Configuration(IAppBuilder app)
         {
+            //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap = new Dictionary<string, string>();
             JwtSecurityTokenHandler.InboundClaimTypeMap = new Dictionary<string, string>();
-
             //app.UseCors(CorsOptions.AllowAll);
-            
+
             // left off with #3 "Authorizing Access to the API", "Client Credentials Flow"
             //https://app.pluralsight.com/player?course=oauth2-openid-connect-angular-aspdotnet&author=kevin-dockx&name=oauth2-openid-connect-angular-aspdotnet-m03&clip=0&mode=live
             app.UseIdentityServerBearerTokenAuthentication(
