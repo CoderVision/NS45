@@ -40,7 +40,8 @@ namespace NtccSteward.Api
                 container.Resolve<IMemberRepository>(),
                 container.Resolve<IMessageRepository>(),
                 container.Resolve<ICommonRepository>(),
-                container.Resolve<ILogger>()));
+                container.Resolve<ILogger>(),
+                container.Resolve<IImportRepository>()));
 
             // register controllers
             container.RegisterType<AccountController>();
