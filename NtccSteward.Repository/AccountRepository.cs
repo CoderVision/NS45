@@ -23,7 +23,7 @@ namespace NtccSteward.Repository
         List<UserProfile> GetUserProfiles(bool active);
         UserProfile GetUserProfile(int userId);
         List<Role> GetRoles();
-        string ProcessAccountRequest(AccountRequest accountRequest);
+        int ProcessAccountRequest(AccountRequest accountRequest);
         UserProfile SaveUserProfile(UserProfile userProfile);
     }
 
@@ -134,8 +134,12 @@ namespace NtccSteward.Repository
             return list;
         }
 
-
-        public string ProcessAccountRequest(AccountRequest accountRequest)
+        /// <summary>
+        /// returs the new IdentityID of the user
+        /// </summary>
+        /// <param name="accountRequest"></param>
+        /// <returns></returns>
+        public int ProcessAccountRequest(AccountRequest accountRequest)
         {
             var proc = "[Security].[ProcessAccountRequest]";
 
@@ -160,13 +164,13 @@ namespace NtccSteward.Repository
 
             // pass all info as parameters
 
-            Func<SqlDataReader, string> readFx = (reader) =>
+            Func<SqlDataReader, int> readFx = (reader) =>
             {
-                return reader["Status"].ToString();
+                return reader.ValueOrDefault("IdentityID", 0);
             };
 
             var executor = new SqlCmdExecutor(ConnectionString);
-            var list = executor.ExecuteSql<string>(proc, CommandType.StoredProcedure, paramz, readFx);
+            var list = executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, readFx);
 
             return list.First();
         }
