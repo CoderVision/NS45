@@ -98,9 +98,12 @@ namespace NtccSteward.Api.Controllers
 
                 accountRequest.ReviewerUserId = userId;
 
-                var result = this.repository.ProcessAccountRequest(accountRequest);
+                var identityId = this.repository.ProcessAccountRequest(accountRequest);
 
-                return Ok(result);
+                var user = this.repository.GetUserProfile(identityId);
+
+                // return the new user
+                return Ok(user);
             }
             catch (Exception ex)
             {
