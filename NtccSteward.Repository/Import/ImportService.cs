@@ -28,7 +28,7 @@ namespace NtccSteward.Repository.Import
         private readonly IMessageRepository messageRepo = null;
         private readonly ICommonRepository commonRepo = null;
         private readonly ILogger logger = null;
-        private readonly ImportRepository importRepo = null;
+        private readonly IImportRepository importRepo = null;
         private readonly EnumMapper mapper = new EnumMapper();
         private readonly Factory factory = new Factory();
         private Church church = null;
@@ -45,7 +45,7 @@ namespace NtccSteward.Repository.Import
             , IMessageRepository messageRepo
             , ICommonRepository commonRepo
             , ILogger logger
-            , ImportRepository importRepo)
+            , IImportRepository importRepo)
         {
             this.connectingString = connectingString;
             this.churchRepo = churchRepo;
