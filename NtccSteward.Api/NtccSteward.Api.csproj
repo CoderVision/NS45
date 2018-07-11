@@ -293,6 +293,9 @@
     <None Include="Project_Readme.html" />
     <None Include="Properties\PublishProfiles\SmarterASP.NET-Api.pubxml" />
     <Content Include="Scripts\angular.min.js.map" />
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NtccSteward.Core\NtccSteward.Core.csproj">
