@@ -149,7 +149,7 @@ namespace NtccSteward.Repository.Import
 
             if (result.Status == RepositoryActionStatus.Error)
             {
-                LogError(result.Exception);
+                LogError(result.Exception, Core.Framework.LogLevel.Error);
                 return;
             }
 
@@ -171,14 +171,17 @@ namespace NtccSteward.Repository.Import
                     $"City1: { ci.City1 }.  ";
 
                 var x = new Exception(msg);
-                LogError(x);
+                LogError(x, Core.Framework.LogLevel.Warning);
                 return;
             }
 
             var memberResult = this.memberRepo.Add(member);
 
             if (memberResult.Status == RepositoryActionStatus.Error)
-                LogError(memberResult.Exception);
+            {
+                LogError(memberResult.Exception, Core.Framework.LogLevel.Error);
+                return;
+            }
 
             member.id = memberResult.Entity.id;
 
@@ -195,7 +198,10 @@ namespace NtccSteward.Repository.Import
             var teamResult = this.teamRepo.SaveTeam(team);
 
             if (teamResult.Status == RepositoryActionStatus.Error)
-                LogError(teamResult.Exception);
+            {
+                LogError(teamResult.Exception, Core.Framework.LogLevel.Warning);
+                return;
+            }
 
             this.pastoralTeam = teamResult.Entity;
 
@@ -314,7 +320,7 @@ namespace NtccSteward.Repository.Import
                         $"Here are the initials: { assoc.Initials }";
 
                     var x = new Exception(msg);
-                    LogError(x);
+                    LogError(x, Core.Framework.LogLevel.Warning);
                     continue;
                 }
 
@@ -322,7 +328,7 @@ namespace NtccSteward.Repository.Import
 
                 if (memberResult.Status == RepositoryActionStatus.Error)
                 {
-                    LogError(memberResult.Exception);
+                    LogError(memberResult.Exception, Core.Framework.LogLevel.Error);
                     continue;
                 }
 
@@ -336,10 +342,10 @@ namespace NtccSteward.Repository.Import
             }
         }
 
-        private void LogError(Exception ex)
+        private void LogError(Exception ex, Core.Framework.LogLevel logLevel)
         {
             var details = $"churchId:  {this.church.id}.  Stacktrace:  { ex.StackTrace }";
-            this.logger.LogInfo(Core.Framework.LogLevel.Error, ex.Message, details, this.userId);
+            this.logger.LogInfo(logLevel, ex.Message, details, this.userId);
         }
 
 
@@ -399,7 +405,7 @@ namespace NtccSteward.Repository.Import
 
                 if (teamResult.Status == RepositoryActionStatus.Error)
                 {
-                    LogError(teamResult.Exception);
+                    LogError(teamResult.Exception, Core.Framework.LogLevel.Error);
                     continue;
                 }
 
@@ -440,7 +446,7 @@ namespace NtccSteward.Repository.Import
             var result = this.teamRepo.SaveTeammate(teammate);
 
             if (result.Status == RepositoryActionStatus.Error)
-                LogError(result.Exception);
+                LogError(result.Exception, Core.Framework.LogLevel.Error);
         }
 
 
@@ -513,7 +519,7 @@ namespace NtccSteward.Repository.Import
                         $"Here are the comments: { memberProfile.Comments }";
 
                     var x = new Exception(msg);
-                    LogError(x);
+                    LogError(x, Core.Framework.LogLevel.Warning);
                     continue;
                 }
 
@@ -521,7 +527,7 @@ namespace NtccSteward.Repository.Import
 
                 if (result.Status == RepositoryActionStatus.Error)
                 {
-                    LogError(result.Exception);
+                    LogError(result.Exception, Core.Framework.LogLevel.Error);
                     continue;
                 }
 
@@ -564,7 +570,7 @@ namespace NtccSteward.Repository.Import
                 ContactInfoLocationType = 8
             });
             if (result.Status == RepositoryActionStatus.Error)
-                LogError(result.Exception);
+                LogError(result.Exception, Core.Framework.LogLevel.Error);
         }
 
         private void SaveEmail(int identityId, string email)
@@ -580,7 +586,7 @@ namespace NtccSteward.Repository.Import
             });
 
             if (result.Status == RepositoryActionStatus.Error)
-                LogError(result.Exception);
+                LogError(result.Exception, Core.Framework.LogLevel.Error);
         }
 
         private void SaveAddress(int identityId, string addressLine1, string city, string state, string zip)
@@ -603,7 +609,7 @@ namespace NtccSteward.Repository.Import
                 ContactInfoLocationType = 9
             });
             if (result.Status == RepositoryActionStatus.Error)
-                LogError(result.Exception);
+                LogError(result.Exception, Core.Framework.LogLevel.Error);
         }
 
         private void ImportGuests(OleDbConnection cn)
@@ -695,7 +701,7 @@ namespace NtccSteward.Repository.Import
                         $"Here are the comments: { memberProfile.Comments }";
 
                     var x = new Exception(msg);
-                    LogError(x);
+                    LogError(x, Core.Framework.LogLevel.Warning);
                     continue;
                 }
 
@@ -703,7 +709,7 @@ namespace NtccSteward.Repository.Import
 
                 if (result.Status == RepositoryActionStatus.Error)
                 {
-                    LogError(result.Exception);
+                    LogError(result.Exception, Core.Framework.LogLevel.Error);
                     continue;
                 }
 
@@ -768,7 +774,7 @@ namespace NtccSteward.Repository.Import
             var result = this.memberRepo.SaveActivity(activity);
 
             if (result.Status == RepositoryActionStatus.Error)
-                LogError(result.Exception);
+                LogError(result.Exception, Core.Framework.LogLevel.Error);
         }
 
 
@@ -822,7 +828,7 @@ namespace NtccSteward.Repository.Import
                 {
                     var msg = $"First Name is null from [Don't Visit] table.  Id: { dnv.Id }.  ChurchId:  { this.church.id }  Here are the comments: { member.Comments }";
                     var x = new Exception(msg);
-                    LogError(x);
+                    LogError(x, Core.Framework.LogLevel.Warning);
                     continue;
                 }
 
@@ -830,7 +836,7 @@ namespace NtccSteward.Repository.Import
 
                 if (result.Status == RepositoryActionStatus.Error)
                 {
-                    LogError(result.Exception);
+                    LogError(result.Exception, Core.Framework.LogLevel.Error);
                     continue;
                 }
 
