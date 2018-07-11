@@ -86,6 +86,9 @@ namespace NtccSteward.Repository.Import
                     this.accessDbFilePathId = 
                         this.importRepo.SaveAccessDbFilePath(this.church.id, filePath);
 
+                    if (this.church == null)
+                        return;
+
                     this.ImportConfigurations(cn);
 
                     this.ImportPastors(cn);
@@ -145,7 +148,10 @@ namespace NtccSteward.Repository.Import
             var result = this.churchRepo.Add(church);
 
             if (result.Status == RepositoryActionStatus.Error)
+            {
                 LogError(result.Exception);
+                return;
+            }
 
             this.church = result.Entity;
 
@@ -157,6 +163,17 @@ namespace NtccSteward.Repository.Import
             member.Line1 = ci.Address;
             member.State = ci.State;
             member.Zip = ci.Zip1;
+
+            if (string.IsNullOrWhiteSpace(member.FirstName))
+            {
+                var msg = $"First Name is null from [Church Info] table.  " +
+                    $"ChurchId:  { this.church.id }.  " +
+                    $"City1: { ci.City1 }.  ";
+
+                var x = new Exception(msg);
+                LogError(x);
+                return;
+            }
 
             var memberResult = this.memberRepo.Add(member);
 
@@ -289,10 +306,25 @@ namespace NtccSteward.Repository.Import
                 member.FirstName = assoc.Name;
                 member.StatusId = assoc.Current ? 49 : 51; // 49 = Active, 51 = Inactive
 
+                if (string.IsNullOrWhiteSpace(member.FirstName))
+                {
+                    var msg = $"First Name is null from [Associate Pastor] table.  " +
+                        $"ChurchId:  { this.church.id }.  " +
+                        $"ASSOCID: { assoc.AssocId }.  " +
+                        $"Here are the initials: { assoc.Initials }";
+
+                    var x = new Exception(msg);
+                    LogError(x);
+                    continue;
+                }
+
                 var memberResult = this.memberRepo.SaveProfile(member);
 
                 if (memberResult.Status == RepositoryActionStatus.Error)
+                {
                     LogError(memberResult.Exception);
+                    continue;
+                }
 
                 assoc.IdentityId = memberResult.Entity.MemberId;
 
@@ -366,7 +398,10 @@ namespace NtccSteward.Repository.Import
                 var teamResult = this.teamRepo.SaveTeam(team);
 
                 if (teamResult.Status == RepositoryActionStatus.Error)
+                {
                     LogError(teamResult.Exception);
+                    continue;
+                }
 
                 pastor.IdentityId = teamResult.Entity.Id; // this will be a TeamId
             }
@@ -468,10 +503,27 @@ namespace NtccSteward.Repository.Import
 
                 memberProfile.Comments = comments;  // last before saving
 
+                if (string.IsNullOrWhiteSpace(memberProfile.FirstName) &&
+                    string.IsNullOrWhiteSpace(memberProfile.MiddleName) &&
+                    string.IsNullOrWhiteSpace(memberProfile.LastName))
+                {
+                    var msg = $"First, Middle, and Last Name are all null from [Soul Winners] table.  " +
+                        $"ChurchId:  { this.church.id }.  " +
+                        $"SWID: { soulwinner.SoulwinnerId }.  " +
+                        $"Here are the comments: { memberProfile.Comments }";
+
+                    var x = new Exception(msg);
+                    LogError(x);
+                    continue;
+                }
+
                 var result = this.memberRepo.SaveProfile(memberProfile);
 
                 if (result.Status == RepositoryActionStatus.Error)
+                {
                     LogError(result.Exception);
+                    continue;
+                }
 
                 soulwinner.IdentityId = result.Entity.MemberId;
 
@@ -633,10 +685,27 @@ namespace NtccSteward.Repository.Import
                 // guest.PendingBaptism  // this is pointless, because if they haven't been baptized, then they are pending
                 // guest.IsNew     // not needed because their date came will tell us they are new
 
+                if (string.IsNullOrWhiteSpace(memberProfile.FirstName) &&
+                    string.IsNullOrWhiteSpace(memberProfile.MiddleName) &&
+                    string.IsNullOrWhiteSpace(memberProfile.LastName))
+                {
+                    var msg = $"First, Middle, and Last Name are all null from [Guests] table.  " +
+                        $"ChurchId:  { this.church.id }.  " +
+                        $"GUESTID: { guest.GuestId }.  " +
+                        $"Here are the comments: { memberProfile.Comments }";
+
+                    var x = new Exception(msg);
+                    LogError(x);
+                    continue;
+                }
+
                 var result = this.memberRepo.SaveProfile(memberProfile);
 
                 if (result.Status == RepositoryActionStatus.Error)
+                {
                     LogError(result.Exception);
+                    continue;
+                }
 
                 guest.IdentityId = result.Entity.MemberId;
 
@@ -749,10 +818,21 @@ namespace NtccSteward.Repository.Import
 
                 member.Comments = member.Comments?.Trim();
 
+                if (string.IsNullOrWhiteSpace(member.FirstName))
+                {
+                    var msg = $"First Name is null from [Don't Visit] table.  Id: { dnv.Id }.  ChurchId:  { this.church.id }  Here are the comments: { member.Comments }";
+                    var x = new Exception(msg);
+                    LogError(x);
+                    continue;
+                }
+
                 var result = this.memberRepo.SaveProfile(member);
 
                 if (result.Status == RepositoryActionStatus.Error)
+                {
                     LogError(result.Exception);
+                    continue;
+                }
 
                 dnv.IdentityId = result.Entity.MemberId;
 
