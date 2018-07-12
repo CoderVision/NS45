@@ -74,7 +74,7 @@ namespace NtccSteward.Repository
                 data.SponsorName = reader.ValueOrDefault<string>("Sponsor");
                 data.TeamId = reader.ValueOrDefault<int>("TeamId");
                 data.TeamName = reader.ValueOrDefault<string>("TeamName");
-                data.Comments = reader.ValueOrDefault<string>("Comment");
+                data.Comments = reader.ValueOrDefault<string>("Comment","").Trim();
                 data.StatusId = reader.ValueOrDefault<int>("StatusId");
                 data.Status = reader.ValueOrDefault<string>("Status");
                 data.StatusChangeTypeId = reader.ValueOrDefault<int>("StatusChangeTypeId");
