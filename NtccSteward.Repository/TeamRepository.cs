@@ -164,7 +164,7 @@ namespace NtccSteward.Repository
 
             Func<SqlDataReader, Tuple<int,int>> readFx = (reader) =>
             {
-                var id = (int)reader["Id"];
+               var id = (int)reader["Id"];
                 var teamPositionEnumTypeId = (int)reader["TeamPositionEnumTypeId"];
 
                 return new Tuple<int, int>(id, teamPositionEnumTypeId);
