@@ -115,6 +115,9 @@
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Prince, Version=1.0.4883.28194, Culture=neutral, PublicKeyToken=8d9b0a8b53aaa3c7">
+      <HintPath>..\packages\Prince.9.0.0.0\lib\net20\Prince.dll</HintPath>
+    </Reference>
     <Reference Include="RestSharp, Version=105.2.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RestSharp.105.2.2\lib\net451\RestSharp.dll</HintPath>
     </Reference>
@@ -286,9 +289,6 @@
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -296,6 +296,9 @@
     <None Include="Project_Readme.html" />
     <None Include="Properties\PublishProfiles\SmarterASP.NET-Api.pubxml" />
     <Content Include="Scripts\angular.min.js.map" />
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NtccSteward.Core\NtccSteward.Core.csproj">
