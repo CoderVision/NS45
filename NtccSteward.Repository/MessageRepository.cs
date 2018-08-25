@@ -19,14 +19,14 @@ namespace NtccSteward.Repository
         void DeleteRecipientGroup(int recipientGroupId);
         List<IMessage> GetMessages(int recipietGroupId, int maxReturnRows);
         List<IRecipientGroup> GetRecipientGroups(int churchId, int messageTypeEnumId);
-        int SaveMessage(IMessage message);
+        int SaveMessage(IMessage message); 
         int SaveRecipient(IRecipient recipient);
         int SaveRecipientGroup(IRecipientGroup group);
         MessageMetadata GetMetadata(int userId);
         IRecipient GetRecipient(int contactInfoid, int recipientGroupId);
         List<IRecipient> GetRecipients(int churchId, int messageTypeEnumId, string criteria);
         SmsConfiguration GetSmsConfiguration(int recipientGroupId);
-        List<IRecipient> GetGroupRecipients(int recipientGroupId, int messageTypeEnumId);
+        List<IRecipient> GetGroupRecipients(int recipientGroupId);
         List<EmailConfigurationProfile> GetEmailConfigurationProfiles();
         EmailConfigurationProfile SaveEmailConfigurationProfiles(EmailConfigurationProfile emailConfiguration);
         void SaveEmailConfiguration(EmailConfiguration emailConfiguration);
@@ -86,13 +86,12 @@ namespace NtccSteward.Repository
             return metadata;
         }
 
-        public List<IRecipient> GetGroupRecipients(int recipientGroupId, int messageTypeEnumId)
+        public List<IRecipient> GetGroupRecipients(int recipientGroupId)
         {
             var proc = "GetGroupRecipients";
 
             var paramz = new List<SqlParameter>();
             paramz.Add(new SqlParameter("recipientGroupId", recipientGroupId));
-            paramz.Add(new SqlParameter("messageTypeEnumId", messageTypeEnumId));
 
             Func<SqlDataReader, IRecipient> readFx = (reader) =>
             {
@@ -136,6 +135,7 @@ namespace NtccSteward.Repository
 
             return list;
         }
+
 
         /// <summary>
         /// Gets message groups, does not include recipients

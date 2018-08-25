@@ -121,7 +121,7 @@ namespace NtccSteward.Api.Controllers
 
             var client = new Twilio.TwilioRestClient(config.Sid, config.Token);
 
-            var recipients = this.repo.GetGroupRecipients(message.RecipientGroupId, 47);
+            var recipients = this.repo.GetGroupRecipients(message.RecipientGroupId);
             foreach (var recipient in recipients)
             {
                 await Task.Run(() => {
@@ -187,6 +187,15 @@ namespace NtccSteward.Api.Controllers
             return Ok(recipients);
         }
 
+        [Route("message/recipientGroup/{id}")]
+        [HttpGet()]
+        public async Task<IHttpActionResult> GetRecipientGroup(int id)
+        {
+            var group = this.repo.GetGroupRecipients(id);
+
+            return Ok(group);
+        }
+
         [Route("message/recipientGroups")]
         [HttpGet()]
         public async Task<IHttpActionResult> GetRecipientGroups(int churchId, int messageTypeEnumId)
@@ -221,7 +230,7 @@ namespace NtccSteward.Api.Controllers
             return Ok(recipientGroup);
         }
 
-        [Route("message/recipientGroups")]
+        [Route("message/recipientGroups/{id}")]
         [HttpDelete]
         public async Task<IHttpActionResult> DeleteRecipientGroup(int id)
         {
