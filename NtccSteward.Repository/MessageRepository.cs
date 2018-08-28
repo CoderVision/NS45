@@ -193,6 +193,8 @@ namespace NtccSteward.Repository
 
             var list = this.executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, readFx);
 
+            // we need to do a merge of recipients
+
             return list.First();
         }
 
@@ -202,7 +204,7 @@ namespace NtccSteward.Repository
             var proc = "DeleteMessageRecipientGroup";
 
             var paramz = new List<SqlParameter>();
-            paramz.Add(new SqlParameter("MessageRecipientGroupId", recipientGroupId));
+            paramz.Add(new SqlParameter("id", recipientGroupId));
 
             this.executor.ExecuteSql<int>(proc, CommandType.StoredProcedure, paramz, null);
         }

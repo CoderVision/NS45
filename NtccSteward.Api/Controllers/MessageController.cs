@@ -9,6 +9,7 @@ using System.Web.Http;
 using NtccSteward.Repository;
 using NtccSteward.Api.Framework;
 using System.Collections.Generic;
+using System.Linq;
 //using Twilio.Rest.Api.V2010.Account;
 
 namespace NtccSteward.Api.Controllers
@@ -214,6 +215,12 @@ namespace NtccSteward.Api.Controllers
             recipientGroup.Id = id;
             if (string.IsNullOrEmpty(recipientGroup.Description))
                 recipientGroup.Description = recipientGroup.Name;
+
+            // delete recipients that are no longer in the list
+            var dbRecipients = this.repo.GetGroupRecipients(recipientGroup.Id);
+            var deletedRecipients = dbRecipients.Where(dbr => !recipientGroup.Recipients.Any(r => r.Id == dbr.Id));
+            foreach (var r in deletedRecipients)
+                this.repo.DeleteRecipient(r.Id);
 
             foreach (var r in recipientGroup.Recipients)
             {
