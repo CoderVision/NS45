@@ -10,7 +10,7 @@ using NtccSteward.Repository;
 using NtccSteward.Api.Framework;
 using System.Collections.Generic;
 using System.Linq;
-//using Twilio.Rest.Api.V2010.Account;
+using System.Web.Http.ModelBinding;
 
 namespace NtccSteward.Api.Controllers
 {
@@ -133,21 +133,20 @@ namespace NtccSteward.Api.Controllers
             return Ok(message);
         }
 
-
+        [AllowAnonymous]
         [Route("message/receiveSms")]
         [HttpPost()]
-        public void ReceiveInboundMessage(string msisdn, string to, string messageId, string text, string type, string message)
+        public async void ReceiveInboundMessage()
         {
-            //https://docs.nexmo.com/messaging/sms-api/api-reference#inbound
+            var smsJson = await this.Request.Content.ReadAsStringAsync();
 
-            this.logger.LogInfo(LogLevel.Information, $"Text message received for {to}", $"Text message received for {to}", 0);
-            // example of inbound message:  
-            //  ?msisdn=19150000001&to=12108054321
-            //  &messageId = 000000FFFB0356D1 & text = This +is+ an + inbound + message
-            //  & type = text & message - timestamp = 2012 - 08 - 19 + 20 % 3A38 % 3A23
+            var sms = new System.Net.Http.Formatting.FormDataCollection(smsJson).ReadAs<TwilioIncomingSms>();
 
+            this.logger.LogInfo(LogLevel.Information, $"Text message received for {sms.To}, coming from: {sms.From}", $"Text message received for {sms.Body}", 0);
 
-            return;
+            // TODO:  
+            //  Save to Database using the To message to find out what church phone number it's being sent to
+            //  Forward the message to the client using Web Sockets if the user is online
         }
 
 
